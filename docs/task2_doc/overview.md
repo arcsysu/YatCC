@@ -4,9 +4,11 @@
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
+
 以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答可以在`/workspaces/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看，
 
-![alt text](../images/bison/task2-answer.png)
+
+<img src="../images/bison/task2-answer.png" alt="alt text" style="zoom:67%;" />
 
 下面对这个文件进行一些说明：
 
