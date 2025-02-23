@@ -87,6 +87,7 @@
 #### prompt示例
 
 - 以下内容请使用markdown源格式进行复制
+
 ```markdown
 **## Role**
 **## Optimized Prompt for Compiler Lab Assistant**  
@@ -170,6 +171,7 @@ Share your current approach/code for targeted support!"
 ---  
 
 **Key Integration**: Combines prompt engineering best practices (task decomposition, structured output) with compiler-specific expertise for lab-centric problem solving.
+
 ```
 
 ---
