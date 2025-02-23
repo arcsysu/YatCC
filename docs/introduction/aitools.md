@@ -1,11 +1,11 @@
 # AI工具配置与使用方法
 
-## Deepseek 插件调用教程
+## 第一部分：Deepseek 插件调用教程
 
 ### 概述
 
 本文档介绍如何通过 VSCode 插件调用部署在天河二号上的 deepseek 服务并用于实验学习，我们将使用 **Roo Code** 插件来实现这个功能。
-当copilot可以使用时（如非web端），也可以参考上一篇copilot申请/使用教程来使用copilot达成类似效果。
+当copilot可以使用时（如非web端），也可以参考第二部分copilot申请/使用教程来使用copilot达成类似效果。
 
 ### 配置部分
 

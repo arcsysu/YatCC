@@ -193,7 +193,7 @@ Expr* Typing::assignment_cast(Expr* lft, Expr* rht) {
 
 - **抽象语义图（Abstract Semantic Graph）**
 单论名字的用法而言，大家并不是那么严格地区分“ASG”和“AST”，很多人把他的IR数据结构称为AST，尽管这些数据结构的引用关系在事实上是图而并非树。不过，相比于那些语法解析器框架，我们上面定义的C++结构体们与之还是有很大差别的，这主要体现在语义结点的相互引用上：
-<img src="../images/bison/asg.png" alt="alt text" style="zoom: 60%;" />
+![alt text](../images/bison/asg.png)
 相比于AST中存储的是变量名，我们在`declReference_1`中直接存储指向变量声明的那个语义结点指针，这将会给后面的分析和变换的代码编写带来极大的便利。
 
 ### ASG总结

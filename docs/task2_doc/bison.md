@@ -30,6 +30,7 @@ Flex和Bison生成的代码分别处于两个C源代码文件，它们各自单�
 Flex和Bison默认用法的场景是传统的命令行指令式程序，生成使用全局变量的不可重入代码，并且Flex固定地从`<stdio.h>`输入输出数据。两者的关系以Bison为主，Flex只是辅助的可选项：Bison从代码文件生成一个`int yyparse()`;函数，其内部调用两个需要我们补充定义的函数`int yylex()`;、`void yyerror(const char *)`来读取词法单元流和报告错误，Flex就是用于生成那个`yylex`函数。
 
 在联合使用时，我们应该**首先编写Bison语法定义（`.y`），通过前言区的`%token`定义有哪几种词法单元，然后在Flex代码中包含生成的头文件，再编写词法单元的解析规则**，这和我们实验1到实验2的顺序是相反的。知道这些之后，我们就得到了基本的文件骨架：
+
 - `parser.y`
 ``` cpp
 %code requires {
@@ -40,6 +41,7 @@ void yyerror(const char *);
 %%
 ```
 为了让Bison生成的代码能够通过编译环节，必须在其中加入`yylex`和`yyerror`的声明。
+
 - `lexer.l`
 ``` cpp
 %{
@@ -65,6 +67,7 @@ void yyerror (char const *);
 start: NUMBER | ADD NUMBER | SUB NUMBER;
 %%
 ```
+
 - `lexer.l`
 ``` cpp
 %{
@@ -660,9 +663,9 @@ declaration_list
 </details>
 
 ## 任务说明
-同学们需要完成下面两个部分的内容：
-1、由于task1的标准答案是复活部分的代码输入，因此同学们需要**补充lex.cpp文件**，将clang标准输出与语法分析的输入进行匹配；
-2、类型检查和ASG生成json文件的部分，已经进行了基本的实现。同学们只要认真阅读asg.hpp文件，了解每个非终结符对应类型的结构和操作，结合上述重点参考的文法**完成`par.y`文件中的文法撰写和语义动作的补充**。
+同学们需要完成下面两个部分的内容：\
+1、由于task1的标准答案是复活部分的代码输入，因此同学们需要**补充lex.cpp文件**，将clang标准输出与语法分析的输入进行匹配；\
+2、类型检查和ASG生成json文件的部分，已经进行了基本的实现。同学们只要认真阅读asg.hpp文件，了解每个非终结符对应类型的结构和操作，结合上述重点参考的文法**完成`par.y`文件中的文法撰写和语义动作的补充**。\
 
 ### 总体思路(main.cpp)
 
@@ -906,7 +909,8 @@ function_definition
 ## 如何debug
 
 ### yydebug
-yyparse部分出现问题，即bison的文法规约等出现问题，直接在main.cpp中加入yydebug为1的代码(如下图)，即可打印出详细的bison文法移进规约栈的信息，从而进行定位。<img src="../images/bison/yydebug.png" alt="alt text" style="zoom:50%;" />
+yyparse部分出现问题，即bison的文法规约等出现问题，直接在main.cpp中加入yydebug为1的代码(如下图)，即可打印出详细的bison文法移进规约栈的信息，从而进行定位。
+![alt text](../images/bison/yydebug.png)
 
 
 需要提醒的是，这部分是不适合使用断点进行调试的，因为其会跳到bison生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。文法的移进规约直接使用yydebug，而其语义动作的定位需要再配合`std::cout`打印即可。
@@ -930,14 +934,14 @@ void printToTxtFile(std::string message) {
 - **指针问题**
 取type的时候，其指针可能是空的，如果这个时候再取其texp对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。比如，如下图所示。
 
-<img src="../images/bison/point.png" alt="alt text" style="zoom:70%;" />
+![alt text](../images/bison/point.png)
 
 - **更改ASG的`Type`类型**
 更改ASG的`Type`类型，只能改变指针指向，不能直接去赋值。比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为ASG结构体的`Type`为`const Type *`类型。
 
-<img src="../images/bison/type.png" alt="alt text" style="zoom:67%;" />
+![alt text](../images/bison/type.png)
 
 ## 其他说明
 实验二的BreakStmt中的loop属性，这个属性不用处理不用管，本实验不会用到（实验三也不会用到）
 
-<img src="../images/bison/loop.png" alt="alt text" style="zoom:67%;" />
+![alt text](../images/bison/loop.png)
