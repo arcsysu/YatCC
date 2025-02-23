@@ -930,14 +930,14 @@ void printToTxtFile(std::string message) {
 - **指针问题**
 取type的时候，其指针可能是空的，如果这个时候再取其texp对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。比如，如下图所示。
 
-<img src="../images/bison/point.png" alt="alt text" style="zoom:70%;" />
+![alt text](../images/bison/point.png)
 
 - **更改ASG的`Type`类型**
 更改ASG的`Type`类型，只能改变指针指向，不能直接去赋值。比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为ASG结构体的`Type`为`const Type *`类型。
 
-<img src="../images/bison/type.png" alt="alt text" style="zoom:67%;" />
+![alt text](../images/bison/type.png)
 
 ## 其他说明
 实验二的BreakStmt中的loop属性，这个属性不用处理不用管，本实验不会用到（实验三也不会用到）
 
-<img src="../images/bison/loop.png" alt="alt text" style="zoom:67%;" />
+![alt text](../images/bison/loop.png)
