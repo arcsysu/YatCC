@@ -30,6 +30,7 @@ Flex和Bison生成的代码分别处于两个C源代码文件，它们各自单�
 Flex和Bison默认用法的场景是传统的命令行指令式程序，生成使用全局变量的不可重入代码，并且Flex固定地从`<stdio.h>`输入输出数据。两者的关系以Bison为主，Flex只是辅助的可选项：Bison从代码文件生成一个`int yyparse()`;函数，其内部调用两个需要我们补充定义的函数`int yylex()`;、`void yyerror(const char *)`来读取词法单元流和报告错误，Flex就是用于生成那个`yylex`函数。
 
 在联合使用时，我们应该**首先编写Bison语法定义（`.y`），通过前言区的`%token`定义有哪几种词法单元，然后在Flex代码中包含生成的头文件，再编写词法单元的解析规则**，这和我们实验1到实验2的顺序是相反的。知道这些之后，我们就得到了基本的文件骨架：
+
 - `parser.y`
 ``` cpp
 %code requires {
@@ -40,6 +41,7 @@ void yyerror(const char *);
 %%
 ```
 为了让Bison生成的代码能够通过编译环节，必须在其中加入`yylex`和`yyerror`的声明。
+
 - `lexer.l`
 ``` cpp
 %{
@@ -65,6 +67,7 @@ void yyerror (char const *);
 start: NUMBER | ADD NUMBER | SUB NUMBER;
 %%
 ```
+
 - `lexer.l`
 ``` cpp
 %{
@@ -906,7 +909,8 @@ function_definition
 ## 如何debug
 
 ### yydebug
-yyparse部分出现问题，即bison的文法规约等出现问题，直接在main.cpp中加入yydebug为1的代码(如下图)，即可打印出详细的bison文法移进规约栈的信息，从而进行定位。<img src="../images/bison/yydebug.png" alt="alt text" style="zoom:50%;" />
+yyparse部分出现问题，即bison的文法规约等出现问题，直接在main.cpp中加入yydebug为1的代码(如下图)，即可打印出详细的bison文法移进规约栈的信息，从而进行定位。
+![alt text](../images/bison/yydebug.png)
 
 
 需要提醒的是，这部分是不适合使用断点进行调试的，因为其会跳到bison生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。文法的移进规约直接使用yydebug，而其语义动作的定位需要再配合`std::cout`打印即可。
