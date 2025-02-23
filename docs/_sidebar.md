@@ -4,7 +4,7 @@
   * [环境配置](introduction/environment.md)
   * [实验框架使用方法](introduction/howtouse.md)
   * [在线评测系统使用方法](introduction/autograder.md)
-  * [AI工具配置与使用方法]()
+  * [AI工具配置与使用方法](introduction/aitools.md)
   * [帮助我们改进实验](introduction/helptoimprove.md)
 * Task0
   * [实验内容](task0_doc/task0.md)
