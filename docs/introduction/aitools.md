@@ -4,7 +4,7 @@
 
 ### 概述
 
-本文档介绍如何通过 VSCode 插件调用部署在天河二号上的 deepseek 服务并用于实验学习，我们将使用 **Roo Code** 插件来实现这个功能。
+本文档介绍如何通过 VSCode 插件调用部署在天河星逸上的 deepseek 服务并用于实验学习，我们将使用 **Roo Code** 插件来实现这个功能。
 
 当copilot可以使用时（如非web端），也可以参考第二部分copilot申请/使用教程来使用copilot达成类似效果。
 
@@ -12,14 +12,14 @@
 
 #### 前置条件
 
-- 安装好 VSCode（或登录使用Vscode Web版）
+- 安装好 VSCode（或登录使用YatCC-AI）
 - 正常网络连接
 - 获得助教提供的配置示例以及连接地址url
 
 #### 配置 Roo Code
 
 1. 进入插件，选择provider为 Openai Compatible
-2. 在底下填入服务器地址url（到时会提供），随便填一个密码，在model选择deepseek-r1，点击Save-Done
+2. 在底下填入服务器地址url（到时会提供），API-Kej将随链接一同提供，在model选择deepseek-r1，点击Save-Done
     ![配置1](../images/llmtools/配置1.gif)
 3. 如果想要修改配置，可以点击右上角的设置按钮，再次进入配置界面进行修改
     ![配置2](../images/llmtools/配置2.gif)
