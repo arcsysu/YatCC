@@ -19,7 +19,7 @@
 #### 配置 Roo Code
 
 1. 进入插件，选择provider为 Openai Compatible
-2. 在底下填入服务器地址url（到时会提供），API-Key，在model选择deepseek-r1，点击Save-Done
+2. 在底下填入服务器地址Base url和API-Key（助教提供），在model选择deepseek-r1，点击Save-Done
     ![配置1](../images/llmtools/配置1.gif)
 3. 如果想要修改配置，可以点击右上角的设置按钮，再次进入配置界面进行修改
     ![配置2](../images/llmtools/配置2.gif)
