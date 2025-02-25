@@ -1,10 +1,44 @@
 # 环境配置
-在本小节中，我们会带领同学们完成实验环境配置。为了尽可能地还原同学们环境配置的过程，这里采用一台从来没有进行过开发的新电脑进行演示。由于本实验需要配置 Docker 容器以及实验相关的编译工具，建议同学们预留`20 GB`的硬盘空间，以便下载安装所需软件。若硬盘空间不足，建议同学们选择[可选方案 3](#可选方案-3--命令行手动配置不使用-docker)进行配置
+在本小节中，我们会带领同学们完成实验环境配置。配置实验环境主要分为以下两种方式：
 
+* **在线平台（推荐使用）**：通过网页开启云端编译器开发环境，无需手动配置实验环境
+* 软件安装：基于项目提供的docker镜像或手动安装依赖库在本地完成环境配置
 
+## 在线平台
+
+YatCC为同学们提供了便捷的在线开发平台，同学们只需在浏览器中打开网页即可开启实验并享受平台提供的AI服务，无需进行繁琐的容器配置和依赖库安装。下面我们将展示在线开发平台的使用流程。
+
+1. 在浏览器中进入`https://yatcc-ai.com`网站，点击网站左上角的Get Started!图标
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_1.png)
+
+2. 输入学生学号与密码，点击登录键
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_2.png)
+
+3. 启动代码空间，刷新页面后即可观察到代码空间状态为运行中
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_3.png)
+
+4. 进入代码空间访问链接，点击查看密码按键并手动复制代码空间密码用于后续登录
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_4.png)
+
+5. 输入代码空间密码，进入代码空间
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_5.png)
+
+6. 成功进入云端代码空间，完成实验环境配置
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_6.png)
+
+7. 退出实验时，请点击工作台的停止按键，避免平台计算资源浪费
+
+![YatCC-OL使用流程](../images/environment/YatCC-OL_7.png)
 
 ## 软件安装
-由于大部分同学都是使用 `Windows` 电脑进行开发，所以这里采用Windows11系统进行演示。首先需要同学们下载并安装以下三种软件。由于 `Windows` 系统下 `docker` 的正常使用需要 `WSL` 环境，所以请同学们在安装 `docker` 之前先安装 `WSL`。(对于 `linux` 系统和  `mac` 系统的同学而言，只需要跳过 `WSL` 的安装即可)。
+
+为了尽可能地还原同学们环境配置的过程，这里采用一台从来没有进行过开发的新电脑进行演示。由于本实验需要配置 Docker 容器以及实验相关的编译工具，建议同学们预留`20 GB`的硬盘空间，以便下载安装所需软件。若硬盘空间不足，建议同学们选择[可选方案 3](#可选方案-3--命令行手动配置不使用-docker)进行配置。由于大部分同学都是使用 `Windows` 电脑进行开发，所以这里采用Windows11系统进行演示。首先需要同学们下载并安装以下三种软件。由于 `Windows` 系统下 `docker` 的正常使用需要 `WSL` 环境，所以请同学们在安装 `docker` 之前先安装 `WSL`。(对于 `linux` 系统和  `mac` 系统的同学而言，只需要跳过 `WSL` 的安装即可)。
 
 需要安装的软件如下：
 
@@ -27,7 +61,7 @@ WSL 是 Windows Subsystem for Linux 的简称，它是微软在 Windows 操作�
 ```shell
 wsl -l -v                       # 列举所有已安装的 Linux 系统
 wsl --set-default-version 2     # 设置 WSL 默认版本号为2
-wsl --install -d Ubuntu        # 安装 Ubuntu 系统
+wsl --install -d Ubuntu         # 安装 Ubuntu 系统
 ```
 
 ![WSL安装示意](../images/wsl1.png)
