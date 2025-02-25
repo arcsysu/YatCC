@@ -1,6 +1,27 @@
 # AI工具配置与使用方法
 
-## 第一部分：Deepseek 插件调用教程
+为了给同学们提供一个智能化的开发体验，我们在天河星逸超级计算机上部署了 **Deepseek-R1** 模型供大家进行调用。本文分为四个部分，将从注册API开始，逐步讲解如何全面使用便捷、智能的模型辅助服务，并提供用分别于 Task 1-4 的Prompt Example，亦会讲解如何进行有效的Prompt Engineering。
+
+## 第一部分：API-Key注册
+
+### 1. 注册账号
+
+- 访问[注册网址](http://505676.proxy.nscc-gz.cn:8888/register?aff=MP23)， **使用学号(请注意必须使用学号注册，否则账号将会被删除)** 注册账号，设置好密码后点击注册。注册成功后使用学号、密码进行登录。
+![api-注册](../images/llmtools/api-注册.png)
+
+### 2. 申请令牌
+
+- 登录后进入主界面，此时应该看见有一个默认的api key："default"，注意这个key是 **不可用** 的(可以直接删除)，需要点击"添加新的令牌"新建一个key。
+![api-主界面](../images/llmtools/api-主界面.png)
+- 进入新增令牌后，设置一个令牌名称，在"模型范围"中选择"deepseek-r1"，ip限制不用填写，点击"永不过期"和"设为无限额度，点击"提交"。
+![api-设置](../images/llmtools/api-设置.png)
+
+### 3. 获得API-Key
+
+- 返回主界面后可以看见新生成的key，点击"复制"按钮复制到剪贴板(无法复制时，从搜索栏进行复制)，形如sk-xxx，这个key就是我们后续使用的API-Key。
+![api-key](../images/llmtools/api-key.png)
+
+## 第二部分：Deepseek 插件调用教程
 
 ### 概述
 
@@ -14,12 +35,12 @@
 
 - 安装好 VSCode（或登录使用YatCC-AI）
 - 正常网络连接
-- 获得助教提供的配置示例以及连接地址url
+- 按照第一部分的内容注册好api-key，准备好Base URL（当前`http://505152.proxy.nscc-gz.cn:8888/v1/`）
 
 #### 配置 Roo Code
 
 1. 进入插件，选择provider为 Openai Compatible
-2. 在底下填入服务器地址Base url和API-Key（助教提供），在model选择deepseek-r1，点击Save-Done
+2. 在底下填入服务器地址Base url和API-Key，在model选择deepseek-r1，点击Save-Done
     ![配置1](../images/llmtools/配置1.gif)
 3. 如果想要修改配置，可以点击右上角的设置按钮，再次进入配置界面进行修改
     ![配置2](../images/llmtools/配置2.gif)
@@ -177,7 +198,7 @@ Share your current approach/code for targeted support!"
 
 ---
 
-## 第二部分：Copilot + VSCode 联动教程
+## 第三部分：Copilot + VSCode 联动教程
 
 ### 1. 准备工作
 
