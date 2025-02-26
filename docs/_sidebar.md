@@ -28,5 +28,9 @@
   * [框架代码介绍](task4_doc/framework.md)
   * [优化算法](task4_doc/optimizations.md)
   * [API 速查](task4_doc/apidoc.md)
+* Task5
+  * [实验介绍](task5_doc/overview.md)
 * Q&A
   * [常见问题与答案](QA.md)
+* 致谢
+  * [文档贡献者](contributors.md)
