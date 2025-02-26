@@ -122,42 +122,25 @@ systemctl start docker   #启动 docker 服务
 
 ## 可选方案 1 ⸺ Dev Containers 自动配置（需安装 Docker）
 
-此章节的步骤分为两种，取决于同学们前面[安装 Docker](#docker-安装) 的方式，如采用第一种方式安装Docker的同学，请继续往下看，如果是用第二种方式安装 Docker 的同学，请跳至[从 WSL2 启动 Dev Containers](#从-wsl2-启动-dev-containers) 继续操作。
+此章节的步骤分为两种，取决于同学们前面[安装 Docker](#docker-安装) 的方式，如采用第一种方式安装Docker的同学，请看[从 Windows 启动 Dev Containers](#从-Windows-启动-Dev-Containers)，如果是用第二种方式安装 Docker 的同学，请跳至[从 WSL2 启动 Dev Containers](#从-wsl2-启动-dev-containers) 继续操作。
 
-同学们打开 VSCode 之后需要点击下图红色三角形所示的按钮，进入到插件管理界面搜寻 `Dev Containers` 进行插件安装。
+### 从 Windows 启动 Dev Containers
+
+同学们首先需要从`https://github.com/arcsysu/YatCC`代码仓库中下载代码（使用`git clone`或手动下载zip包）。下载后打开 VSCode 代码编辑器，并打开下载好的代码文件夹。
+
+![dev安装示意1](../images/environment/devcon_1.png)
+
+在 VSCode 中点击下图红色三角形所示的按钮，进入到插件管理界面搜寻 `Dev Containers` 进行插件安装。
 
 ![VSCode 插件安装](../images/vscodeplugin.png)
 
 请同学们确保 Docker 服务处于**启动状态**后，请点击 VSCode 左下角的红色箭头所指的齿轮，然后再点击另外红色箭头所指的按钮打开 Command Palette，或使用快捷键 `Ctrl+Shift+P` 叫出 Command Palette。
 
-![dev安装示意](../images/devcon1.jpg)
+![dev安装示意1](../images/devcon1.jpg)
 
-此时在 VSCode 的顶部居中位置会出现如下图所示的内容，请同学们在出现的搜索栏中输入 `Dev Containers` 关键词，然后大家需要点击下图红色三角形所示的按钮 `Dev Containers: Clone Repository in Container Volume`。
+此时在 VSCode 的顶部居中位置会出现如下图所示的内容，请同学们在出现的搜索栏中输入 `Dev Containers` 关键词，然后大家需要点击下图红色三角形所示的按钮 `Dev Containers: Reopen in Container`。该操作表示将当前文件夹（YatCC代码仓库）以容器的形式打开并自动进行容器环境配置。
 
-![dev安装示意2](../images/devcon2.jpg)
-
-然后需要同学们在如下所示的界面输入实验仓库地址 `https://github.com/arcsysu/YatCC`，并且点击 `Clone git repository form URL` 按钮。
-
-
-![dev安装示意2](../images/newpull.png)
-
-
-<!-- 在这个时候 vscode 会出现下图所示的窗口提示同学们登录自己的 github 账号，请同学们点击下图中所示的`github`按钮
-
-![github 登录示意](../images/githublog.png)
-
-接着会出现如下图所示的窗口要求同学们确认是否同意该插件使用 github 账号进行登录，请同学们点击确认。
-
-![github 登录确认](../images/githublogconfirm.png)
-
-如果同学们的浏览器保存了 github 的登录信息，那么会出现下图所示的一个会话窗口，请同学们点击打开 vscode 即可。（如果同学们的浏览器没有保存 github 登录信息，需要多一个输入 github 账号密码进行登录的步骤）
-
-![github 登录确认](../images/githublogweb.png)
-
-
-成功授权 github 登录信息之后，同学们的电脑会回到 vscode 的界面，弹出如下所示窗口。请同学们选择前面我们 fork 到自己账号下的的实验代码仓库，选择主分支。
-
-![github 仓库选择](../images/githubrepselect.png) -->
+![dev安装示意2](../images/environment/devcon_2.png)
 
 此时 VSCode 便会自动开始实验环境的搭建与配置。点击右下角的 show log 即可观察环境配置进度,
 
@@ -167,27 +150,9 @@ systemctl start docker   #启动 docker 服务
 
 ![showok1](../images/showok1.jpg)
 
-如果在 Dev Container 配置时由于网络不稳定原因导致 Docker 镜像拉取失败，同学们可以尝试以下操作后重新进行 Dev Container 配置：
+如果顺利的话，vscode 的顶部还会弹出如图所示的窗口来提示同学们选择项目所示的编译器，请同学们选择箭头所示的 clang 18 即可。
 
-```bash
-# 使用命令行删除镜像缓存（也可以通过 Docker Desktop 界面删除镜像缓存）
-docker rmi sumuzhe317/sysu-lang:latest  # 删除本地缓存的实验镜像
-docker rmi vsc-volume-bootstrap:latest  # 删除本地缓存的 bootstrap 镜像
-
-# 从校内镜像源重新拉取镜像，并对镜像重命名
-docker pull docker.mirrors.matrix.moe/sumuzhe317/sysu-lang:latest &&
-docker tag docker.mirrors.matrix.moe/sumuzhe317/sysu-lang:latest sumuzhe317/sysu-lang:latest &&
-docker rmi docker.mirrors.matrix.moe/sumuzhe317/sysu-lang:latest
-
-# 若无法连接至校内镜像源，可使用 Docker 代理镜像源进行拉取
-docker pull dockerproxy.com/sumuzhe317/sysu-lang:latest &&
-docker tag dockerproxy.com/sumuzhe317/sysu-lang:latest sumuzhe317/sysu-lang:latest &&
-docker rmi dockerproxy.com/sumuzhe317/sysu-lang:latest
-```
-
-如果顺利的话，vscode 的顶部还会弹出如图所示的窗口来提示同学们选择项目所示的编译器，请同学们选择箭头所示的 clang14 即可。
-
-![showok2](../images/showok2.jpg)
+![showok2](../images/howtoconf_2.png)
 
 ### 从 WSL2 启动 Dev Containers
 
@@ -201,12 +166,13 @@ docker rmi dockerproxy.com/sumuzhe317/sysu-lang:latest
 git clone git@github.com:arcsysu/YatCC.git
 ```
 
-![clone 仓库](../images/wsl-git-clone.png)
-
 此时当前目录下会多一个 `YatCC` 目录，命令行输入 `code YatCC` 用 VSCode 开启该目录。
 
 ![从 WSL 启动 VSCode](../images/start-code-from-wsl.png)
 
+从WSL打开YatCC仓库后，后续操作与[从 Windows 启动 Dev Containers](#从-Windows-启动-Dev-Containers)相同。
+
+<!-- 
 如果先前在 WSL 环境中未安装过 Dev Container 插件，先到插件管理界面搜寻 Dev Containers 安装插件。
 
 ![安装 Dev Containers 插件](../images/install-dev-container.png)
@@ -219,9 +185,9 @@ git clone git@github.com:arcsysu/YatCC.git
 
 ![配置好的 Container](../images/dev-container-success.png)
 
-点击左侧 CMake 图标，在 Configure 可以设置项目使用的编译器，请同学们选择 Clang 14。
+点击左侧 CMake 图标，在 Configure 可以设置项目使用的编译器，请同学们选择 Clang 18。
 
-![编译器配置](../images/cmake-configuration.png)
+![编译器配置](../images/cmake-configuration.png) -->
 
 ### 注意事项
 
