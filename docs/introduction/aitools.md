@@ -466,3 +466,15 @@ F -> ( E ) | id
 [提示工程指南 | Prompt Engineering Guide](https://www.promptingguide.ai/zh)
 
 [Prompt Library | DeepSeek API Docs](https://api-docs.deepseek.com/zh-cn/prompt-library/?utm_source=ai-bot.cn)
+
+### Task 1-4 Prompt Examples 链接
+
+在每一章的overview的结尾都给出了prompt示例，大家可以选择性使用或优化这些prompt。
+
+- [Task1 Prompt Example](../task1_doc/overview.md#task1-prompt-example)
+
+- [Task2 Prompt Example](../task2_doc/overview.md#task2-prompt-example)
+
+- [Task3 Prompt Example](../task3_doc/overview.md#task3-prompt-example)
+
+- [Task4 Prompt Example](../task4_doc/overview.md#task4-prompt-example)
