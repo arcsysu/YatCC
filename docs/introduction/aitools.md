@@ -35,7 +35,7 @@
 
 - 安装好 VSCode（或登录使用YatCC-AI）
 - 正常网络连接
-- 按照第一部分的内容注册好api-key，准备好Base URL（当前`http://505152.proxy.nscc-gz.cn:8888/v1/`）
+- 按照第一部分的内容注册好api-key，准备好Base URL（当前`http://505676.proxy.nscc-gz.cn:8888/v1/`）
 
 #### 配置 Roo Code
 
