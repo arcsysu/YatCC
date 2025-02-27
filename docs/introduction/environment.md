@@ -152,7 +152,7 @@ systemctl start docker   #启动 docker 服务
 
 ![showok1](../images/showok1.jpg)
 
-如果顺利的话，vscode 的顶部还会弹出如图所示的窗口来提示同学们选择项目所示的编译器，请同学们选择箭头所示的 clang 18 即可。
+如果顺利的话，vscode 的顶部还会弹出如图所示的窗口来提示同学们选择项目所示的编译器，请同学们选择箭头所示的 GCC 13 即可。
 
 ![showok2](../images/howtoconf_2.png)
 

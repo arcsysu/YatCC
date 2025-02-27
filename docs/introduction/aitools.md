@@ -11,13 +11,15 @@
 
 ## 第一部分：API-Key注册
 
-### 1. 注册账号
+### 1. 登录账号
 
 - 访问[注册网址](http://505676.proxy.nscc-gz.cn:8888/register?aff=MP23)， **使用学号(请注意必须使用学号注册，否则账号将会被删除)** 注册账号，设置好密码后点击注册。注册成功后使用学号、密码进行登录。
 
   > 在2025春季学期，如果你已经填写了教学群中的注册问卷，无需进行注册，直接使用助教发送到你邮箱的账号密码登录API平台即可。
 
-  ![api-注册](../images/llmtools/api-注册.png)
+- ![api-注册](../images/llmtools/api-注册.png)
+- 访问[登录网址](http://505676.proxy.nscc-gz.cn:8888/login)，使用 **邮件下发** 的初始账号密码进行登录。
+- ![api-登录](../images/llmtools/api-登录.png)
 
 ### 2. 申请令牌
 
@@ -51,7 +53,6 @@
 
 1. 进入插件，选择provider为 Openai Compatible
 2. 在底下填入服务器地址Base url和API-Key，在model选择deepseek-r1，点击Save-Done
-    ![配置1](../images/llmtools/配置1.gif)
 3. 如果想要修改配置，可以点击右上角的设置按钮，再次进入配置界面进行修改
     ![配置2](../images/llmtools/配置2.gif)
 
@@ -470,3 +471,15 @@ F -> ( E ) | id
 [提示工程指南 | Prompt Engineering Guide](https://www.promptingguide.ai/zh)
 
 [Prompt Library | DeepSeek API Docs](https://api-docs.deepseek.com/zh-cn/prompt-library/?utm_source=ai-bot.cn)
+
+### Task 1-4 Prompt Examples 链接
+
+在每一章的overview的结尾都给出了prompt示例，大家可以选择性使用或优化这些prompt。
+
+- [Task1 Prompt Example](../task1_doc/overview.md#task1-prompt-example)
+
+- [Task2 Prompt Example](../task2_doc/overview.md#task2-prompt-example)
+
+- [Task3 Prompt Example](../task3_doc/overview.md#task3-prompt-example)
+
+- [Task4 Prompt Example](../task4_doc/overview.md#task4-prompt-example)
