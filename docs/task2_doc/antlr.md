@@ -261,7 +261,7 @@ a / 5
 a / 3
 a % 3
 ```
-前面我们提到步骤一我们需要在`/workspaces/SYsU-lang2/task/2/antlr/SYsUParser.g4`中对测试样例新出现的语法规则进行定义，所以现在我们需要在`SYsUParser.g4`中对乘法表达式，处罚表达式以及取模表达式进行语法规则的添加。
+前面我们提到步骤一我们需要在`/workspaces/SYsU-lang2/task/2/antlr/SYsUParser.g4`中对测试样例新出现的语法规则进行定义，所以现在我们需要在`SYsUParser.g4`中对乘法表达式，除法表达式以及取模表达式进行语法规则的添加。
 
 此时由于大家`pull`代码之后没有对`g4`文件做任何修改，它是如下图所示的。
 ```c++

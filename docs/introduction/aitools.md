@@ -256,8 +256,24 @@ Share your current approach/code for targeted support!"
 - 保证这时浏览器的定位在学校范围内，并且与刚才账单信息填写的地址一致，点击Continue验证位置，进入Upload proof界面说明通过了
   - ![申请界面2](../images/llmtools/8.%20申请界面2.png)
 - **注意：从这里开始可以重新打开vpn**
-- 按照模板文件（助教会发模板文件）进行制作，记得删除模板中的注释，然后用手机拍照上传（这里是因为电脑会直接显示虚拟摄像头失效）
-- 也可以直接用手机进入同一个申请界面直接拍照上传
+- 按r如下模板进行制作"学生证"，可以在电脑上填好打印，记得删除模板中的注释。
+
+```plaintext
+Ministry of Education Student Status Online Verification
+Name: Xiao Ming, // 姓名，与 GitHub 上支付信息名称一致
+Institution: Sun Yat-sen University, // 大学名称，必须是GitHub 上显示的英文名
+Level: Undergraduate,
+Class: 23 CS Class 5, // 班级，随便写
+Major: CS, // 专业，随便填
+Student ID: 1145141919810, // 学生证号，随便写
+Duration: 4 years,
+Type: Regular Higher Education,
+Mode: Full-time,
+Student Status: Registered (Expected Graduation Date: July 31,2028)// 毕业时间，随便写，但不要过于离谱
+// 写完后把注释删掉
+```
+
+- 用手机拍照上传（这里是因为电脑会直接显示虚拟摄像头失效），也可以直接用手机进入同一个申请界面直接拍照上传
 
 #### (4) 后续
 
