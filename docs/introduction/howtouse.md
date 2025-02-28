@@ -6,18 +6,12 @@
 
 在上一小节环境构造时，不管同学们采用的是 `dev containers` 自动构建的方法还是手动构建的方法，打开项目的方式都是一样的。同学们首先需要点击下图中左侧箭头所示的像一台电脑一样的按钮 `remote explorer`（一个 vscode 插件，需手动安装） ，然后点击`REMOTE EXPLORER`**后**的选择框，按下向下的类三角形按钮，选择红色箭头所示的`Dev Containers`选项，之后同学们便会在下图所示的界面，将鼠标放到 `YatCC`（如果是手动配置的环境，容器名称可能不同）的位置，点击鼠标右键，再点击`Open Container in xx Window`，即可成功打开我们的实验项目环境。
 
-
-![showlog](../images/howtoreopendev.jpg)
-
-
-
-
-
+![showlog](../images/howtoreopendev.png)
 
 ## 如何做实验
 虽然实验项目如下存在很多的文件夹，但是同学们最需要关心的只有`task`文件夹下的内容以及`config.cmake`
 
-![showlog](../images/howtodolab.jpg)
+![showlog](../images/howtodolab.png)
 
 在`config.cmake`的开头存在着以下一段代码，同学们需要在这段代码中填入你的学号和姓名。在这里实验一和实验二我们提供了多种完成的方式，同学们需要使用了某种方式进行实现之后，在使用上一小节介绍的方法进行编译构建之前，需要将你选择进行实现方法填入对应的地方。此外，下面这段代码中还提到了一个词`复活`，我们默认将复活设置为开启。我们设计的实验是前后连贯的，前一个实验的输出结果有可能是后一个实验的输入，但是我们考虑到同学们可能存在上一个实验精力不济无法取得满分的情况。在这种情况下开启`复活`，可以使得当前实验的输入不受上一个实验的输出影响（此时当前实验的输入结果为助教提前设计好的标准输入）
 
@@ -47,21 +41,22 @@ set(TASK4_REVIVE OFF)
 - 第二步，将鼠标放到下图所示的 `task1` 对应行的末尾，点击出现的小铅笔按钮（你可能需要把鼠标滚轮向下滑一点才能找到`TASK1`）
 - 第三步，对`Debug`目标以及`Launch`目标重复第二步中的操作
 
+以下图片演示了如何生成实验一的答案和分数(下一小节会介绍如何找到生成的标准答案)。请同学们注意，点击生成当前实验的分数前请先生成当前实验的答案（因为同学们的分数是通过比对标准答案输出和你的代码对应的输出而得到的）。另外由于实验默认开启复活机制，所以当前实验的输入是上一个实验的标准输出，这就意味着如果大家想要生成 task1 的标准答案请先生成 task0 的答案。
 
-这里需要进行这样的设置的原因是在后续CMAKE测试运行时并不知道要编译哪个目标，没有办法指定测试目标和构建目标之间的依赖，所以需要将三个目标的设置指代清晰。
+![showlog](../images/howtoscorenew.png)
 
-![showlog](../images/task1build.jpg)
+## 如何查看输出与得分
 
-以下图片演示了如何生成实验一的答案和分数(下一小节会介绍如何找到生成的标准答案)，请同学们注意，点击生成当前实验的分数前请先生成当前实验的答案（因为同学们的分数是通过比对标准答案输出和你的代码对应的输出而得到的）。另外还请同学们注意，由于实验默认开启复活机制，所以当前实验的输入是上一个实验的标准输出，这就意味着如果大家想要生成 task1 的标准答案请先生成 task0 的答案。
+假设我们现在评测task1，以下文件保存着实验的输出与得分
 
-![showlog](../images/howtogetscorenew.jpg)
-
-
-
+* `/YatCC/build/test/task1/score.txt`：点击`task1-score`后命令行输出的实验得分
+* `/YatCC/build/test/task1/Testing/Temporary/LastTest.log`：保存每个测例的输入输出路径，并记录运行测例时输出到stdout的内容（使用`printf`、`cout`等函数的输出结果）
+* `/YatCC/build/test/task1/functional-0/000_main.sysu.c/score.txt`：记录`functional-0/000_main.sysu.c`测例的得分（其他测例同理）
 
 ## 如何调试代码
+
 在这里首先介绍如何通过肉眼比对的方式来进行 debug，在上一小节中我们介绍了如何获得当前正在做的实验的标准答案，通过对比某个测试样例下标准答案和自己的输出的 debug 方式就是肉眼比对 debug 。以`000_main.sysu.c`这个测试样例为例子，同学们可以在
-`/workspaces/YatCC/build/test/task1/functional-0/`找到`000_main.sysu.c`这个文件夹，查看文件夹中的内容可以发现存在以下三个文件夹，通过查看以下三个文件夹中的内容即可进行 debug 。
+`/YatCC/build/test/task1/functional-0/`找到`000_main.sysu.c`这个文件夹，查看文件夹中的内容可以发现存在以下三个文件夹，通过查看以下三个文件夹中的内容即可进行 debug 。
 ```
 |-- answer.txt
 |-- output.txt
@@ -73,10 +68,6 @@ set(TASK4_REVIVE OFF)
 
 ![showlog](../images/maindebug.png)
 
-然后在`PROJECT STATUS`处将`Debug`和`Build`配置为`task1`
+然后点击左侧插件菜单栏中的量杯按钮`TESTING`。在对应测试样例的后面点击如下图所示的debug按钮即可进入调试的图形界面。若只需要测试task1的测例，则在搜索栏中输入task1进行筛选。最后，只需要点击`Debug Test`即可开启单个测例的单步调试。
 
-![showlog](../images/debugtest11.jpg)
-
-然后点击左侧插件菜单栏中的量杯按钮`TESTING`。在对应测试样例的后面点击如下图所示的debug按钮即可进入调试的图形界面。
-
-![showlog](../images/debugtest22.jpg)
+![showlog](../images/debugtest.png)

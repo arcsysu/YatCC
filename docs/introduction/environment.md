@@ -154,6 +154,24 @@ systemctl start docker   #启动 docker 服务
 
 ![showok2](../images/howtoconf_2.png)
 
+若YatCC实验团队更新实验镜像，同学们需要在命令行终端中手动更新镜像并重新构建容器：
+
+```shell
+# 查看当前正在运行的容器
+docker ps
+
+# 删除基于旧镜像构建的容器（容器ID在 docker ps 中返回）
+docker rm a88076318069
+
+# 查看镜像
+docker images
+
+# 删除旧容器（镜像ID在 docker images 中返回）
+docker rmi db0053e9d7eb
+```
+
+成功删除旧容器与镜像后重新按照本节方法创建Dev Containers容器即可。
+
 ### 从 WSL2 启动 Dev Containers
 
 同学们如果使用第二种方式安装 Docker，配置步骤会稍显不同。首先我们需要打开 Windows 终端机进入 WSL2 命令行界面。
@@ -171,23 +189,6 @@ git clone git@github.com:arcsysu/YatCC.git
 ![从 WSL 启动 VSCode](../images/start-code-from-wsl.png)
 
 从WSL打开YatCC仓库后，后续操作与[从 Windows 启动 Dev Containers](#从-Windows-启动-Dev-Containers)相同。
-
-<!-- 
-如果先前在 WSL 环境中未安装过 Dev Container 插件，先到插件管理界面搜寻 Dev Containers 安装插件。
-
-![安装 Dev Containers 插件](../images/install-dev-container.png)
-
-如果已经安装 Dev Containers，用 VSCode 开启 `YatCC` 目录后右下角会显示 Dev Containers 的提示，点击 `Reopen in Container` 按钮会自动进行环境配置。
-
-![从 Dev Containers 启动镜像](../images/reopen-in-container.png)
-
-配置完成后，点击左侧 Remote Explorer 按钮进入 Remote Exploer 管理界面，下拉选单选择 `Dev Containers` 会出现刚才配置好的容器，点击中间的 `Open in Container in New Window` 就会开启配置好开发环境的 VSCode 工作区，同学们下次要进入工作区只需要在 WSL 开启 VSCode，从这个界面进入就行了。
-
-![配置好的 Container](../images/dev-container-success.png)
-
-点击左侧 CMake 图标，在 Configure 可以设置项目使用的编译器，请同学们选择 Clang 18。
-
-![编译器配置](../images/cmake-configuration.png) -->
 
 ### 注意事项
 
