@@ -16,7 +16,7 @@
 
   > 在2025春季学期，如果你已经填写了教学群中的注册问卷，无需进行注册，直接使用助教发送到你邮箱的账号密码登录API平台即可。
 
-- ![api-注册](../images/llmtools/api-注册.png)
+- ![api-登录](../images/llmtools/api-登录.png)
 - 访问[登录网址](http://505676.proxy.nscc-gz.cn:8888/login)，使用 **邮件下发** 的初始账号密码进行登录。
 - ![api-登录](../images/llmtools/api-登录.png)
 
