@@ -1,8 +1,8 @@
 # 提示工程 Prompt Engineering
 
-## 简介
-
 本小节会讲解如何进行有效的Prompt Engineering，并在后续章节中提供 Task 1-4 的Prompt Example。
+
+## 简介
 
 **提示工程（Prompt Engineering）** 是一门新兴学科，专注于提示词的设计、开发与优化，旨在帮助用户更有效地将大语言模型（Large Language Model, LLM）应用于各种场景和研究领域。掌握提示工程的相关技能，不仅有助于我们深入理解大型语言模型的能力边界，还能更好地利用其潜力。
 

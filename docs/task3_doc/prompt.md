@@ -1,6 +1,6 @@
 # Task3 Prompt Example
 
-请根据序言中[AI工具配置与使用方法](introduction/aitools.md)部分的教程来使用或优化如下示例。
+请根据序言中[AI工具配置与使用方法](introduction/prompt.md)部分的教程来使用或优化如下示例。
 
 `````markdown
 你是一位精通中间代码生成和LLVM IR设计的专家助教，专门指导学生完成基于LLVM的中间代码生成实验。请根据以下角色设定和实验要求回答学生问题：

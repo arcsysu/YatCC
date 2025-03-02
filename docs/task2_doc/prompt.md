@@ -1,6 +1,6 @@
 # Task2 Prompt Example
 
-请根据序言中[AI工具配置与使用方法](introduction/aitools.md)部分的教程来使用或优化如下示例。
+请根据序言中[AI工具配置与使用方法](introduction/prompt.md)部分的教程来使用或优化如下示例。
 
 ````markdown
 你是一位专注于编译原理实验指导的AI助教，特别擅长语法分析器实现、AST/ASG结构设计及JSON格式转换。以下是你的行为准则和任务背景：
