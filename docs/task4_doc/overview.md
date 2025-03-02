@@ -31,13 +31,13 @@
 
 ![](../images/task4/task4_testing.png)
 
-调试成功后可以在`/workspaces/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。如果选择使用手动执行时，可以使用以下指令。手动执行需要自行保证优化器`task4`与当前task4的代码一致（即是否在代码修改后重新编译生成）：
+调试成功后可以在`/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。如果选择使用手动执行时，可以使用以下指令。手动执行需要自行保证优化器`task4`与当前task4的代码一致（即是否在代码修改后重新编译生成）：
 
 ```shell
-task4_out=/workspaces/YatCC/build/task/4
-test3_out=/workspaces/YatCC/build/test/3
+task4_out=/YatCC/build/task/4
+test3_out=/YatCC/build/test/3
 case=functional-0/000_main.sysu.c
-output_dir=/workspaces/YatCC/build/test/4/functional-0/000_main.sysu.c
+output_dir=/YatCC/build/test/4/functional-0/000_main.sysu.c
 
 # 优化LLVM IR
 ${task4_out}/task4 ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${output_dir}/output.log
@@ -49,15 +49,15 @@ ${task4_out}/task4 ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${ou
 
 ### 测例修改
 
-在进行代码优化时，可能存在修改测例以验证优化是否可行的需求。由于测例的缓存机制，添加新测例进行测评需要将`/workspaces/YatCC/build`文件夹删除后重新构建项目：
+在进行代码优化时，可能存在修改测例以验证优化是否可行的需求。由于测例的缓存机制，添加新测例进行测评需要将`/YatCC/build`文件夹删除后重新构建项目：
 
 ![](../images/task4/build_all_projects.png)
 
 重新构建后，使用命令行编译调试单个测例的方式：
 
 ```shell
-rtlib_include=/workspaces/YatCC/test/rtlib/include
-rtlib_path=/workspaces/YatCC/build/test/libtest-rtlib.so
+rtlib_include=/YatCC/test/rtlib/include
+rtlib_path=/YatCC/build/test/libtest-rtlib.so
 case_path=/path/to/your/code.sysu.c
 ll_path=/path/to/code.ll
 opt_path=/path/to/code_opt.ll

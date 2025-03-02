@@ -22,7 +22,7 @@
 2. 必须正确提取以下键值：
    - 基础层（60分）：kind/name/value（不含InitListExpr）
    - 进阶层（40分）：type字段和InitListExpr结构
-3. 参考标准：`/workspaces/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`
+3. 参考标准：`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`
 
 **典型问题场景**（需重点覆盖）：
 - JSON节点结构理解（如TranslationUnitDecl的inner结构）

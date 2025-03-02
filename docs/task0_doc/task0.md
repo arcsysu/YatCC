@@ -69,7 +69,7 @@ main()
 ```bash
 [main] Building folder: YatCC task0
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0 --
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0 --
 [build] [1/2  50% :: 0.661] Building CXX object task/0/CMakeFiles/task0.dir/main.cpp.o
 [build] [2/2 100% :: 0.728] Linking CXX executable task/0/task0
 [driver] Build completed: 00:00:00.781
@@ -85,8 +85,8 @@ main()
 ```bash
 [main] Building folder: YatCC task0-score
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0-score --
-[build] [1/1   0% :: 0.000] cd /workspaces/YatCC/build/test/task0 && /usr/bin/python3.10 /workspaces/YatCC/test/task0/score.py /workspaces/YatCC/build/test/task0 /workspaces/YatCC/build/task/0/task0
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0-score --
+[build] [1/1   0% :: 0.000] cd /YatCC/build/test/task0 && /usr/bin/python3.10 /YatCC/test/task0/score.py /YatCC/build/test/task0 /YatCC/build/task/0/task0
 [build] task0 总分:100.0
 [build] 
 [build] task0    100.00/100.00  Hello, SYsU-lang!
@@ -106,16 +106,16 @@ main()
 ```bash
 [main] Building folder: YatCC task0-pack
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0-pack --
-[build] [1/1 100% :: 0.008] cd /workspaces/YatCC/task && /usr/bin/cmake -E tar cvfJ /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz /workspaces/YatCC/task/0 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0-pack --
+[build] [1/1 100% :: 0.008] cd /YatCC/task && /usr/bin/cmake -E tar cvfJ /YatCC/build/task/task0.0123456789-某某某.tar.xz /YatCC/task/0 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。
 [build] 0
 [build] 0/README.md
 [build] 0/config.cmake
 [build] 0/main.cpp
 [build] 0/CMakeLists.txt
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
 [driver] Build completed: 00:00:00.029
 [build] Build finished with exit code 0
 ```
