@@ -243,11 +243,11 @@ operator()(ast::FunctionDefinitionContext* ctx) //处理函数定义，创建一
 
 在同学们完成了上述的解耦工作之后，接着就需要完成`antlr`语法分析器的完成。同学们需要完成`/workspaces/SYsU-lang2/task/2/antlr/SYsUParser.g4`中的语法规则的编辑。对于语法规则应该如何编写，语法规则应该编写哪些内容，同学们可以根据测试样例的内容进行一一编写，接下来我们会以一些测试样例为例进行一些演示。
 
-在同学们完成词法单元的名字填写之前，直接运行从远程仓库拉下来的代码大概能得到 20 分左右（这里提到20分左右是因为之前评分代码有bug，现在的最新情况是和const相关的样例会扣分）。 在按照上一节中的指引填写词法单元的名字映射之后重新运行评分脚本，此时同学们可以获得 30 分左右。所以下图所示的几个样例同学们首先要解决的测试样例。
+在同学们完成词法单元的名字填写之前，直接运行从远程仓库拉下来的代码大概能得到 20 分左右。 在按照上一节中的指引填写词法单元的名字映射，并依照下方指引，完成第一个语法规则的编写后，重新运行评分脚本，此时同学们可以获得 30 分左右。所以下图所示的几个样例同学们首先要解决的测试样例。
 
 ![antlr 任务一](../images/task2_antlr/scoreExam.jpg)
 
-要想一个测试样例拿到满分我们需要完成两个步骤，第一个步骤是对该样例中首次出现的语法规则在`/workspaces/SYsU-lang2/task/2/antlr/SYsUParser.g4`中进行定义。第二个步骤是在`/workspaces/SYsU-lang2/task/2/antlr/Ast2Asg.cpp`和`/workspaces/SYsU-lang2/task/2/antlr/Ast2Asg.hpp`中对我们新添加的语法规则进行处理，并且如果`Ast2Asg.cpp`中有新增函数，`hpp`文件需要同步更新。。
+要想一个测试样例拿到满分我们需要完成两个步骤，第一个步骤是对该样例中首次出现的语法规则在`/workspaces/SYsU-lang2/task/2/antlr/SYsUParser.g4`中进行定义。第二个步骤是在`/workspaces/SYsU-lang2/task/2/antlr/Ast2Asg.cpp`和`/workspaces/SYsU-lang2/task/2/antlr/Ast2Asg.hpp`中对我们新添加的语法规则进行处理，并且如果`Ast2Asg.cpp`中有新增函数，`hpp`文件**需要同步更新**。
 
 那么就以下图所示的几个测试样例为例, 向同学们演示如何做我们的步骤一和步骤二。
 
@@ -553,5 +553,4 @@ Ast2Asg::operator()(ast::MultiplicativeExpressionContext* ctx)
 1. 同学们首先需要填写`/task/2/antlr/SYsULexer.tokens`中所有测试样例需要用到的`token`名字，在构建项目之后`/build/task/2/antlr/SYsULexer.tokens.hpp`中会自动生成一些`k`字母开头的`constexper`定义，最后在`/task/2/antlr/SYsULexer.cpp`中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射就完成了我们的第一个任务。
 
 2. 在`SYsUParser.g4`中修改了已有的规则就需要在`Ast2Asg.cpp`中对应的处理函数处做修改。如果在`SYsUParser.g4`中添加了新的规则就需要在`Ast2Asg.cpp`中添加新的处理函数。并且如果`Ast2Asg.cpp`中有新增函数，`hpp`文件需要同步更新。
-
 
