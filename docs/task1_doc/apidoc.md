@@ -1,6 +1,6 @@
 # API速查
 
-## antlr 的 API 文档
+## antlr API 文档
 
 ### Lexer（词法分析器基础类）
 Lexer类是所有由ANTLR生成的词法分析器的基类。它负责将输入的字符流（CharStream）转换成一个个的词法单元（Token）。
@@ -31,22 +31,7 @@ Vocabulary接口提供了一种方式来访问由词法分析器使用的词法�
 - getDisplayName(int tokenType)：根据词法单元的类型返回最适合显示的名称。
 ```
 
-### CharStream（字符流接口）
-CharStream是一个接口，定义了ANTLR词法分析器从中读取输入文本的字符流的方法。这个接口允许ANTLR以统一的方式处理不同来源的文本输入。
-
-```
-主要方法和用法：
-- consume()：消费（读取）当前的字符，并将指针移动到下一个字符。
-- LA(int i)：查看向前第i个字符，但不从流中消费它。LA(1)表示查看下一个字符。
-- mark()：标记当前流的状态，以便之后可以调用release()回到这个状态。
-- release(int marker)：回到由mark()方法标记的状态。
-- seek(int index)：将字符流的当前位置设置为index。
-- getText(Interval interval)：获取指定区间内的文本。
-```
-
-
-
-## flex 的 API 文档
+## flex API 文档
 在使用 Flex 构建词法分析器时，同学主要会与 Flex 的宏定义、函数和配置选项打交道。Flex 是一个为了快速生成词法分析器的工具，它不像 ANTLR 那样有一个面向对象的 API 集合，而是基于一系列的宏定义和函数来工作。以下是在使用 Flex 构建词法分析器过程中最可能用到的关键概念和组件：
 
 ###  宏定义和特殊规则
