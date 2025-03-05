@@ -1,5 +1,6 @@
 # 实验内容
-实验 0 存在的目的是保证每一位同学都已经配置好了实验环境并且学会了使用实验框架，并且获得使用大语言模型来辅助代码开发的第一手体验。<u>在本次编译课程实验中，我们助教团队提供了 DeepSeek-R1</u>，供大家使用。
+
+实验 0 存在的目的是保证每一位同学都已经配置好了实验环境并且学会了使用实验框架，并且获得使用大语言模型来辅助代码开发的第一手体验。<u>在本次编译课程实验中，我们助教团队提供了 DeepSeek-R1</u>，为同学们提供大模型问答、代码修改等功能。
 
 首先请同学们完成实验项目的配置。实现项目配置包括确定编译器版本、工具可用性、库文件位置等操作。要完成实验项目配置，同学们首先需要点击左侧插件菜单栏中的CMAKE按钮进入到如下图所示的界面，然后请同学们点击`Delete Cache and Reconfigure`这个按钮进行项目代码的配置。
 
@@ -68,7 +69,7 @@ main()
 ```bash
 [main] Building folder: YatCC task0
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0 --
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0 --
 [build] [1/2  50% :: 0.661] Building CXX object task/0/CMakeFiles/task0.dir/main.cpp.o
 [build] [2/2 100% :: 0.728] Linking CXX executable task/0/task0
 [driver] Build completed: 00:00:00.781
@@ -84,8 +85,8 @@ main()
 ```bash
 [main] Building folder: YatCC task0-score
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0-score --
-[build] [1/1   0% :: 0.000] cd /workspaces/YatCC/build/test/task0 && /usr/bin/python3.10 /workspaces/YatCC/test/task0/score.py /workspaces/YatCC/build/test/task0 /workspaces/YatCC/build/task/0/task0
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0-score --
+[build] [1/1   0% :: 0.000] cd /YatCC/build/test/task0 && /usr/bin/python3.10 /YatCC/test/task0/score.py /YatCC/build/test/task0 /YatCC/build/task/0/task0
 [build] task0 总分:100.0
 [build] 
 [build] task0    100.00/100.00  Hello, SYsU-lang!
@@ -105,16 +106,16 @@ main()
 ```bash
 [main] Building folder: YatCC task0-pack
 [build] Starting build
-[proc] Executing command: /usr/bin/cmake --build /workspaces/YatCC/build --config Debug --target task0-pack --
-[build] [1/1 100% :: 0.008] cd /workspaces/YatCC/task && /usr/bin/cmake -E tar cvfJ /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz /workspaces/YatCC/task/0 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。
+[proc] Executing command: /usr/bin/cmake --build /YatCC/build --config Debug --target task0-pack --
+[build] [1/1 100% :: 0.008] cd /YatCC/task && /usr/bin/cmake -E tar cvfJ /YatCC/build/task/task0.0123456789-某某某.tar.xz /YatCC/task/0 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。 && echo 作业已打包，请提交\ '/YatCC/build/task/task0.0123456789-某某某.tar.xz'\ 到评测服务器。
 [build] 0
 [build] 0/README.md
 [build] 0/config.cmake
 [build] 0/main.cpp
 [build] 0/CMakeLists.txt
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
-[build] 作业已打包，请提交 /workspaces/YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
+[build] 作业已打包，请提交 /YatCC/build/task/task0.0123456789-某某某.tar.xz 到评测服务器。
 [driver] Build completed: 00:00:00.029
 [build] Build finished with exit code 0
 ```

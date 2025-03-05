@@ -6,13 +6,6 @@
 
 [The Core LLVM Class Hierarchy Reference](https://www.llvm.org/docs/ProgrammersManual.html#id128)
 
-[LLVM IR 快速上手](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/llvm_ir_quick_primer.html) [强烈推荐]
-
-[LLVM 中的 SSA](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/llvm_ir_ssa.html) [强烈推荐]
-
-[LLVM 架构中最为重要的概念](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/design_hints.html) [强烈推荐]
-
-
 ### LLVM IR 结构
 
 对于下述源代码，假设文件名为 test.c：
