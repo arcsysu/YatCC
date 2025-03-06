@@ -191,10 +191,10 @@ F -> ( E ) | id
 
 在每一章的Prompt示例小节都给出了prompt示例，大家可以选择性使用或优化这些prompt。
 
-- [Task1 Prompt Example](../task1_doc/prompt.md#task1-prompt-example)
+- [Task1 Prompt Example](task1_doc/prompt.md#task1-prompt-example)
 
-- [Task2 Prompt Example](../task2_doc/prompt.md#task2-prompt-example)
+- [Task2 Prompt Example](task2_doc/prompt.md#task2-prompt-example)
 
-- [Task3 Prompt Example](../task3_doc/prompt.md#task3-prompt-example)
+- [Task3 Prompt Example](task3_doc/prompt.md#task3-prompt-example)
 
-- [Task4 Prompt Example](../task4_doc/prompt.md#task4-prompt-example)
+- [Task4 Prompt Example](task4_doc/prompt.md#task4-prompt-example)
