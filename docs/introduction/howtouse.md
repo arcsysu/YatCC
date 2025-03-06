@@ -1,10 +1,14 @@
 # 实验框架使用方法
-在前面环境搭建的文档中我们提到了如果同学们使用我们提供的 vscode + dev containers 对实验项目进行构造，同学们将体会到使用助教提前编辑好的脚本的便利，在本节中我们将对如何使用我们的实验框架进行详细的介绍。
+
+在前面环境搭建的文档中我们提到了如果同学们使用我们提供的在线代码仓库或 VSCode + Dev Containers 对实验项目进行构造，同学们将体会到使用助教提前编辑好的脚本的便利，在本节中我们将对如何使用我们的实验框架进行详细的介绍。
 
 ## 如何打开项目
-在上一节中我们带领同学们们完成了实验环境的配置。如果同学们在环境配置结束后对 vscode 进行了关闭，可能会遇到不知道如何再次进入我们已经配好的环境的情况，所以在这一小节中我们将向同学们介绍如何在 vscode 中打开我们的项目。
 
-在上一小节环境构造时，不管同学们采用的是 `dev containers` 自动构建的方法还是手动构建的方法，打开项目的方式都是一样的。同学们首先需要点击下图中左侧箭头所示的像一台电脑一样的按钮 `remote explorer`（一个 vscode 插件，需手动安装） 。后续步骤如下：
+> 此操作面向使用 Dev Containers 完成实验的同学，使用其他方式配置环境的同学无需进行。
+
+在上一节中我们带领同学们们完成了实验环境的配置。如果同学们在环境配置结束后对 VSCode 进行了关闭，可能会遇到不知道如何再次进入我们已经配好的环境的情况，所以在这一小节中我们将向同学们介绍如何在 VSCode 中打开我们的项目。
+
+在上一小节环境构造时，不管同学们采用的是 `Dev Containers` 自动构建的方法还是手动构建的方法，打开项目的方式都是一样的。同学们首先需要点击下图中左侧箭头所示的像一台电脑一样的按钮 `Remote Explorer`（一个 VSCode 插件，需手动安装） 。后续步骤如下：
 
 1. 点击`REMOTE EXPLORER`后的选择框
 2. 按下向下的类三角形按钮，选择红色箭头所示的`Dev Containers`选项，之后同学们便会在下图所示的界面
@@ -12,7 +16,29 @@
 
 ![showlog](../images/howtoreopendev.png)
 
+## 如何更新项目
+
+由于我们的代码仍处于不断更新与完善的阶段，同学们在实验发布或更新时需要重新拉取位于 Github 上的代码。若当前仓库使用通过`Download ZIP`直接下载源代码，此时`/path/to/YatCC`目录下不包含`.git`文件夹，此时我们需要使用以下代码跟踪远端代码仓库并拉取代码：
+
+```shell
+git init
+git branch -m main
+git remote add origin https://ghfast.top/https://github.com/arcsysu/YatCC.git
+```
+
+完成上述操作后，YatCC目录下会出现`.git`文件夹，说明当前项目已关联远端代码仓库。若当前目录已包含`.git`文件夹，则执行`git init`时会出现`Reinitialized existing Git repository in ...`提示。跟踪远端代码仓库后，使用以下指令保存当前修改并更新代码：
+
+```shell
+git fetch origin main
+git reset --soft origin/main
+git stash
+git stash pop
+```
+
+完成上述操作后，实验代码已和远端代码仓库同步，同学们可以继续开始实验。
+
 ## 如何做实验
+
 虽然实验项目如下存在很多的文件夹，但是同学们最需要关心的只有`task`文件夹下的内容以及`config.cmake`
 
 ![showlog](../images/howtodolab.png)
