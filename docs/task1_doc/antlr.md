@@ -99,5 +99,4 @@ for (auto&& token : tokens.getTokens())
     }
 ```
 
-`for`循环中剩下的代码用于判断是否输出`[StartOfLine]`和`[LeadingSpace]`以及输出最终结果，这些代码不用同学们进行修改，所以不做更多的介绍。但对`Loc`信息进行提取，包括简单的`token`行号以及列号，`token`所在的文件名的提取需要同学们自己实现。
-
+`for`循环中剩下的代码用于判断是否输出`[StartOfLine]`和`[LeadingSpace]`以及输出最终结果，在这里不做更多的介绍。
