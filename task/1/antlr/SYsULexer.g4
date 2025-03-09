@@ -72,7 +72,7 @@ OctalDigit
 
 
 // 预处理信息处理，可以从预处理信息中获得文件名以及行号
-// 预处理信息前面的数组即行号
+// 预处理信息中的第一个数字即为行号
 LineAfterPreprocessing
     :   '#' Whitespace* ~[\r\n]*
         -> skip
