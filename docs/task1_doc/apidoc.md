@@ -2,9 +2,9 @@
 
 ## ANTLR API 文档
 
-`ANTLR` 提供了一套面向对象的 API，用于构建和使用由 ANTLR 生成的词法分析器。
+ANTLR 提供了一套面向对象的 API，用于构建和使用由 ANTLR 生成的词法分析器。
 
-`ANTLR`的官方文档可以点击[这里](https://github.com/antlr/antlr4/blob/master/doc/index.md)，完整的 API 文档可以在[这里](https://www.antlr.org/api/Java/index.html)找到。下面简单介绍实验涉及到的一些核心类和接口，方便同学们在编写代码时查阅。
+ANTLR的官方文档可以点击[这里](https://github.com/antlr/antlr4/blob/master/doc/index.md)，完整的 API 文档可以在[这里](https://www.antlr.org/api/Java/index.html)找到。下面简单介绍实验涉及到的一些核心类和接口，方便同学们在编写代码时查阅。
 
 ### Lexer（词法分析器基础类）
 
@@ -76,7 +76,3 @@ Github 上有 flex 的[完整文档](https://westes.github.io/flex/manual/)，�
 - `.`匹配除了换行符以外的任意单个字符。
 - `*`、`+`和`?`分别表示前面的元素出现任意次、至少一次、至多一次。
 - `|`用于分隔选择项，表示或的关系。
-
-```
-
-```

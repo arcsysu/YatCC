@@ -2,7 +2,7 @@
 
 **ANTLR**（ANother Tool for Language Recognition）是一个强大的开源生成工具，支持生成词法分析器、解析器以及树解析器。在接下来的 task2 中，我们也会用到它。
 
-本实验中，我们提供了一个基于`ANTLR`的残缺词法分析器，其代码框架如下：
+本实验中，我们提供了一个基于 ANTLR 的残缺词法分析器，其代码框架如下：
 
 ```text
 -- antlr/
@@ -18,7 +18,7 @@
 
 `SYsULexer.g4`是词法分析器的核心文件，其中定义了词法分析器的规则。
 
-`ANTLR` 会根据`.g4`文件生成`SYsULexer.cpp`和`SYsULexer.h`两个文件，其中定义了继承自`antlr4::Lexer`的`SYsULexer`类，供主程序使用。`SYsULexer`类的定义是根据我们编写的词法规则生成的，调用这个类的方法，就可以根据规则识别出各类词法单元了。在成功构建一次 task1 之后，你可以在`/YatCC/build/antlr4_generated_src/task1-antlr/`下看到 ANTLR 的产物。
+ANTLR 会根据`.g4`文件生成`SYsULexer.cpp`和`SYsULexer.h`两个文件，其中定义了继承自`antlr4::Lexer`的`SYsULexer`类，供主程序使用。`SYsULexer`类的定义是根据我们编写的词法规则生成的，调用这个类的方法，就可以根据规则识别出各类词法单元了。在成功构建一次 task1 之后，你可以在`/YatCC/build/antlr4_generated_src/task1-antlr/`下看到 ANTLR 的产物。
 
 ---
 
@@ -120,7 +120,7 @@ for (auto&& token : tokens.getTokens()) {
 
 ---
 
-`ANTLR`会给我们在`SYsULexer.g4`定义的每条规则，生成一个特定的类型 ID，可以通过`Token::getType()`来获取。
+ANTLR 会给我们在`SYsULexer.g4`定义的每条规则，生成一个特定的类型 ID，可以通过`Token::getType()`来获取。
 
 同时，`SYsULexer`类中还有一个`Vocabulary`类对象`vocabulary`，用于保存类型 ID 与我们取的“规则名”之间的映射关系。
 
