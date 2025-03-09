@@ -12,7 +12,7 @@
 * Task1
   * [实验介绍](task1_doc/overview.md)
   * [使用 flex 完成 Task1](task1_doc/flex.md)
-  * [使用 antlr 完成 Task1](task1_doc/antlr.md)
+  * [使用 ANTLR 完成 Task1](task1_doc/antlr.md)
   * [Prompt示例](task1_doc/prompt.md)
   * [API 速查](task1_doc/apidoc.md)
 * Task2

@@ -1,40 +1,41 @@
 # API 速查
 
-## antlr API 文档
+## ANTLR API 文档
+
+`ANTLR` 提供了一套面向对象的 API，用于构建和使用由 ANTLR 生成的词法分析器。
+
+`ANTLR`的官方文档可以点击[这里](https://github.com/antlr/antlr4/blob/master/doc/index.md)，完整的 API 文档可以在[这里](https://www.antlr.org/api/Java/index.html)找到。下面简单介绍实验涉及到的一些核心类和接口，方便同学们在编写代码时查阅。
 
 ### Lexer（词法分析器基础类）
 
-Lexer 类是所有由 ANTLR 生成的词法分析器的基类。它负责将输入的字符流（CharStream）转换成一个个的词法单元（Token）。
+`Lexer` 类是所有由 ANTLR 生成的词法分析器的基类。它负责将输入的字符流（CharStream）转换成一个个的词法单元（Token）。
 
-```
-主要方法和用法：
-- nextToken()：从输入流中获取下一个词法单元。这是进行词法分析的主要方法。
-- reset()：重置词法分析器的状态，通常在开始新的分析前调用。
-- skip()：跳过当前正在考虑的字符或词法单元。
-```
+主要方法和描述：
 
-### Token（词法单元接口）
+- `nextToken()`：从输入流中获取下一个词法单元。这是进行词法分析的主要方法。
+- `reset()`：重置词法分析器的状态，通常在开始新的分析前调用。
+- `skip()`：跳过当前正在考虑的字符或词法单元。
 
-Token 接口表示由词法分析器生成的一个词法单元，包含了关于该词法单元的所有信息，如类型、文本和在输入文本中的位置。
+### Token（词法单元类）
 
-```
-主要属性：
-- getType()：获取词法单元的类型，类型通常由词法分析器的规则定义。
-- getText()：获取词法单元的文本内容。
-- getLine()：获取词法单元出现的行号。
-- getCharPositionInLine()：获取词法单元在其所在行的位置（字符偏移量）。
-```
+`Token` 类表示由词法分析器生成的一个词法单元，其中包含了关于该词法单元的所有信息，如类型、文本和在输入文本中的位置。
 
-### Vocabulary（词法符号名称访问）
+主要方法和描述：
 
-Vocabulary 接口提供了一种方式来访问由词法分析器使用的词法符号的名称。这对于打印调试信息或者在解析时生成更可读的输出非常有用。
+- `getType()`：获取词法单元的类型 ID，类型 ID 通常根据词法分析器的规则自动生成。
+- `getText()`：获取词法单元的文本内容。
+- `getLine()`：获取词法单元出现的行号。
+- `getCharPositionInLine()`：获取词法单元在其所在行的位置（字符偏移量）。
 
-```
+### Vocabulary（词典类）
+
+`Vocabulary` 类保存了词法分析器使用的词法符号的名称，并提供了一系列方法来访问，这对于打印调试信息或者在解析时生成更可读的输出非常有用。
+
 主要方法：
-- getSymbolicName(int tokenType)：根据词法单元的类型（tokenType）返回其符号名称。
-- getLiteralName(int tokenType)：根据词法单元的类型返回其字面值名称（如果有的话）。
-- getDisplayName(int tokenType)：根据词法单元的类型返回最适合显示的名称。
-```
+
+- `getSymbolicName(int tokenType)`：根据词法单元的类型（tokenType）返回其符号名称，也即在`.g4`文件中定义的规则名。
+- `getLiteralName(int tokenType)`：根据词法单元的类型返回其字面值名称（如果有的话）。
+- `getDisplayName(int tokenType)`：根据词法单元的类型返回最适合显示的名称。
 
 ## flex API 文档
 
@@ -75,3 +76,7 @@ Github 上有 flex 的[完整文档](https://westes.github.io/flex/manual/)，�
 - `.`匹配除了换行符以外的任意单个字符。
 - `*`、`+`和`?`分别表示前面的元素出现任意次、至少一次、至多一次。
 - `|`用于分隔选择项，表示或的关系。
+
+```
+
+```
