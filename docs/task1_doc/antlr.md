@@ -100,7 +100,7 @@ Newline
 
 ---
 
-首先，我们用`inFile`初始化一个 ANTLR 输入流对象`input`。然后实例化一个`SYsULexer`类对象`lexer`，并将输入流对象`input`传入。接着，我们用`lexer`初始化一个 token 流对象`tokens`。`fill()`方法会调用`lexer`，逐个读取输入的字符流并生成 token，最后存储到`tokens`内部的列表中。
+首先，我们用`inFile`初始化一个 ANTLR 输入流对象`input`。然后实例化一个`SYsULexer`类对象`lexer`，并将输入流对象`input`传入。接着，我们用`lexer`初始化一个 token 流对象`tokens`。`fill()`方法会调用`lexer`，逐个读取输入的字符流并生成 token，最后存储到`tokens`内部的列表中，直到处理完`<EOF>`。
 
 ```c++
 antlr4::ANTLRInputStream input(inFile);
@@ -110,7 +110,7 @@ antlr4::CommonTokenStream tokens(&lexer);
 tokens.fill();
 ```
 
-之后，就可以利用`getTokens()`方法逐个读取 token，并调用`print_token()`函数输出结果到指定文件中了。
+之后，就可以利用`getTokens()`方法，拿到一个`vector<Token*>`。最后用`for`循环遍历每个`Token`，并调用`print_token()`函数输出结果到指定文件中。
 
 ```c++
 for (auto&& token : tokens.getTokens()) {
@@ -147,6 +147,6 @@ if (tokenTypeMapping.find(tokenTypeName) != tokenTypeMapping.end()) {
 
 - 补充词法规则：首先在`SYsULexer.g4`中编写词法分析规则，然后给`main.cpp`中的`tokenTypeMapping`添加对应的映射。
 
-- 更新并记录状态信息：除了正确识别出每个词法单元的类型并输出外，我们还需要识别出词法单元出现在源文件中的位置和源文件路径，这要求我们在处理对应文本时记录与更新当前词法单元状态。你可能需要在`main.cpp`中定义一些全局变量来完成这项工作。
+- 更新状态信息：除了正确识别并输出每个词法单元的类型外，我们还需要输出每个词法单元出现在源文件中的位置和源文件路径。由于调用`fill()`是一次性处理并生成所有的`Token`，所以我们需要在循环调用`print_token()`时，根据当前拿到的`Token`，不断更新状态信息（例如行号、文件路径等）。你可能需要自己在`main.cpp`中定义一些全局变量来保存这些状态信息。
 
-- 输出结果：正确记录词法单元状态后，利用这些状态信息组装分析结果，最后通过`main.cpp`的`print_token()`函数输出到目标文件中。
+- 输出结果：根据**当前的**状态信息，组装结果并输出到指定文件中。
