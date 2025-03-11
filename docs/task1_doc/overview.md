@@ -38,16 +38,16 @@ int main(){
 用`clang`进一步对预处理后的源代码进行词法分析，其结果如下：
 
 ```c++
-int 'int'	 [StartOfLine]	Loc=<./functional-0/000_main.sysu.c:1:1>
-identifier 'main'	 [LeadingSpace]	Loc=<./functional-0/000_main.sysu.c:1:5>
-l_paren '('		Loc=<./functional-0/000_main.sysu.c:1:9>
-r_paren ')'		Loc=<./functional-0/000_main.sysu.c:1:10>
-l_brace '{'		Loc=<./functional-0/000_main.sysu.c:1:11>
-return 'return'	 [StartOfLine] [LeadingSpace]	Loc=<./functional-0/000_main.sysu.c:2:5>
-numeric_constant '3'	 [LeadingSpace]	Loc=<./functional-0/000_main.sysu.c:2:12>
-semi ';'		Loc=<./functional-0/000_main.sysu.c:2:13>
-r_brace '}'	 [StartOfLine]	Loc=<./functional-0/000_main.sysu.c:3:1>
-eof ''		Loc=<./functional-0/000_main.sysu.c:3:2>
+int 'int'  [StartOfLine]  Loc=<./functional-0/000_main.sysu.c:1:1>
+identifier 'main'  [LeadingSpace]  Loc=<./functional-0/000_main.sysu.c:1:5>
+l_paren '('  Loc=<./functional-0/000_main.sysu.c:1:9>
+r_paren ')'  Loc=<./functional-0/000_main.sysu.c:1:10>
+l_brace '{'  Loc=<./functional-0/000_main.sysu.c:1:11>
+return 'return'  [StartOfLine]  [LeadingSpace]  Loc=<./functional-0/000_main.sysu.c:2:5>
+numeric_constant '3'  [LeadingSpace]  Loc=<./functional-0/000_main.sysu.c:2:12>
+semi ';'  Loc=<./functional-0/000_main.sysu.c:2:13>
+r_brace '}'  [StartOfLine]  Loc=<./functional-0/000_main.sysu.c:3:1>
+eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 ```
 
 其中每行开头的单词是后面单引号包裹的词法单元的别名, `[StartOfLine]` 表示该词法单元位于所在行的行首，`[LeadingSpace]`表示该词法单元前面存在空格。
