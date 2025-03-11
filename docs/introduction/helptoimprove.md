@@ -7,7 +7,7 @@
 - 对修改后的代码进行 push 并提交 PR
 
 ## 将代码 fork 到自己账户
-首先请同学们在浏览器打开[项目仓库网址](https://github.com/arcsysu/SYsU-lang2)，点击下图所示的`fork`按钮。
+首先请同学们在浏览器打开[项目仓库网址](https://github.com/arcsysu/YatCC)，点击下图所示的`fork`按钮。
 
 ![fork1](../images/fork1.jpg)
 
@@ -26,11 +26,11 @@
 
 首先请你在命令行进入对 fork 后的仓库进行clone
 ```
-git clone https://github.com/zwshan/SYsU-lang2-test
+git clone https://github.com/arcsysu/YatCC.git
 ```
 待 clone 完成之后 cd 到文件夹内，并且进行实验分支的查看
 ```bash
-cd SYsU-lang2-test
+cd YatCC
 git branch -a
 ```
 会出现如下图所示的界面，可以看到存在一个docs的分支，在这个界面下，同学们可以在英文输入法状态按`q`键退出。

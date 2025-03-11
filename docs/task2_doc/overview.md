@@ -4,7 +4,9 @@
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
-以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答可以在`/workspaces/SYsU-lang2/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看，
+
+以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答可以在`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看，
+
 
 ![alt text](../images/bison/task2-answer.png)
 
@@ -25,7 +27,6 @@
 - valueCategory: 值类别，如prvalue，表示纯右值。
 - value: 节点值，对于字面量如整数字面量，这个字段包含了具体的值。
 
-
 此外，通过`vscode`可以很方便地看到其结构，我们采取下述方式:鼠标点击以下图示红框部分就会显示这个文件的结构，
 
 ![alt text](../images/bison/task2-json.png)
@@ -35,6 +36,7 @@
 ![alt text](../images/bison/task2-answer-exam.png)
 
 由该文件，可以得到其整体结构为：
+
 ```bash
 |-- TranslationUnitDecl
    |-- 多个TypedefDecl
@@ -44,8 +46,9 @@
             |-- IntegerLiteral
 ```
 
-
 ## 评分标准
+
 同学们查看json文件，会发现上述每个节点里面包含了非常多的属性，除去TypedefDecl不用管之外，我们的评分以属性打印为准，具体如下：
+
 - 是否提取出正确的 "kind"、"name"、"value" 键值，不含 "InitListExpr"（60 分）
 - 是否提取出正确的 "type" 键值及是否构造正确的 "InitListExpr" 生成树（40 分）。

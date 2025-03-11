@@ -6,13 +6,6 @@
 
 [The Core LLVM Class Hierarchy Reference](https://www.llvm.org/docs/ProgrammersManual.html#id128)
 
-[LLVM IR 快速上手](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/llvm_ir_quick_primer.html) [强烈推荐]
-
-[LLVM 中的 SSA](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/llvm_ir_ssa.html) [强烈推荐]
-
-[LLVM 架构中最为重要的概念](https://buaa-se-compiling.github.io/miniSysY-tutorial/pre/design_hints.html) [强烈推荐]
-
-
 ### LLVM IR 结构
 
 对于下述源代码，假设文件名为 test.c：
@@ -92,7 +85,7 @@ LLVM IR 文件的基本单元为 Module，一个 Module 对应于一个完整的
 
 [llvm::LLVMContext Class Reference](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html)
 
-llvm::LLVMConext 是一个不透明的对象，它拥有和管理许多核心LLVM数据结构，例如类型和常量值表。我们不需要详细了解它，我们只需要将一个该类型的实例来传递给需要它的API即可。
+llvm::LLVMConext 是一个不透明的对象，它拥有和管理许多核心LLVM数据结构，例如类型和常量值表。**我们不需要详细了解它**，我们只需要将一个该类型的实例来传递给需要它的API即可。
 
 创建LLVMContext的实例也非常简单，[构造函数](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html#a4eb1cb06b47255ef63fa4212866849e1)：
 
@@ -247,15 +240,15 @@ LLVM IR 中显示为：iN，其中 N 为我们自己指定的位数
 ```c++
 #include <llvm/IR/DerivedTypes.h>
 
-unsigned N = /* 指定位数 */;
+unsigned NumBits = /* 指定位数 */;
 
 /// NumBits：整数位数
 /// static IntegerType *llvm::IntegerType::get(LLVMContext &C, unsigned NumBits);
-llvm::Type *type = llvm::IntegerType::get(TheContext, N);
+llvm::Type *type = llvm::IntegerType::get(TheContext, NumBits);
 
 /// 或者
 
-llvm::Type *type = TheBuild.getIntNTy(N);
+llvm::Type *type = TheBuild.getIntNTy(NumBits);
 ```
 
 #### 函数类型
@@ -304,11 +297,11 @@ llvm::Type *ithParamType = funcType->getParamType(I);
 
 /// 遍历函数参数类型
 auto begin = funcType->param_begin();
-    while(begin != funcType->param_end()) {
-		/* Do something */
-        begin ++;
-	}
+while(begin != funcType->param_end()) {
+  /* Do something */
+      begin ++;
 }
+
 ```
 
 #### 数组类型
@@ -526,7 +519,7 @@ llvm::GlobalVariable *gloVar = new llvm::GlobalVariable(
 3. 将函数添加至模块的全局构造函数数组中。
 
 ```c++
-/// 举个简单的例子，例如：int a = 20
+/// 举个简单的例子，例如：int a = 1;
 
 /// 1. 创建全局变量，并为全局变量暂时先指定零初始化
 llvm::Type *ty = llvm::Type::getInt32Ty(TheContext);
@@ -548,7 +541,7 @@ llvm::BasicBlock *entryBlock = llvm::BasicBlock::Create(TheContext, "entry", cto
 /// 设置 LLVM IR 插入点为 entry 基本块
 TheBuilder.SetInsertPoint(entryBlock);
 /// 创建 store 指令将常量1存入全局变量 gloVar
-TheBuilder.CreateStore(llvm::ConstantInt::get(llvm::Type::getInt32Ty(TheContext), 10), gloVar);
+TheBuilder.CreateStore(llvm::ConstantInt::get(llvm::Type::getInt32Ty(TheContext), 1), gloVar);
 
 /// 3. 将函数添加至模块 TheModule 的全局构造函数数组中,65535为优先级
 ///    优先级数值越大执行时间越靠后，优先级数值最大值为65535
@@ -564,7 +557,7 @@ llvm::appendToGlobalCtors(TheModule, ctorFunc, 65535);
 
 define private void @ctor() {
 entry:
-  store i32 10, ptr @glolVar, align 4
+  store i32 1, ptr @glolVar, align 4
 }
 ```
 

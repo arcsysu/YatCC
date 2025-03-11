@@ -10,33 +10,27 @@
 
 打一个比喻，让大家对bison的功能有基本了解：
 
-假如同学们在学习一种新的语言，这时候我们需要一个“词典”来翻译听到或者看到的这门语言的单词。同样，在计算机领域，编程语言也需要这样一个“词典”，我们称之为“解析器”，它用来读懂程序代码。
+假如同学们在学习一种新的语言，这时候我们需要一个“词典”来翻译听到或者看到的这门语言的单词。同样，在计算机领域，编程语言也需要这样一个“词典”，我们称之为“解析器”，它用来读懂程序代码。那么 Bison 就像是一个专门用来制作这种“词典”的工厂。你需要告诉Bison你的编程语言的规则，比如这门语言是怎样建立的，有哪些单词，单词之间又是怎样组合的等等，然后Bison就会根据你提供的这些规则，为你制作出一个符合这些规则的“词典”或者说“解析器”。
 
-那么 Bison 就像是一个专门用来制作这种“词典”的工厂。你需要告诉Bison你的编程语言的规则，比如这门语言是怎样建立的，有哪些单词，单词之间又是怎样组合的等等，然后Bison就会根据你提供的这些规则，为你制作出一个符合这些规则的“词典”或者说“解析器”。
-
-这个“解析器”可以作为一个针对特定编程语言的阅读工具，帮助计算机更好地理解这门语言的程序代码。比如说，当计算机通过这个“解析器”读到一个程序代码时，它可以告诉计算机这个代码的意思是让计算机执行什么样的操作。
-
-
-通过上述的比喻，相信大家可以理解，bison 是一个语法分析器的生成器。而flex和bison常常进行配合使用，从而共同完成词法分析和语法分析。
+这个“解析器”可以作为一个针对特定编程语言的阅读工具，帮助计算机更好地理解这门语言的程序代码。比如说，当计算机通过这个“解析器”读到一个程序代码时，它可以告诉计算机这个代码的意思是让计算机执行什么样的操作。通过上述的比喻，相信大家可以理解，bison 是一个语法分析器的生成器。而flex和bison常常进行配合使用，从而共同完成词法分析和语法分析。
 
 大致可以将其处理流程理解如下（更为准确地在**bison实现原理**部分介绍）：
 
-输入一个文件，flex可以对该文件进行正则表达式的匹配，从而生成一系列的token流（这个大家在实验一中已经很清楚了）。
+- 输入一个文件，flex可以对该文件进行正则表达式的匹配，从而生成一系列的token流（这个大家在实验一中已经很清楚了）。
 
-而lex生成每一个token之后，将其传给bison进行处理：bison会对当前传入的token进行语法分析，即文法的匹配，并进行相应移进归约操作，从而完成语法分析。
+- lex生成每一个token之后，将其传给bison进行处理：bison会对当前传入的token进行语法分析，即文法的匹配，并进行相应移进归约操作，从而完成语法分析。
 
-同时，我们可以在bison进行移进归约操作的时候，进行自定义语义动作，从而可以完成语法分析。
+- 同时，我们可以在bison进行移进归约操作的时候，进行自定义语义动作，从而可以完成语法分析。
 
 bison的使用方式很简单，给出下列重要的知识总结：
 
 #### Flex和bison的使用范式
-Flex和Bison生成的代码分处于两个C源代码文件，它们各自单独编译，然后通过外部链接机制最终链接为一个整体。
-
-Flex和Bison的代码文件在整体结构上都是被两个%%分成了三个部分：前言、主体、后记。
+Flex和Bison生成的代码分别处于两个C源代码文件，它们各自单独编译，然后通过外部链接机制最终链接为一个整体。Flex和Bison的代码文件在整体结构上都是被两个%%分成了三个部分：前言、主体、后记。
 
 Flex和Bison默认用法的场景是传统的命令行指令式程序，生成使用全局变量的不可重入代码，并且Flex固定地从`<stdio.h>`输入输出数据。两者的关系以Bison为主，Flex只是辅助的可选项：Bison从代码文件生成一个`int yyparse()`;函数，其内部调用两个需要我们补充定义的函数`int yylex()`;、`void yyerror(const char *)`来读取词法单元流和报告错误，Flex就是用于生成那个`yylex`函数。
 
-在联合使用时，我们应该首先编写Bison语法定义（`.y`），通过前言区的`%token`定义有哪几种词法单元，然后在Flex代码中包含生成的头文件，再编写词法单元的解析规则，这和我们实验1到实验2的顺序是相反的。知道这些之后，我们就得到了基本的文件骨架：
+在联合使用时，我们应该**首先编写Bison语法定义（`.y`），通过前言区的`%token`定义有哪几种词法单元，然后在Flex代码中包含生成的头文件，再编写词法单元的解析规则**，这和我们实验1到实验2的顺序是相反的。知道这些之后，我们就得到了基本的文件骨架：
+
 - `parser.y`
 ``` cpp
 %code requires {
@@ -47,6 +41,7 @@ void yyerror(const char *);
 %%
 ```
 为了让Bison生成的代码能够通过编译环节，必须在其中加入`yylex`和`yyerror`的声明。
+
 - `lexer.l`
 ``` cpp
 %{
@@ -72,6 +67,7 @@ void yyerror (char const *);
 start: NUMBER | ADD NUMBER | SUB NUMBER;
 %%
 ```
+
 - `lexer.l`
 ``` cpp
 %{
@@ -106,7 +102,8 @@ start: NUMBER | ADD NUMBER | SUB NUMBER;
 ```cpp
 start: NUMBER STRING { $$ = $2 + $1; } ;
 ```
-其中`$$`、`$1`、`$2`会被Bison自动拓展为类似于`start.str`、`NUMBER.num`、`STRING.str`的联合体成员引用，并且Bison会帮我们检查类型的使用是否正确。语义值最终的来源是词法解析器，在`yylex`函数（flex主体部分）中，使用全局变量`yylval`填入词法单元的语义值，比如：
+**其中`$$`、`$1`、`$2`会被Bison自动拓展为类似于`start.str`、`NUMBER.num`、`STRING.str`的联合体成员引用**，并且Bison会帮我们检查类型的使用是否正确。语义值最终的来源是词法解析器，在`yylex`函数（flex主体部分）中，使用全局变量`yylval`填入词法单元的语义值，比如：
+
 ```cpp
 [0-9]+ {
   yylval.num = atol(yytext);
@@ -123,19 +120,17 @@ start: NUMBER STRING { $$ = $2 + $1; } ;
 
 #### bison实现原理（感兴趣了解）
 
-首先要明白的一点是，Flex和Bison的代码不是C和C++源代码，严格地说它们是专用于生成词法解析器和语法解析器的领域特定语言（DSL）。bison不是语法分析器，只是用于生成语法分析器的一种语言。
-
-使用bison定义了语义分析规则之后，其会生成`y.tab.h`, `y.tab.c`, `y.output`等文件，将这些文件与flex生成的文件`lex.yy.c`一起进行编译运行，最后可以得到一个可执行文件，而这个文件才是用作输入文本的语法分析器所用。
+首先要明白的一点是，Flex和Bison的代码不是C和C++源代码，严格地说它们是专用于生成词法解析器和语法解析器的领域特定语言（DSL）。bison不是语法分析器，只是用于生成语法分析器的一种语言。使用bison定义了语义分析规则之后，其会生成`y.tab.h`, `y.tab.c`, `y.output`等文件，将这些文件与flex生成的文件`lex.yy.c`一起进行编译运行，最后可以得到一个可执行文件，而这个文件才是用作输入文本的语法分析器所用。
 
 上述中间过程，我们都为同学们进行省略和遮盖，同学们以后如果需要自己用的话，这些中间过程必不可少。
 
+bison官方文档（不建议看）
 
-#### bison官方文档（不建议看）
 https://www.gnu.org/software/bison/manual/ 这是bison的官方文档，不建议看，在熟悉bison以后用于查找一些具体用法比较好。
 
 #### bison总结
 
-其实，在本实验中，需要理解bison的使用就是两个重要部分：文法书写和语义动作定义。
+其实，在本实验中，**需要理解bison的使用就是两个重要部分：文法书写和语义动作定义**。
 
 ```cpp
 start : translation_unit ; //这是文法的定义，表示start终结符可以推导为translation_unit终结符
@@ -152,9 +147,7 @@ start
 	;
 ```
 
-
-
-### 文法参考1
+### 文法参考
 本实验采用的文法是SysY语言（编译器比赛中所定义的语言用的文法），其文法如下。
 
 目前提供的代码中的文法可能与下述给出的有细微不相同，但是表达的是一个意思，这无伤大雅，同学们可以作参考。
@@ -214,7 +207,7 @@ ConstExp      ::= Exp;
 
 如果需要SysY语言更为详细的文法解释和定义，可以参考该链接：https://gitlab.eduxiji.net/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf
 
-本实验模板代码所取用的文法如下，不过下述文法是非常完整的类C语言的文法，同学们可以取用自己需要的即可。
+本实验模板代码所取用的文法如下(**可以重点参考**)，不过下述文法是非常完整的类C语言的文法，同学们可以取用自己需要的即可。
 <details>
   <summary>
     完整文法
@@ -665,18 +658,22 @@ declaration_list
 	: declaration
 	| declaration_list declaration
 	;
-```
+  ```
 
 </details>
 
+## 任务说明
+同学们需要完成下面两个部分的内容：\
+1、由于task1的标准答案是复活部分的代码输入，因此同学们需要**补充lex.cpp文件**，将clang标准输出与语法分析的输入进行匹配；\
+2、类型检查和ASG生成json文件的部分，已经进行了基本的实现。同学们只要认真阅读asg.hpp文件，了解每个非终结符对应类型的结构和操作，结合上述重点参考的文法**完成`par.y`文件中的文法撰写和语义动作的补充**。\
 
-## 总体思路(main.cpp)
+### 总体思路(main.cpp)
 
 以main.cpp为入口，实验2首先进行语法分析：`yyparse`（在其中进行填充ASG的结构），然后进行类型检查 `typing(*par::gTranslationUnit)`，最后将asg生成json文件 `asg2json`，并且写入指定文件。
 
 在语法分析中，bison的 `yyparse`中有下面的逻辑：
 
-- 由于实验2以复活版本的进行实验，因此输入的是task1-answer，同学们可以看下其中的一个文件：`/workspaces/SYsU-lang2/build/test/task1/functional-0/000_main.sysu.c/answer.txt`，如下图所示
+- 由于实验2以复活版本的进行实验，因此输入的是task1-answer，同学们可以看下其中的一个文件：`/YatCC/build/test/task1/functional-0/000_main.sysu.c/answer.txt`，如下图所示
 
 ![task1-answer](../images/bison/task1-answer.png)
 
@@ -684,13 +681,7 @@ declaration_list
   （其逻辑是：相比于实验一的输入直接是源文件从而进行相关的各个`token`的匹配，实验二复活版本将匹配上述输入文件的每一行，然后对每一行进行处理，提取出每行的第一个单词（`tokenId`）和每行的第二个单词中的引号内容（`tokenValue`）。例如，以一行为例，识别出的`token`：其`tokenId`为`int`，其`tokenValue`为引号内的内容，也为`int`。）
 - `bison`拿到该`token`后，首先进行文法的匹配，进行移进归约操作，而后在每个移进归约的过程中完成用户自定义的语义动作，在本实验中，我们是生成并填充ASG结构。
 
-在类型检查中，`typing`则将对生成的ASG中的每一个结构进行类型检查，如果不通过该类型检查，程序就会停止。同学可以利用这个方便地进行查错，判断自己到底是哪个类型没有写对。
-
-在ASG生成json文件中，`asg2json`将在yyparse中生成并通过类型检查的ASG结构进行输出并打印。
-
-而类型检查和ASG生成json文件的部分，已经进行了基本的实现，同学们只要负责**语法分析中的文法撰写和语义动作撰写**即可，即，`par.y`文件的补充。
-
-由于复活部分的代码输入的task1的标准答案，因此同学们需要补充`lex.cpp`文件，将clang标准输出跟语法分析的输入进行匹配。
+在类型检查中，`typing`则将对生成的ASG中的每一个结构进行类型检查，如果不通过该类型检查，程序就会停止。同学可以利用这个方便地进行查错，判断自己到底是哪个类型没有写对。在ASG生成json文件中，`asg2json`将在yyparse中生成并通过类型检查的ASG结构进行输出并打印。而类型检查和ASG生成json文件的部分，已经进行了基本的实现，同学们只要负责**语法分析中的文法撰写和语义动作撰写**即可，即，`par.y`文件的补充(由于task1的标准答案是复活部分的代码输入，因此同学们需要补充`lex.cpp`文件，将clang标准输出跟语法分析的输入进行匹配。)
 
 ## 文件结构说明
 
@@ -716,9 +707,7 @@ declaration_list
    |-- Obj.cpp
 ```
 
-其中 `common`是共有文件，包含了：ASG结构定义文件 `asg.hpp`和 `asg.cpp`（基类函数定义 `obj.hpp`和 `obj.cpp`），类型检查需要用到的文件:`Typing.hpp`和 `Typing.cpp`，ASG转换为Json的文件：`Asg2Json.hpp`和 `Asg2Json.cpp`。
-
-其具体解析见公共代码介绍。
+其中 `common`是共有文件，包含了：ASG结构定义文件 `asg.hpp`和 `asg.cpp`（基类函数定义 `obj.hpp`和 `obj.cpp`），类型检查需要用到的文件:`Typing.hpp`和 `Typing.cpp`，ASG转换为Json的文件：`Asg2Json.hpp`和 `Asg2Json.cpp`。其具体解析见公共代码介绍。
 
 其中 `bison`是本实验的部分，包含了：
 
@@ -730,23 +719,25 @@ declaration_list
 
 这个部分将会对重点代码进行说明和解析，同时，将会以一个文法为小例子进行讲解，方便同学们理解。
 
-### 以一个简单的文法为例子说明
+#### 以一个简单的文法为例子说明
 举一个例子，语句的文法其中一种表示如下：
 ```bash
-statement -> compound_statement
+statement 
+	： compound_statement
 	| expression_statement（表达式语句）
 	| selection_statement（选择语句）
 	| iteration_statement（迭代语句）
 	| jump_statement ; （跳转语句）
-```   
+```
 其中选择语句的文法的其中一种表示如下：
 ```bash
-selection_statement -> IF '(' expression ')' statement
-| IF '(' expression ')' statement ELSE statement;
+selection_statement 
+	： IF '(' expression ')' statement
+	| IF '(' expression ')' statement ELSE statement;
 ```
-**文法撰写：**
+**1、文法撰写：**
 
-则在`par.y`文件中添加的代码应该如下表示。这个文法代码的添加非常简单，只需要按照`bison`的语法把`->`变为`:`即可。
+在`par.y`文件中添加的代码应该如下表示：
 
 ```cpp
 // 只是部分文法，并不是全面的
@@ -760,31 +751,78 @@ jump_statement
    | RETURN expression ';'
 ;
 ```
-**语义动作撰写：**
-从语法分析树直接转化到JSON的输出是十分困难的，我们需要进行一些封装和转换，从而可以简便地通过`bison`的语义动作进行填充定义的ASG结构，从而为之后的json转化做铺垫。
+**2、语义动作撰写：**
+从语法分析树直接转化到JSON的输出是十分困难的，我们需要进行一些封装和转换，从而可以简便地通过`bison`的语义动作，进行填充定义的ASG结构，从而为之后的json转化做铺垫。
 
-由刚刚的例子，我们在`asg.hpp`中语句找到对应的结构（对于一些结构体的含义不太清楚的，可以通过`asg2json.cpp`中的每个结构的打印方式即可知道该结构体对应的是什么，建议同学们都看看`asg2json.cpp`这样对结构体的含义更为清晰，也以免出错。）
+由刚刚的例子，我们可以在`asg.hpp`中语句找到对应的结构如下所示（对于一些结构体的含义不太清楚的，可以通过`asg2json.cpp`中的每个结构的打印方式即可知道该结构体对应的是什么，建议同学们都看看`asg2json.cpp`这样对结构体的含义更为清晰，也以免出错。）
 ```cpp
-struct Stmt : public Obj // 语句
-{};
+namespace asg {
+    
+//==============================================================================
+// 类型
+//==============================================================================
+struct TypeExpr;
+struct Expr;
+struct Decl;
+struct Type : Obj；   /* Type用于表示节点的类型信息，包括基本类型和复合类型 */
+struct TypeExpr : Obj；   /* 表示更复杂的类型表达，如数组和函数类型 */
+struct PointerType : TypeExpr；
+struct ArrayType : TypeExpr；
+struct FunctionType : TypeExpr；
+    
+//==============================================================================
+// 表达式
+//==============================================================================
+struct Decl;
+struct Expr : Obj；    /* Expr表示所有表达式节点的基类，比如字面量、二元运算、函数调用等 */
+struct IntegerLiteral : Expr；
+struct StringLiteral : Expr；
+struct DeclRefExpr : Expr； //表示对声明的引用
+struct ParenExpr : Expr；  //表示带括号的表达式
+struct UnaryExpr : Expr；  //一元表达式
+struct BinaryExpr : Expr；  /* 表示二元表达式 */
+struct CallExpr : Expr；   /* 表示函数调用的语法树节点 */
+struct InitListExpr : Expr；  /* 初始化列表（如数组或结构体初始化） */
+struct ImplicitInitExpr : Expr；  /* 被用来表示某种隐式初始化的表达式 */
+struct ImplicitCastExpr : Expr；   //表示隐式类型转换表达式
+    
+//==============================================================================
+// 语句
+//==============================================================================
+struct FunctionDecl;
+struct Stmt : Obj  /* 所有语句的基类，例如表达式语句和符合语句 */
+struct NullStmt : Stmt
+struct DeclStmt : Stmt
+struct ExprStmt : Stmt
+struct CompoundStmt : Stmt
+struct IfStmt : Stmt
+struct WhileStmt : Stmt
+struct DoStmt : Stmt
+struct BreakStmt : Stmt
+struct ContinueStmt : Stmt
+struct ReturnStmt : Stmt
 
-struct CompoundStmt : public Stmt // 复合语句
-{
-std::vector<Stmt*> subs;
-};
+//==============================================================================
+// 声明
+//==============================================================================
+struct Decl : Obj  /* 表示所有声明的基类，例如变量声明和函数声明 */
+struct VarDecl : Decl  /* 变量variable声明 */
+struct FunctionDecl : Decl  /* 函数声明 */
 
-struct ReturnStmt : public Stmt // Return语句
-{
-  FunctionDecl* func{ nullptr };
-  Expr* expr{ nullptr };
-};
+//==============================================================================
+// 顶层
+//==============================================================================
+struct TranslationUnit : Obj   /* 代表整个程序或一个编译单元，是ASG的根节点 */
+    
+} // namespace asg
+
 ```
-则想要对刚刚文法生成相应的ASG结构则要进行填充，则在刚刚bison的文法代码上加上语义动作如下。即匹配到了相应的文法之后，所进行的代码动作。
+接下来对刚刚文法生成相应的ASG结构进行填充，需要在bison的文法代码中加上对应的语义动作(即匹配到了相应的文法之后，所进行的代码动作)，如下{  }中的内容:
 ```cpp
 statement // Stmt
   : compound_statement 
     { 
-      $$ = $1; 
+      $$ = $1;  
     }
   | expression_statement 
     { 
@@ -812,24 +850,24 @@ jump_statement // ReturnStmt
 解释`statement`的语义动作：
 - `$$ = $1;` 直接将`statement`的值令为文法左边第一个符号的值。
 
-解释`selection_statement`的语义动作：
-- 使用`&par::gMgr.make<asg::ReturnStmt>();`进行构造`ReturnStmt`结构体。具体可以看`make`的代码，只要是直接或间接继承于`Obj`类型的都可以用这个构造器进行构造。
-然后填充该结构体，根据asg的定义，需要填充`func`、`expr`结构，在这里只能填充`expr`结构。
-- 显然`$2`（文法右边第二个表示为`expression`，用`$`进行取出）为该语句的`expression`，因此有`p->expr = $2;`
-- `$$ = p;` `$$`为文法右边的值即`jump_statement`的值，则此动作为将该`jump_statement`的值设置为`ReturnStmt`的值。
+解释`jump_statement`的语义动作：
+- 使用`&par::gMgr.make<asg::ReturnStmt>();`构造`ReturnStmt`结构体。具体可以看`make`的代码，只要是直接或间接继承于`Obj`类型的都可以用这个构造器进行构造。然后填充该结构体，根据asg的定义，需要填充`func`、`expr`结构，在这里只能填充`expr`结构。
+- 显然`$2`（文法右边第二个表示为`expression`，用`$`进行取出）为该语句的`expression`，因此有`p->expr = $2;`，其中文法右边第三个‘ ; ’表示为$3。
+- `$$ = p;` `$$`为文法右边的值即`jump_statement`的值，则此动作为将该`jump_statement`的值设置为`ReturnStmt`结构的P值。
 
+**3、在`par.y`相对应的地方进行类型的定义**
 
-记得`par.y`相对应的地方进行类型的定义。以`compound_statement`为例。
+在使用一个非终结符或终结符时，需要在`par.y`相对应的地方进行类型的定义，以`compound_statement`为例。
 
 ```cpp
 %union {
    asg::CompoundStmt* CompoundStmt;  // 首先进行类型的命名
 }
 
-%nterm <CompoundStmt> compound_statement // 然后即可再此使用
+%type <CompoundStmt> compound_statement // 然后即可再此使用
 ```
 
-其实最后所有文法的语义动作总的生成的就是一个`TranslationUnit`的结构体，其中包含了所有的ASG的信息，可以查看下面的代码。最后`asg2json`就是抓住这个节点以其为根，然后进行遍历其中进行打印出相应所有的节点。
+其实最后所有文法的语义动作总的生成的就是一个`TranslationUnit`的结构体，其中包含了所有的ASG的信息，可以查看下面代码。最后`asg2json`就是抓住这个节点以其为根，然后进行遍历其中进行打印出相应所有的节点。
 ```cpp
 start
    : translation_unit 
@@ -838,7 +876,8 @@ start
       }
    ;
 ```
-### 其余代码解释
+**4、其余代码解释**
+
 ``` cpp
 function_definition
   : declaration_specifiers declarator
@@ -870,23 +909,21 @@ function_definition
 ## 如何debug
 
 ### yydebug
-yyparse部分出现问题，即bison的文法规约等出现问题，直接设置yydebug为1即可。在main.cpp中加入以下的代码。
+yyparse部分出现问题，即bison的文法规约等出现问题，直接在main.cpp中加入yydebug为1的代码(如下图)，即可打印出详细的bison文法移进规约栈的信息，从而进行定位。
 ![alt text](../images/bison/yydebug.png)
-即可打印出详细的bison文法移进规约栈的信息，从而进行定位。
 
-需要提醒的是，这部分是不适合不适合使用断点进行调试的，因为其会跳到bison生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。
 
-文法的移进规约直接使用yydebug，而其语义动作的定位再配合`std::cout`打印即可。
+需要提醒的是，这部分是不适合使用断点进行调试的，因为其会跳到bison生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。文法的移进规约直接使用yydebug，而其语义动作的定位需要再配合`std::cout`打印即可。
 
 ### 断点调试
-在`Typing`和`Asg2Json`部分使用使用断点调试，看下是哪一部分生成不到位出了问题。配合`std::cout`打印更佳。
+在`Typing`和`Asg2Json`部分使用断点调试，看下是哪一部分生成不到位出了问题。配合`std::cout`打印更佳。
 
 ### 输出到文件
 有时候编译很顺畅的进行通过的时候，`std::cout`是打印不出的，因此这个时候可以将`std::cout`写入到文件里面。例如可以定义以下函数，然后使用该函数就可以打印到指定文件，即可进行debug。
 ```cpp
 void printToTxtFile(std::string message) {
     std::ofstream myfile;
-    myfile.open ("/workspaces/SYsU-lang/task/2/bison/log.txt", std::ios_base::app); // 'app' means appending to the end of the file, trunc: start of the file
+    myfile.open ("/YatCC/task/2/bison/log.txt", std::ios_base::app); // 'app' means appending to the end of the file, trunc: start of the file
     myfile << message << "\n";
     myfile.close();
 }
@@ -894,18 +931,17 @@ void printToTxtFile(std::string message) {
 
 ## 可能会遇到的坑点
 
-- 指针问题
-取type的时候，其指针可能是空的，如果这个时候再取其texp对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。
-比如，如下图所示。
+- **指针问题**
+取type的时候，其指针可能是空的，如果这个时候再取其texp对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。比如，如下图所示。
 
 ![alt text](../images/bison/point.png)
 
-- 更改ASG的`Type`类型
-更改ASG的`Type`类型，只能改变指针指向，不能直接去赋值。
-比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为ASG结构体的`Type`为`const Type *`类型。
+- **更改ASG的`Type`类型**
+更改ASG的`Type`类型，只能改变指针指向，不能直接去赋值。比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为ASG结构体的`Type`为`const Type *`类型。
 
 ![alt text](../images/bison/type.png)
 
 ## 其他说明
 实验二的BreakStmt中的loop属性，这个属性不用处理不用管，本实验不会用到（实验三也不会用到）
+
 ![alt text](../images/bison/loop.png)

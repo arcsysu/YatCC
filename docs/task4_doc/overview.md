@@ -27,17 +27,17 @@
 
 ### 输出调试
 
-为了方便同学们调试优化效果，同学们可以使用本项目提供的调试功能对单个测例进行输出调试（调试准备工作参考[如何调试代码](../introduction/howtouse.md#如何调试代码)一节）。调试时使用`test4/`过滤，因为`task4/`仅执行我们实现的优化并生成优化后的LLVM IR代码，`test4/`则完成优化和评分两个任务（具体差别可以查看`SYsU-lang2/test/task4/CMakeLists.txt`）：
+为了方便同学们调试优化效果，同学们可以使用本项目提供的调试功能对单个测例进行输出调试（调试准备工作参考[如何调试代码](../introduction/howtouse.md#如何调试代码)一节）。调试时使用`test4/`过滤，因为`task4/`仅执行我们实现的优化并生成优化后的LLVM IR代码，`test4/`则完成优化和评分两个任务（具体差别可以查看`YatCC/test/task4/CMakeLists.txt`）：
 
 ![](../images/task4/task4_testing.png)
 
-调试成功后可以在`/workspaces/SYsU-lang2/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。如果选择使用手动执行时，可以使用以下指令。手动执行需要自行保证优化器`task4`与当前task4的代码一致（即是否在代码修改后重新编译生成）：
+调试成功后可以在`/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。如果选择使用手动执行时，可以使用以下指令。手动执行需要自行保证优化器`task4`与当前task4的代码一致（即是否在代码修改后重新编译生成）：
 
 ```shell
-task4_out=/workspaces/SYsU-lang2/build/task/4
-test3_out=/workspaces/SYsU-lang2/build/test/3
+task4_out=/YatCC/build/task/4
+test3_out=/YatCC/build/test/3
 case=functional-0/000_main.sysu.c
-output_dir=/workspaces/SYsU-lang2/build/test/4/functional-0/000_main.sysu.c
+output_dir=/YatCC/build/test/4/functional-0/000_main.sysu.c
 
 # 优化LLVM IR
 ${task4_out}/task4 ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${output_dir}/output.log
@@ -49,20 +49,20 @@ ${task4_out}/task4 ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${ou
 
 ### 测例修改
 
-在进行代码优化时，可能存在修改测例以验证优化是否可行的需求。由于测例的缓存机制，添加新测例进行测评需要将`/workspaces/SYsU-lang2/build`文件夹删除后重新构建项目：
+在进行代码优化时，可能存在修改测例以验证优化是否可行的需求。由于测例的缓存机制，添加新测例进行测评需要将`/YatCC/build`文件夹删除后重新构建项目：
 
 ![](../images/task4/build_all_projects.png)
 
 重新构建后，使用命令行编译调试单个测例的方式：
 
 ```shell
-rtlib_include=/workspaces/SYsU-lang2/test/rtlib/include
-rtlib_path=/workspaces/SYsU-lang2/build/test/libtest-rtlib.so
+rtlib_include=/YatCC/test/rtlib/include
+rtlib_path=/YatCC/build/test/libtest-rtlib.so
 case_path=/path/to/your/code.sysu.c
 ll_path=/path/to/code.ll
 opt_path=/path/to/code_opt.ll
 bin_path=/path/to/code_opt
-CC=/opt/SYsU-lang/llvm/install/bin/clang
+CC=/opt/YatCC/llvm/install/bin/clang
 
 # 生成LLVM IR
 ${CC} -cc1 -O0 -S -emit-llvm -isystem ${rtlib_include} ${case_path} -o ${ll_path}
@@ -73,3 +73,4 @@ ${task4_out}/task4 ${ll_path} ${opt_path}
 # 将LLVM IR编译为二进制文件
 ${CC} -O0 ${opt_path} ${rtlib_path} -o ${bin_path}
 ```
+
