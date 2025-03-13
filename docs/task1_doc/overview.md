@@ -6,7 +6,7 @@
 
 `/YatCC/test/cases`路径下存放了本实验所有的测试用源代码文件。以`/YatCC/test/cases/functional-0/000_main.sysu.c`为例，其内容如下所示：
 
-```c++
+```cpp
 int main(){
     return 3;
 }
@@ -14,7 +14,7 @@ int main(){
 
 其经过`clang`预处理后，我们可以在`/YatCC/build/test/task0/functional-0/000_main.sysu.c`得到以下内容：
 
-```c++
+```cpp
 # 1 "./functional-0/000_main.sysu.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
@@ -37,7 +37,7 @@ int main(){
 
 用`clang`进一步对预处理后的源代码进行词法分析，其结果如下，该信息可以在`/YatCC/build/test/task1/functional-0/000_main.sysu.c/answer.txt`找到：
 
-```c++
+```cpp
 int 'int'  [StartOfLine]  Loc=<./functional-0/000_main.sysu.c:1:1>
 identifier 'main'  [LeadingSpace]  Loc=<./functional-0/000_main.sysu.c:1:5>
 l_paren '('  Loc=<./functional-0/000_main.sysu.c:1:9>

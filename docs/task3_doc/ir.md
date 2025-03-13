@@ -9,6 +9,7 @@
 ### LLVM IR 结构
 
 对于下述源代码，假设文件名为 test.c：
+
 ```c
 const int a = 10;
 int b = 5;
@@ -71,11 +72,11 @@ LLVM IR 文件的基本单元为 Module，一个 Module 对应于一个完整的
 - 目标平台信息。`target datalayout` 表示数据布局如大小端存储、对齐方式、整数类型有哪些等等；`target triple `为描述目标平台信息的三元组，一般形式为 `<architecture>-<vendor>-<system>[-extra-info]`。
 - 元数据。以感叹号!开头，可以附加到 LLVM IR 的指令和全局对象上，为优化器和代码生成器提供关于代码的额外信息。
 - 全局标识符，以 @ 开头
-  - 全局变量 GlobalVariable。如在上述IR中，`@a = constant i32 10, align 4` 和 `@b = global i32 5, align 4`，`align 4` 表示4字节对齐。
-  - 函数 Function。定义了的函数以 define 开头，如在上述IR中，`define dso_local i32 @main()`，i32 表示函数的返回值为 int 类型。函数若只是声明而没有函数体，则以 declare 开头，如 `declare i32 f()`。函数也可以有参数列表，如`define i32 f(i32 %a, i32 %b)`。
+  - 全局变量 GlobalVariable。如在上述 IR 中，`@a = constant i32 10, align 4` 和 `@b = global i32 5, align 4`，`align 4` 表示 4 字节对齐。
+  - 函数 Function。定义了的函数以 define 开头，如在上述 IR 中，`define dso_local i32 @main()`，i32 表示函数的返回值为 int 类型。函数若只是声明而没有函数体，则以 declare 开头，如 `declare i32 f()`。函数也可以有参数列表，如`define i32 f(i32 %a, i32 %b)`。
     每个定义了的函数均由若干个基本块 BasicBlock 构成。
-    - 每一个基本块都有一个属于自己的，在当前函数中唯一的标签，**每个函数执行的第一个基本块一定是标签为 entry 的基本块**，它是函数的入口基本块。在上述IR中，main() 函数总共有4个基本块，其标签分别为 entry，if.then，if.end 和 return，在开始执行 main() 函数时，一定是从 entry 基本块开始执行。
-    - 每一个基本块中都有若干条指令以及局部变量，且最后一条指令一定是一条 [终结指令](https://llvm.org/docs/LangRef.html#terminator-instructions)，如上述IR中 return 基本块的`ret i32 %1`，以及分支跳转指令，分支跳转指令又分为有条件跳转，如`br i1 %cmp, label %if.then, label %if.end`，如果 %cmp 为真，则跳转到 if.then 基本块，否则跳转到 if.end 基本块，和无条件跳转，如`br label %return`，直接跳转到 return 基本块。
+    - 每一个基本块都有一个属于自己的，在当前函数中唯一的标签，**每个函数执行的第一个基本块一定是标签为 entry 的基本块**，它是函数的入口基本块。在上述 IR 中，main() 函数总共有 4 个基本块，其标签分别为 entry，if.then，if.end 和 return，在开始执行 main() 函数时，一定是从 entry 基本块开始执行。
+    - 每一个基本块中都有若干条指令以及局部变量，且最后一条指令一定是一条 [终结指令](https://llvm.org/docs/LangRef.html#terminator-instructions)，如上述 IR 中 return 基本块的`ret i32 %1`，以及分支跳转指令，分支跳转指令又分为有条件跳转，如`br i1 %cmp, label %if.then, label %if.end`，如果 %cmp 为真，则跳转到 if.then 基本块，否则跳转到 if.end 基本块，和无条件跳转，如`br label %return`，直接跳转到 return 基本块。
       一个基本块中的指令一定是从上往下顺序执行的，且一个基本块中的指令要么全都执行，要么全都不执行。
     - 基本块中的局部变量以百分号%开头，如上述 LLVM IR 中的 %cmp，如果没有为局部变量或者基本块标签命名，则 LLVM 会自动以无符号数字，按顺序为每个局部变量和基本块标签编号，如 %1，%2。
 
@@ -85,15 +86,15 @@ LLVM IR 文件的基本单元为 Module，一个 Module 对应于一个完整的
 
 [llvm::LLVMContext Class Reference](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html)
 
-llvm::LLVMConext 是一个不透明的对象，它拥有和管理许多核心LLVM数据结构，例如类型和常量值表。**我们不需要详细了解它**，我们只需要将一个该类型的实例来传递给需要它的API即可。
+llvm::LLVMConext 是一个不透明的对象，它拥有和管理许多核心 LLVM 数据结构，例如类型和常量值表。**我们不需要详细了解它**，我们只需要将一个该类型的实例来传递给需要它的 API 即可。
 
-创建LLVMContext的实例也非常简单，[构造函数](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html#a4eb1cb06b47255ef63fa4212866849e1)：
+创建 LLVMContext 的实例也非常简单，[构造函数](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html#a4eb1cb06b47255ef63fa4212866849e1)：
 
-```c++
+```cpp
 #include <llvm/IR/LLVMContext.h>
 
 /// 构造函数：LLVMContext();
-llvm::LLVMContext TheContext;	
+llvm::LLVMContext TheContext;
 ```
 
 #### llvm::Module
@@ -102,13 +103,13 @@ llvm::LLVMContext TheContext;
 
 llvm::Module 是所有其他 LLVM IR 对象的顶层容器，包含了全局变量、函数、该模块所依赖的库/其他模块、符号表和有关目标平台的各种数据。我们生成的所有 IR 都会储存在这里。
 
-为了创建 LLVM Module的实例，我们需要表示 Module ID 的字符串以及 LLVMContext 的引用，[构造函数](https://llvm.org/doxygen/classllvm_1_1Module.html#a378f93ece2ac999e500f07056cfe6528)：
+为了创建 LLVM Module 的实例，我们需要表示 Module ID 的字符串以及 LLVMContext 的引用，[构造函数](https://llvm.org/doxygen/classllvm_1_1Module.html#a378f93ece2ac999e500f07056cfe6528)：
 
-```c++
+```cpp
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 
-llvm::LLVMContext TheContext;	
+llvm::LLVMContext TheContext;
 
 /// 构造函数：Module(StringRef ModuleID, LLVMContext &C)；
 llvm::Module TheModule("Module ID", TheContext);
@@ -122,7 +123,7 @@ llvm::Module TheModule("Module ID", TheContext);
 
 LLVM::IRBuilder 用于生成 LLVM IR，其提供了统一的 API 来创建和插入指令到基本块（BasicBlock）中。我们可以使用 llvm::IRBuilder 的[构造函数](https://llvm.org/doxygen/classllvm_1_1IRBuilder.html#aa1e284a3ff6e4e6662223ed0b0cdd201)来指定 IR 的插入位置，也可以使用[ SetInsertPoint 方法](https://llvm.org/doxygen/classllvm_1_1IRBuilderBase.html#ace45cae6925c65e9d6916e09dd5b17cc)来修改 IR 的插入位置。
 
-```c++
+```cpp
 #include <llvm/IR/IRbuilder.h>
 
 // ====================================================================
@@ -155,12 +156,12 @@ TheBuilder.SetInsertPoint(Inst);
 
 创建 llvm::IRBuilder 的实例时，也可以不在一开始就指定 IR 插入点，直接将 LLVMContext 的引用作为参数传入即可，在想要设置 IR 插入点时，可以利用 SetInsertPoint 方法：
 
-```c++
+```cpp
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/IRBuilder.h>
 
-llvm::LLVMContext TheContext;	
+llvm::LLVMContext TheContext;
 
 llvm::Module TheModule("Module ID", TheContext);
 
@@ -188,13 +189,11 @@ LLVM IR 是强类型的，类型系统是 LLVM IR 中最为重要的一部分。
 llvm::Type 是 LLVM IR 类型系统中的基类，其和其派生类提供了许多静态方法来创建类型实例，部分类型也可以通过 llvm::IRBuilder 的接口来创建。
 ![](https://llvm.org/doxygen/classllvm_1_1Type__inherit__graph.png)
 
+#### Void 类型
 
+LLVM IR 中显示为：void
 
-#### Void类型
-
-LLVM IR 中显示为：void 
-
-```c++
+```cpp
 #include <llvm/IR/Type.h>
 
 /// 省略TheContext, TheModule, TheBuilder实例的创建
@@ -207,11 +206,11 @@ llvm::Type *type = llvm::Type::getVoidTy(TheContext);
 llvm::Type *type = TheBuilder.getVoidType();
 ```
 
-#### 1位整数（bool）类型
+#### 1 位整数（bool）类型
 
 LLVM IR 中显示为：i1
 
-```c++
+```cpp
 /// static IntegerType *llvm::Type::getInt1Ty(LLVMContext &C);
 llvm::Type *type = llvm::Type::getInt1Ty(TheContext);
 
@@ -220,11 +219,11 @@ llvm::Type *type = llvm::Type::getInt1Ty(TheContext);
 llvm::Type *type = TheBuilder.getInt1Ty();
 ```
 
-#### 32位整数类型
+#### 32 位整数类型
 
 LLVM IR 中显示为：i32
 
-```C++
+```cpp
 /// static IntegerType *llvm::Type::getInt32Ty(LLVMContext &C);
 llvm::Type *type = llvm::Type::getInt32Ty(TheContext);
 
@@ -237,7 +236,7 @@ llvm::Type *type = TheBuilder.getInt32Ty();
 
 LLVM IR 中显示为：iN，其中 N 为我们自己指定的位数
 
-```c++
+```cpp
 #include <llvm/IR/DerivedTypes.h>
 
 unsigned NumBits = /* 指定位数 */;
@@ -253,7 +252,7 @@ llvm::Type *type = TheBuild.getIntNTy(NumBits);
 
 #### 函数类型
 
-```c++
+```cpp
 #include <llvm/IR/DerivedTypes.h>
 
 /// Result：  函数返回值类型
@@ -270,7 +269,7 @@ llvm::FunctionType *funcType = llvm::FunctionType::get(
 
 若函数没有参数时，也可以省去 Params 形参：
 
-```c++
+```cpp
 /// static FunctionType *llvm::FunctionType::get(Type *Result, bool isVarArg);
 /// 例如：int ()
 llvm::FunctionType *funcType =
@@ -279,11 +278,11 @@ llvm::FunctionType *funcType =
 
 有了 llvm::FunctionType 实例后，可以：
 
-```c++
+```cpp
 llvm::FunctionType *funcType = /* 获得函数类型实例指针 */;
 
 /// True表示为可变参数函数
-bool isVarArg = funcType->isVarArg(); 
+bool isVarArg = funcType->isVarArg();
 
 /// 获得函数返回值类型
 llvm::Type *retType = funcType->getReturnType();
@@ -306,7 +305,7 @@ while(begin != funcType->param_end()) {
 
 #### 数组类型
 
-```c++
+```cpp
 #include <llvm/IR/DerivedTypes.h>
 
 /// ElementType：数组元素的类型
@@ -321,7 +320,7 @@ llvm::ArrayType *arrType2D = llvm::ArrayType::get(arrType1D, 5);
 
 有了 llvm::ArrayType 实例后，可以：
 
-```c++
+```cpp
 llvm::ArrayType *arrType = /* 获得数组实例指针 */;
 
 /// 获得数组元素个数
@@ -333,7 +332,7 @@ llvm::Type *elementType = arrType->getElementType();
 
 #### 指针类型
 
-```c++
+```cpp
 #include <llvm/IR/DerivedTypes.h>
 
 /// ElementType： 指针指向的元素类型
@@ -352,13 +351,13 @@ llvm::Type *pointer = pointee->getPointerTo();
 
 在 LLVM 17 中，所有的指针类型都是不透明指针 [Opaque Pointers](https://llvm.org/docs/OpaquePointers.html)，即对于一个指针类型，我们无法知道其指向的类型，不管是查看生成的 LLVM IR，还是调用 llvm::Type/PointerType 的接口（ LLVM 17 中已经移除了 llvm::Type/PointerType 获得指针指向类型的接口）。
 
-例如，对于上述例子，int * 在传统 LLVM 指针类型中，在 LLVM IR 中的表示为 i32*，但是在 LLVM 17 的 LLVM IR 中，则表示为 ptr。
+例如，对于上述例子，int _ 在传统 LLVM 指针类型中，在 LLVM IR 中的表示为 i32_，但是在 LLVM 17 的 LLVM IR 中，则表示为 ptr。
 
 #### 判断是否为特定类型
 
 当我们有了一个 llvm::Type 的实例时，可以通过下述方法判断其是否是特定类型，返回值均为 bool 类型：
 
-```C++
+```cpp
 llvm::Type *type = /* 获得 llvm::Type 实例指针 */
 
 /// True 表示是整数类型
@@ -395,7 +394,7 @@ LLVM IR 中，对于常量的创建，与 llvm::Type 相同，llvm::Constant 和
 
 #### 创建整数常量
 
-```c++
+```cpp
 #include <llvm/IR/Constants.h>
 
 /// 返回给定整数值 V 和整数类型 Ty 的整数常量
@@ -418,7 +417,7 @@ llvm::ConstantInt *constantInt = TheBuilder.getInt32(10);
 
 #### 创建数组常量
 
-```c++
+```cpp
 #include <llvm/IR/Constants.h>
 
 /// Ty：数组类型
@@ -435,11 +434,11 @@ llvm::Constant *constantArray = llvm::ConstantArray::get(
       });
 ```
 
-#### 对任意类型创建0常量
+#### 对任意类型创建 0 常量
 
 常用于对变量进行默认的零初始化。
 
-```c++
+```cpp
 #include <llvm/IR/Constants.h>
 
 /// Ty：类型
@@ -454,7 +453,7 @@ static Constant *llvm::Constant::getNullValue(Type *Ty);
 
 创建全局变量可以直接使用 llvm::GlobalVariable 的构造函数
 
-```c++
+```cpp
 #include <llvm/IR/GlobalVariable.h>
 
 /// M：			llvm::Module实例，包含所有 LLVM IR 的顶层容器
@@ -465,12 +464,12 @@ static Constant *llvm::Constant::getNullValue(Type *Ty);
 /// Initializer：初始值
 /// Name：		全局变量的名字
 /// 其他参数在本次实验中可以不用关注
-GlobalVariable(Module &M, Type *Ty, 
-               bool isConstant, LinkageTypes Linkage, 
-               Constant *Initializer, const Twine &Name="", 
-               GlobalVariable *InsertBefore=nullptr, 
-               ThreadLocalMode=NotThreadLocal, 
-               std::optional< unsigned > AddressSpace=std::nullopt, 
+GlobalVariable(Module &M, Type *Ty,
+               bool isConstant, LinkageTypes Linkage,
+               Constant *Initializer, const Twine &Name="",
+               GlobalVariable *InsertBefore=nullptr,
+               ThreadLocalMode=NotThreadLocal,
+               std::optional< unsigned > AddressSpace=std::nullopt,
                bool isExternallyInitialized=false);
 ```
 
@@ -486,7 +485,7 @@ GlobalVariable(Module &M, Type *Ty,
 
 在创建全局变量前，我们已经求得了其的初始值，那么只需要调用 llvm::GlobalVariable 的构造函数创建全局变量就可以了
 
-```c++
+```cpp
 // 例如：int a = 20
 
 llvm::Type *ty = llvm::Type::getInt32Ty(TheContext);
@@ -518,7 +517,7 @@ llvm::GlobalVariable *gloVar = new llvm::GlobalVariable(
 
 3. 将函数添加至模块的全局构造函数数组中。
 
-```c++
+```cpp
 /// 举个简单的例子，例如：int a = 1;
 
 /// 1. 创建全局变量，并为全局变量暂时先指定零初始化
@@ -563,7 +562,7 @@ entry:
 
 #### 在模块符号表中查找全局变量
 
-```c++
+```cpp
 /// gloVarName 表示全局变量的名字
 llvm::GlobalVariable *gloVar = TheModule.getGlobalVariable(gloVarName);
 ```
@@ -585,7 +584,7 @@ LLVM IR 中的的局部变量仅出现在基本块中，且均以百分号%开�
 
 #### alloca 指令
 
-```c++
+```cpp
 // Ty：要分配的内存空间的类型
 // Name：局部变量的名字，若未取名，则 LLVM 自动分配
 AllocaInst *CreateAlloca(Type *Ty, Value *ArraySize=nullptr, const Twine &Name="");
@@ -593,25 +592,25 @@ AllocaInst *CreateAlloca(Type *Ty, Value *ArraySize=nullptr, const Twine &Name="
 
 例如，对于 int a：
 
-```C++
+```cpp
 TheBuilder.CreateAlloca(TheBuilder.getInt32Ty(), nullptr, "a");
 ```
 
 结果如下：
 
-```c++
+```cpp
 %a = alloca i32
 ```
 
-局部变量 a 是通过 alloca 指令通过内存分配得到的，其类型其实为指针，也就是 i32 *，指向 i32 类型的数据，不过在 LLVM IR 中，其类型显示为 ptr。
+局部变量 a 是通过 alloca 指令通过内存分配得到的，其类型其实为指针，也就是 i32 \*，指向 i32 类型的数据，不过在 LLVM IR 中，其类型显示为 ptr。
 
 又如，对于 int a\[10\]\[5\]：
 
-```c++
+```cpp
 /// int [5]
-llvm::ArrayType *arrType1D = llvm::ArrayType::get(TheBuilder.getInt32Ty(), 5);  
+llvm::ArrayType *arrType1D = llvm::ArrayType::get(TheBuilder.getInt32Ty(), 5);
 /// int [10][5]
-llvm::ArrayType *arrType2D =llvm::ArrayType::get(arrType1D, 10);  
+llvm::ArrayType *arrType2D =llvm::ArrayType::get(arrType1D, 10);
 
 TheBuilder.CreateAlloca(arrType2D, nullptr, "a");
 ```
@@ -635,7 +634,7 @@ TheBuilder.CreateAlloca(arrType2D, nullptr, "a");
 
 while(i < 10000) {
     int tmp = /* 创建局部变量 */;
-    
+
     /* Do something */
 }
 
@@ -676,7 +675,7 @@ while.end:                                        ; preds = %while.cond
 
 使用方法如下：
 
-```c++
+```cpp
 /// 创建调用 llvm.stacksave 的指令
 auto sp = TheBuilder.CreateIntrinsic(llvm::Intrinsic::stacksave, {}, {},
                                      nullptr, "sp");
@@ -685,8 +684,6 @@ auto sp = TheBuilder.CreateIntrinsic(llvm::Intrinsic::stacksave, {}, {},
 /// 创建调用 llvm.stackrestore 的指令
 TheBuilder.CreateIntrinsic(llvm::Intrinsic::stackrestore, {}, {sp});
 ```
-
-
 
 #### store 指令
 
@@ -697,17 +694,17 @@ TheBuilder.CreateIntrinsic(llvm::Intrinsic::stackrestore, {}, {sp});
 
 需要用到 store 指令：
 
-```c++
+```cpp
 /// 将数据存储在某指针类型的变量指向的地址中
 /// Val：要存储的数据
 /// Ptr：指针类型的变量，指向数据要存放的地址
 StoreInst *CreateStore(Value *Val, Value *Ptr, bool isVolatile=false);
 ```
 
-例如，对于`int a = 10`，要将常量10存入局部变量 a 中：
+例如，对于`int a = 10`，要将常量 10 存入局部变量 a 中：
 
-```c++
-/// 1. 使用 alloca 指令创建局部变量 a 
+```cpp
+/// 1. 使用 alloca 指令创建局部变量 a
 llvm::AllocaInst *a = TheBuilder.CreateAlloca(TheBuilder.getInt32Ty(), nullptr, "a");
 
 // 2. 使用 store 指令将常量10存储到局部变量 a 中
@@ -732,7 +729,7 @@ store i32 10, ptr %a
 
 可以使用 load 指令：
 
-```c++
+```cpp
 /// 取出某指针类型的变量指向的地址中的数据
 /// Ty：	 取出的值的类型
 /// Ptr： 指针类型的变量，指向数据存放的地址
@@ -741,7 +738,7 @@ LoadInst *CreateLoad(Type *Ty, Value *Ptr, const Twine &Name = "");
 
 如，对于`int a = 10; int b = a`：
 
-```c++
+```cpp
 /// 1. 使用 alloca 创建局部变量 a
 llvm::AllocaInst *a = TheBuilder.CreateAlloca(TheBuilder.getInt32Ty(), nullptr, "a");
 
@@ -773,13 +770,13 @@ store i32 %0, ptr %b
 
 如上例中的：
 
-```c++
+```cpp
 Value *aVal = TheBuilder.CreateLoad(a->getAllocatedType(), a);
 ```
 
 该 load 指令的结果直接存储在寄存器 %0 中：`%0 = load i32, ptr %a`，使用时直接传给需要它的接口即可：
 
-```c++
+```cpp
 /// store i32 %0, ptr %b
 TheBuilder.CreateStore(aVal, b);
 ```
@@ -788,32 +785,32 @@ TheBuilder.CreateStore(aVal, b);
 
 全局变量的存储也是需要分配内存空间的，而不是直接存储在寄存器中。因此实际上，全局变量也是指针类型。
 
-例如 `@globalVar = global i32 10`，全局变量 @globalVar 为 i32 * 类型（LLVM IR 中显示为 ptr），指向 i32 类型的数据，该数据为 i32 10。
+例如 `@globalVar = global i32 10`，全局变量 @globalVar 为 i32 \* 类型（LLVM IR 中显示为 ptr），指向 i32 类型的数据，该数据为 i32 10。
 
-根据 [store](#store 指令) 和 [load](# load 指令) 两节可知：全局变量的赋值（非使用 llvm::Constant 的常量数据进行初始化）和取值也是分别使用 store 指令和 load 指令。 
+根据 [store](#store 指令) 和 [load](# load 指令) 两节可知：全局变量的赋值（非使用 llvm::Constant 的常量数据进行初始化）和取值也是分别使用 store 指令和 load 指令。
 
 例如：
 
-```c++
+```cpp
 /// 全局变量 a 的声明和定义
-int a = 10;  
+int a = 10;
 
 int main() {
     /* do something */
-    
+
     /// 全局变量的取值
     int b = a;
-    
+
     /// 全局变量的赋值
-    a = 20;  
-    
+    a = 20;
+
     /* do something */
 }
 ```
 
 生成 LLVM IR 的部分 C++ 参考代码如下：
 
-```c++
+```cpp
 /// 1. 创建全局变量 a，赋初始值常量10
 auto a = llvm::GlobalVariable(TheModule, TheBuilder.getInt32Ty(), false,
                               llvm::GlobalVariable::ExternalLinkage,
@@ -863,7 +860,7 @@ store i32 20, ptr @a    		; 将常量20存入全局变量 a 中
 
 了解 LLVM IR 中的函数，可见 [函数](#函数)
 
-```c++
+```cpp
 #include <llvm/IR/ValueSymbolTable.h>
 
 llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
@@ -876,7 +873,7 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 
 数组的创建可以参考 [创建全局变量](#创建全局变量) 和 [局部变量](#局部变量) 两节。
 
-[创建数组常量](#创建数组常量) 和 [对任意类型创建0常量](#对任意类型创建0常量) 两节对于全局数组的初始化或许会有帮助。
+[创建数组常量](#创建数组常量) 和 [对任意类型创建 0 常量](#对任意类型创建0常量) 两节对于全局数组的初始化或许会有帮助。
 
 使用全局构造函数来初始化全局数组和局部数组的初始化可以参考下面 [数组元素的访问](#数组元素的访问) 一节，通过 GEP 指令、[load](#load 指令) 指令和 [store](#store 指令) 指令来进行逐数组元素初始化。
 
@@ -886,7 +883,7 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 
 在本次实验中，对于数组元素的访问，可以使用 llvm::IRBuilder 的 CreateInBoundsGEP()。
 
-```c++
+```cpp
 /// 根据索引列表，将指针偏移量应用于基指针，获得结果指针
 /// Ty：		基指针 Ptr 指向的数据的类型
 /// Ptr：	基指针
@@ -894,9 +891,9 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 Value *CreateInBoundsGEP(Type *Ty, Value *Ptr, ArrayRef<Value *> IdxList, const Twine &Name="");
 ```
 
-例如，对于int arr\[10\]\[5\]，如果我们想要访问 arr\[2\]\[1\]：
+例如，对于 int arr\[10\]\[5\]，如果我们想要访问 arr\[2\]\[1\]：
 
-```C++
+```cpp
 /// 数组的创建：
 /// llvm::ArrayType *arrTy1D =
 ///     llvm::ArrayType::get(llvm::Type::getInt32Ty(TheContext), 5);
@@ -913,7 +910,7 @@ std::vector<llvm::Value *> idxList{
 llvm::Value *val = TheBuilder.CreateInBoundsGEP(arrTy2D, arr, idxList);
 ```
 
-产生的LLVM IR如下：
+产生的 LLVM IR 如下：
 
 ```
 %0 = getelementptr inbounds [10 x [5 x i32]], ptr %arr, i64 0, i64 2, i64 1
@@ -931,23 +928,23 @@ llvm::IRBuilder 的 CreateInBoundsGEP() 产生的 LLVM IR 的基本语法如下�
 
 `<ty> <idx>`：表示一组索引的类型和索引值，`{...}`花括号表示一组或者多组索引，索引的类型`<ty>`一般为`i32`或者`i64`，索引值`<idx>`为具体的数字。索引指向的数据类型决定了增加索引值时，指针的偏移量为多少。每一组索引指向的数据类型都是不一样的，其索引值变化时，对应的指针偏移量的变化也不同。
 
-细心的同学可能已经发现，我们想要访问 arr\[2\]\[1\]，为什么索引的第一位是0呢，为什么使用0、2、1的索引列表而不是直接2、1？
+细心的同学可能已经发现，我们想要访问 arr\[2\]\[1\]，为什么索引的第一位是 0 呢，为什么使用 0、2、1 的索引列表而不是直接 2、1？
 
-**全局数组和使用 alloca 指令分配内存得到的局部数组，其变量本质都是指针类型，指向对应的数组**。第一个索引0指向的数据类型即为 %arr 指向的数据类型，也就是 [10 x [5 x i32]] 的数组，索引值每变化1，对应的指针偏移量就为 10 * 5 * 32 位，而整个数组 %arr 的大小也正好就这么大。
+**全局数组和使用 alloca 指令分配内存得到的局部数组，其变量本质都是指针类型，指向对应的数组**。第一个索引 0 指向的数据类型即为 %arr 指向的数据类型，也就是 [10 x [5 x i32]] 的数组，索引值每变化 1，对应的指针偏移量就为 10 _ 5 _ 32 位，而整个数组 %arr 的大小也正好就这么大。
 
-通过第一个索引0可以取出 [10 x [5 x i32]] 的数组，该数组也可以看作 [5 x i32]* 类型的指针。对于该指针来说，第二个索引2就成为了其 getelementptr inbounds 指令的第一个索引，索引2指向的数据类型为 [5 x i32] 的数组。索引值每变化1，对应的指针偏移量就为 5 * 32 位。
+通过第一个索引 0 可以取出 [10 x [5 x i32]] 的数组，该数组也可以看作 [5 x i32]_ 类型的指针。对于该指针来说，第二个索引 2 就成为了其 getelementptr inbounds 指令的第一个索引，索引 2 指向的数据类型为 [5 x i32] 的数组。索引值每变化 1，对应的指针偏移量就为 5 _ 32 位。
 
-通过第二个索引2就取出了 [5 x i32] 的数组，该数组可以看作 i32 *类型的指针。对于该指针来说，第三个索引1就成为了其 getelementptr inbounds 指令的第一个索引，索引1指向的数据类型为 i32 类型的整数。索引值每变化1，对应的指针偏移量就为32位。
+通过第二个索引 2 就取出了 [5 x i32] 的数组，该数组可以看作 i32 \*类型的指针。对于该指针来说，第三个索引 1 就成为了其 getelementptr inbounds 指令的第一个索引，索引 1 指向的数据类型为 i32 类型的整数。索引值每变化 1，对应的指针偏移量就为 32 位。
 
 我们想要访问 arr\[2\]\[1\]，口头计算加上我们的经验便可以知道：
 
-我们是要访问 (arr的基地址 + 2\*5\*32 位+ 1\*32 位) 这个地址处开始的32位的数据。通过上述分析可知，GEP 指令以 %arr 的值为基地址，指针偏移量为 0\*10\*5\*32 + 2\*5\*32 + 1\*32，最终确实返回的是我们想要的 a\[2\]\[1\]处数据的指针，注意，**GEP 指令返回的是元素的指针**，也就是说，上例中 %result 其实是 i32 *，指向我们想要的 a\[2\]\[1\]。
+我们是要访问 (arr 的基地址 + 2\*5\*32 位+ 1\*32 位) 这个地址处开始的 32 位的数据。通过上述分析可知，GEP 指令以 %arr 的值为基地址，指针偏移量为 0\*10\*5\*32 + 2\*5\*32 + 1\*32，最终确实返回的是我们想要的 a\[2\]\[1\]处数据的指针，注意，**GEP 指令返回的是元素的指针**，也就是说，上例中 %result 其实是 i32 \*，指向我们想要的 a\[2\]\[1\]。
 
 对于数组元素的赋值和取值，因为我们通过 GEP 指令得到的是元素指针，是指针类型，那么我们便可以使用 [store](#store 指令) 和 [load](#load 指令) 指令。
 
 例如，令 arr\[2\]\[1\]=2 并取出该值：
 
-```C++
+```cpp
 /// 索引
 std::vector<llvm::Value *> idxList{
     TheBuilder.getInt64(0), TheBuilder.getInt64(2), TheBuilder.getInt64(1)};
@@ -962,7 +959,7 @@ TheBuilder.CreateStore(TheBuilder.getInt32(2), element);
 TheBuilder.CreateLoad(llvm::Type::getInt32Ty(TheContext), element);
 ```
 
-生成的LLVM IR 如下：
+生成的 LLVM IR 如下：
 
 ```
 ; 取出元素指针
@@ -987,7 +984,7 @@ store i32 2, ptr %0
 
 #### 函数声明/创建
 
-```c++
+```cpp
 #include <llvm/IR/Function.h>
 
 // Ty：函数类型
@@ -999,7 +996,7 @@ static Function *llvm::Function::Create(FunctionType *Ty, LinkageTypes Linkage, 
 
 例如，对于函数 void f(int a, int b)：
 
-```c++
+```cpp
 /// 函数类型：void(int, int)
 llvm::FunctionType *funcType = llvm::FunctionType::get(
     llvm::Type::getVoidTy(TheContext),
@@ -1021,11 +1018,11 @@ declare void @f(i32 %0, i32 %1)
 
 细心的同学可能会发现，LLVM IR 中，函数 f 的参数为 %0 和 %1，并不是源码中的 a 和 b，我们可以通过迭代器遍历函数 f 的参数列表，为每个参数设置名字：
 
-```c++
+```cpp
 auto argIter = func->arg_begin();
 
 /// 设置第一个参数的名字为 a，并使 argIter ++
-argIter++->setName("a"); 
+argIter++->setName("a");
 /// 设置第二个参数的名字为 b
 argIter->setName("b");
 ```
@@ -1042,7 +1039,7 @@ declare void @f(i32 %a, i32 %b)
 
 #### 在模块符号表中查找函数
 
-```c++
+```cpp
 /// llvm::Module 的成员函数
 /// 通过函数名字，在 llvm::Module 的符号表找到对应的函数
 /// Name：要调用的函数的名字
@@ -1051,13 +1048,13 @@ Function *getFunction(StringRef Name) const;
 
 例如，想找到名字为 f 的函数：
 
-```c++
+```cpp
 llvm::Function *func = TheModule.getFunction("f");
 ```
 
 #### 调用函数
 
-```c++
+```cpp
 /// llvm::IRBuilder的成员函数
 /// 创建 call 指令
 /// Callee：	要调用的函数
@@ -1066,9 +1063,9 @@ CallInst *CreateCall(FunctionCallee Callee, ArrayRef<Value *> Args = None,
                        const Twine &Name = "", MDNode *FPMathTag = nullptr);
 ```
 
-例如，想要调用函数 void f(int a, int b)，并传入参数常量1和2作为参数：
+例如，想要调用函数 void f(int a, int b)，并传入参数常量 1 和 2 作为参数：
 
-```c++
+```cpp
 /// 通过 llvm::Module 的符号表找到对应的函数
 llvm::Function *func = TheModule.getFunction("f");
 
@@ -1086,7 +1083,7 @@ call void @f(i32 1, i32 2)
 
 如果想要调用函数 void f()，没有参数传入：
 
-```c++
+```cpp
 /// 通过 llvm::Module 的符号表找到对应的函数
 Function *func = TheModule.getFunction("f");
 
@@ -1102,7 +1099,7 @@ call void @f()
 
 #### 获得函数基本块
 
-```c++
+```cpp
 llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
 
 /// 遍历基本块列表
@@ -1114,9 +1111,9 @@ for(auto &Block : *func) {
 llvm::BasicBlock *entryBlock = func->getEntryBlock();
 ```
 
-#### 获得当前函数所属Module
+#### 获得当前函数所属 Module
 
-```C++
+```cpp
 llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
 
 llvm::Module *module = func->getParent();
@@ -1128,24 +1125,24 @@ llvm::Module *module = func->getParent();
 
 #### 创建基本块
 
-```c++
+```cpp
 /// Name：	基本块的标签名，不取名则 LLVM 自动分配
 /// Parent：	基本块所属的函数
-static BasicBlock *llvm::BasicBlock::Create(LLVMContext &Context, 
-                               const Twine &Name="", 
-                               Function *Parent=nullptr, 
+static BasicBlock *llvm::BasicBlock::Create(LLVMContext &Context,
+                               const Twine &Name="",
+                               Function *Parent=nullptr,
                                BasicBlock *InsertBefore=nullptr);
 ```
 
 例如，在函数 func 中创建标签为 entry 基本块：
 
-```c++
+```cpp
 llvm::BasicBlock *block = llvm::BasicBlock::Create(TheContext, "entry", func);
 ```
 
 #### 获得当前基本块所属的函数
 
-```c++
+```cpp
 llvm::Function *func = block->getParent();
 ```
 
@@ -1153,7 +1150,7 @@ llvm::Function *func = block->getParent();
 
 在 LLVM IR 正确组织的情况下，每一个基本块的最后一条指令都应该是一条终结指令 [Terminator instructions](https://llvm.org/docs/LangRef.html#terminator-instructions)。
 
-```c++
+```cpp
 /// 如果Block没有终结指令，则inst = nullptr
 /// 也可据此来判断该基本块是否有终结指令
 llvm::Instruction *inst = Block->getTerminator();
@@ -1173,7 +1170,7 @@ llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
 
 #### 整数加法+
 
-```C++
+```cpp
 /// LHS + RHS
 
 /// LHS：			加号左边操作数
@@ -1183,14 +1180,14 @@ llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
 /// 				 如果设置了NUW和/或NSW，则分别保证了指令操作不会发生无符号/有符号溢出，
 /// 				 如果有溢出发生，则指令的结果为poison value，
 /// 				 如果没设置NUW和/或NSW，则LLVM会分别对无符号/有符号的溢出情况进行处理。
-Value *CreateAdd (Value *LHS, Value *RHS, 
-                  const Twine &Name="", 
+Value *CreateAdd (Value *LHS, Value *RHS,
+                  const Twine &Name="",
                   bool HasNUW=false, bool HasNSW=false);
 ```
 
 例如，对于 a+b：
 
-```C++
+```cpp
 /// 在函数符号表中查找局部变量 a 和 b
 llvm::Value *a = func->getValueSymbolTable()->lookup("a");
 llvm::Value *b = func->getValueSymbolTable()->lookup("b");
@@ -1215,14 +1212,14 @@ TheBuilder.CreateAdd(valA, valB);
 
 ```c
 /// LHS - RHS
-Value *CreateSub(Value *LHS, Value *RHS, 
+Value *CreateSub(Value *LHS, Value *RHS,
                  const Twine &Name = "",
                  bool HasNUW = false, bool HasNSW = false);
 ```
 
 例如，a-b：
 
-```C++
+```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), a);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), b);
@@ -1238,18 +1235,18 @@ TheBuilder.CreateSub(valA, valB);
 %2 = sub i32 %0, %1
 ```
 
-#### 整数乘法*
+#### 整数乘法\*
 
-```C++
+```cpp
 /// LHS * RHS
-Value *CreateMul(Value *LHS, Value *RHS, 
-                 const Twine &Name="", 
+Value *CreateMul(Value *LHS, Value *RHS,
+                 const Twine &Name="",
                  bool HasNUW=false, bool HasNSW=false);
 ```
 
-例如，a*b：
+例如，a\*b：
 
-```C++
+```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), a);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), b);
@@ -1267,17 +1264,17 @@ TheBuilder.CreateMul(valA, valB);
 
 #### 整数除法/
 
-```C++
+```cpp
 /// 有符号整数除法
 /// LHS / RHS
-Value *CreateSDiv(Value *LHS, Value *RHS, 
-                  const Twine &Name="", 
+Value *CreateSDiv(Value *LHS, Value *RHS,
+                  const Twine &Name="",
                   bool isExact=false);
 ```
 
 例如， a/b：
 
-```C++
+```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), a);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), b);
@@ -1295,7 +1292,7 @@ TheBuilder.CreateSDIV(valA, valB);
 
 #### 整数取余%
 
-```C++
+```cpp
 // 有符号整数取余
 // LHS % RHS
 Value *createSRem(Value *LHS, Value *RHS, const Twine &Name="");
@@ -1303,7 +1300,7 @@ Value *createSRem(Value *LHS, Value *RHS, const Twine &Name="");
 
 例如，a%b：
 
-```C++
+```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), a);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), b);
@@ -1325,7 +1322,7 @@ TheBuilder.CreateSRem(valA, valB);
 
 ##### 大于>
 
-```C++
+```cpp
 /// 有符号大于
 /// LHS > RHS
 Value *CreateICmpSGT(Value *LHS, Value *RHS, const Twine &Name="");
@@ -1333,7 +1330,7 @@ Value *CreateICmpSGT(Value *LHS, Value *RHS, const Twine &Name="");
 
 ##### 大于等于>=
 
-```C++
+```cpp
 /// 有符号大于等于
 /// LHS >= RHS
 Value *CreateICmpSGE (Value *LHS, Value *RHS, const Twine &Name="");
@@ -1341,7 +1338,7 @@ Value *CreateICmpSGE (Value *LHS, Value *RHS, const Twine &Name="");
 
 ##### 小于<
 
-```C++
+```cpp
 /// 有符号小于
 /// LHS < RHS
 Value *CreateICmpSLT(Value *LHS, Value *RHS, const Twine &Name="");
@@ -1349,7 +1346,7 @@ Value *CreateICmpSLT(Value *LHS, Value *RHS, const Twine &Name="");
 
 ##### 小于等于<=
 
-```C++
+```cpp
 /// 有符号小于等于
 /// LHS <= RHS
 Value *CreateICmpSLE (Value *LHS, Value *RHS, const Twine &Name="")
@@ -1357,7 +1354,7 @@ Value *CreateICmpSLE (Value *LHS, Value *RHS, const Twine &Name="")
 
 ##### 相等==
 
-```C++
+```cpp
 /// 相等
 /// LHS == RHS
 Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
@@ -1365,11 +1362,11 @@ Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
 
 ##### 不相等!=
 
-````C++
+```cpp
 /// 不相等
 /// LHS != RHS
 Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
-````
+```
 
 #### 与&&
 
@@ -1390,7 +1387,7 @@ Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 
 1. 处理 exp_1 的部分：
 
-   在当前基本块中处理 exp_1，获得处理完 exp_1 后当前正在插入的基本块（因为处理 exp_1 可能需要创建多个基本块），在该基本块末尾创建条件跳转指令 br，如果 exp_1=true，跳转到标签为 land.rhs 的基本块，否则，跳转到标签为 land.end的基本块。
+   在当前基本块中处理 exp_1，获得处理完 exp_1 后当前正在插入的基本块（因为处理 exp_1 可能需要创建多个基本块），在该基本块末尾创建条件跳转指令 br，如果 exp_1=true，跳转到标签为 land.rhs 的基本块，否则，跳转到标签为 land.end 的基本块。
 
 2. exp_1=true 接着处理 exp_2 的部分：
 
@@ -1409,20 +1406,20 @@ Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 
 ##### 条件跳转指令
 
-```C++
+```cpp
 /// 如果 Cond=True，则跳转到 True 基本块，否则，跳转到 False 基本块
 /// Cond：	条件，i1类型
 /// True：	如果 Cond 为真，则跳转到 True 基本块
 /// False：	如果 Cond 为假，则跳转到 False 基本块
-BranchInst *CreateCondBr(Value *Cond, 
-                         BasicBlock *True, 
-                         BasicBlock *False, 
+BranchInst *CreateCondBr(Value *Cond,
+                         BasicBlock *True,
+                         BasicBlock *False,
                          MDNode *BranchWeights=nullptr, MDNode *Unpredictable=nullptr);
 ```
 
 例如 a==b && exp_2：
 
-```C++
+```cpp
 Value *eq = TheBuilder.CreateICmpEQ(valA, valB); /// 判断是否 a == b
 BasicBlock *lhsTrueBlock = BasicBlock::Create(TheContext, "land.rhs", func);
 BasicBlock *landEndBlock = BasicBlock::Create(TheContext, "land.end", func);
@@ -1437,7 +1434,7 @@ br i1 %4, label %land.rhs, label %land.end  ; %4=true 则跳转到 %land.rhs，�
 
 ##### 无条件跳转指令
 
-```C++
+```cpp
 /// 无条件跳转到目标基本块
 /// Dest：目标基本块
 BranchInst *CreateBr(BasicBlock *Dest);
@@ -1445,7 +1442,7 @@ BranchInst *CreateBr(BasicBlock *Dest);
 
 例如：
 
-```C++
+```cpp
 TheBuilder.CreateBr(landEndBlock);
 ```
 
@@ -1473,7 +1470,7 @@ phi 指令（Phi Instruction）是在 LLVM IR 中用于处理基本块间值传�
 
 要想使用 phi 指令，首先需要创建 phi 节点：
 
-```C++
+```cpp
 /// Ty：：				指定创建的 PHINode 的结果的类型，即上述语法中的 <ty>
 /// NumReservedValues：	 表示 PHINode 要处理多少前驱基本块，有多少候选值，即上述语法中 [%value %block] 对的数量
 PHINode *CreatePHI(Type *Ty, unsigned NumReservedValues, const Twine &Name="");
@@ -1481,7 +1478,7 @@ PHINode *CreatePHI(Type *Ty, unsigned NumReservedValues, const Twine &Name="");
 
 之后，使用 addIncoming() 函数来为 PHINode 添加前驱基本块和值，即添加 `[%value %block] `对。
 
-```C++
+```cpp
 /// PHINode成员函数
 /// V：	前驱基本块传过来的值
 /// BB：	前驱基本块
@@ -1490,13 +1487,13 @@ void addIncoming(Value *V, BasicBlock *BB)
 
 例如：
 
-```C++
+```cpp
 PHINode *phi = TheBuilder.CreatePHI(Type::getInt1Ty(TheContext), 2, "merge");
 phi->addIncoming(eq, Block);
 phi->addIncoming(gt, lhsTrueBlock);
 ```
 
-生成的IR如下：
+生成的 IR 如下：
 
 ```
 %merge = phi i1 [ %4, %entry ], [ %5, %land.rhs ]
@@ -1506,7 +1503,7 @@ phi->addIncoming(gt, lhsTrueBlock);
 
 例如，对于表达式 a > b && b > c，三者均为 i32 类型。
 
-```C++
+```cpp
 /// 在函数符号表中查找局部变量 a、b、c
 llvm::Value *varA = func->getValueSymbolTable()->lookup("a");
 llvm::Value *varB = func->getValueSymbolTable()->lookup("b");
@@ -1597,7 +1594,7 @@ land.end:                                         ; preds = %land.rhs, %entry
 
 例如，对于表达式 a > b || b > c，三者均为 i32 类型：
 
-```c++
+```cpp
 /// 在函数符号表中查找局部变量 a、b、c
 llvm::Value *varA = func->getValueSymbolTable()->lookup("a");
 llvm::Value *varB = func->getValueSymbolTable()->lookup("b");
@@ -1652,14 +1649,14 @@ lor.end:                                          ; preds = %lor.rhs, %entry
 
 #### 非!
 
-```c++
+```cpp
 /// 将对 V 进行按位取反操作
 Value *CreateNot(Value *V, const Twine &Name="");
 ```
 
 例如 !(a>b)，两个遍历均为 i32 类型：
 
-```C++
+```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), varA);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), varB);
@@ -1682,7 +1679,7 @@ TheBuilder.CreateNot(cmp);
 
 #### 取负-
 
-```C++
+```cpp
 /// 用于创建整数的取负操作
 /// 对 V 进行取负
 Value *CreateNeg (Value *V, const Twine &Name="", bool HasNUW=false, bool HasNSW=false);
@@ -1690,7 +1687,7 @@ Value *CreateNeg (Value *V, const Twine &Name="", bool HasNUW=false, bool HasNSW
 
 例如 b=-a：
 
-```C++
+```cpp
 /// load指令取出 a 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), varA);
 

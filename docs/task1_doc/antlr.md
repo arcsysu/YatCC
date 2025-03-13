@@ -26,13 +26,13 @@ ANTLR 会根据`.g4`文件生成`SYsULexer.cpp`和`SYsULexer.h`两个文件，�
 
 `SYsULexer.g4`首行以`lexer grammer`开头，表示正在定义一个词法分析器。后面跟词法分析器的名字，这也将是生成的类的名字。
 
-```antlr
+```antlr4
 lexer grammar SYsULexer;
 ```
 
 接下来就可以编写一系列规则了。规则的基本格式是`词法规则名 : 模式;`，其中词法规则名的**首字母必须大写**。对于关键字，数学运算符以及各种括号而言，规则编写起来非常简单：
 
-```antlr
+```antlr4
 Auto : 'auto';
 LeftParen : '(';
 Less : '<';
@@ -41,7 +41,7 @@ LessEqual : '<=';
 
 对于编程语言中更加复杂的组成单元，例如标志符，数字，字符串等，模式就需要使用正则表达式进行表达。可以先定义一些`fragment`，相当于定义一些正则表达式并取一个别名，例如：
 
-```antlr
+```antlr4
 fragment
 IdentifierNondigit
     :   Nondigit
@@ -60,7 +60,7 @@ Digit
 
 然后就可以使用这些`fragment`来编写更复杂的规则了，例如：
 
-```antlr
+```antlr4
 Identifier
     :   IdentifierNondigit
         (   IdentifierNondigit
@@ -73,7 +73,7 @@ Identifier
 
 同学们可能会注意到，有些规则后加上了`-> skip`，这表示匹配到这些规则后不会生成 token 而直接跳过：
 
-```antlr
+```antlr4
 Newline
     :   (   '\r' '\n'?
         |   '\n'
@@ -104,7 +104,7 @@ Newline
 
 首先，我们用`inFile`初始化一个 ANTLR 输入流对象`input`。然后实例化一个`SYsULexer`类对象`lexer`，并将输入流对象`input`传入。接着，我们用`lexer`初始化一个 token 流对象`tokens`。`fill()`方法会调用`lexer`，逐个读取输入的字符流并生成 token，最后存储到`tokens`内部的列表中，直到处理完`<EOF>`。
 
-```c++
+```cpp
 antlr4::ANTLRInputStream input(inFile);
 SYsULexer lexer(&input);
 
@@ -114,7 +114,7 @@ tokens.fill();
 
 之后，就可以利用`getTokens()`方法，拿到一个`vector<Token*>`。最后用`for`循环遍历每个`Token`，并调用`print_token()`函数输出结果到指定文件中。
 
-```c++
+```cpp
 for (auto&& token : tokens.getTokens()) {
   print_token(token, tokens, outFile, lexer);
 }
@@ -128,7 +128,7 @@ ANTLR 会给我们在`SYsULexer.g4`定义的每条规则，生成一个特定的
 
 通过下面这段代码，就可以由一个`Token`对象，获取其对应的规则名了：
 
-```c++
+```cpp
 auto& vocabulary = lexer.getVocabulary();
 
 auto tokenTypeName = std::string(vocabulary.getSymbolicName(token->getType()));
@@ -136,7 +136,7 @@ auto tokenTypeName = std::string(vocabulary.getSymbolicName(token->getType()));
 
 但是这个“规则名”并不是我们要在最终文件中输出的字符串，所以`main.cpp`中含定义了一个哈希表`tokenTypeMapping`来保存每个在`SYsULexer.g4`中定义的“规则名”对应的输出字符串。
 
-```c++
+```cpp
 if (tokenTypeName.empty())
   tokenTypeName = "<UNKNOWN>"; // 处理可能的空字符串情况
 
