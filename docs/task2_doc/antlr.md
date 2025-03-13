@@ -3,11 +3,11 @@
 ## 总体框架
 
 总的来说，本实验需要同学们做的事情有两个：
-1. 同学们需要先填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，`SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。然后同学们需要在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射。这些`k`开头的`token`名字的映射将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
+1. 前置工作：这是本实验的词法分析器部分。同学们需要先填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，已经写好的脚本 `SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成文件 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。然后同学们需要在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射。这些`k`开头的`token`名字的映射将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
 
-2. `SYsUParser.g4` 用于定义 `AST` 。在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.cpp` 中对应的处理函数处做修改。如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 `AST`能够正确转换为 `ASG`。并且如果 `Ast2Asg.cpp` 中有新增函数，`hpp` 文件需要同步更新。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要整整阅读理解 `asg.hpp` 。 
+2. 正式工作：实现语法分析器与从 `AST` 到 `ASG` 的转换`SYsUParser.g4` 用于定义 `AST` 。在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.cpp` 中对应的处理函数处做修改。如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 `AST`能够正确转换为 `ASG`。并且如果 `Ast2Asg.cpp` 中有新增函数，`hpp` 文件需要同步更新。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要认真阅读理解 `asg.hpp` 。 
 
-接下来会先向大家讲解最基本的知识，并且在“上手思路”一节中手把手教大家完成本实验的方式。经过了“上手思路”的培训，同学们就可以尽情探索本实验的后续文档和内容了~
+接下来会先向大家讲解最基本的知识，并且在“上手思路”一节中手把手教大家完成本实验的方式。经过“上手思路”的培训后，同学们就可以尽情探索本实验的后续文档和内容了~
 
 使用`antlr`完成实验时所需要用到的文件如下所示，其中`common`文件夹内的内容是不管使用`antlr`还是`bison`进行实现都需要用到的代码。
 ```bash
@@ -37,23 +37,41 @@
 简单来说，根据本实验的流程图，这些代码可分为5个部分：
 1. 前缀为 `SYsULexer` 的四个文件是本实验的词法分析器部分；
 2. `SYsUParser.g4` 定义了本实验的抽象语法树 `AST` ；
-3. `Ast2Asg.cpp/.hpp` 用于将 `AST` 转换为 `ASG` ；
-5. `Typing.cpp/.hpp` 用于对 `ASG` 进行类型推导和检查；
-6. `Asg2Json.cpp/.hpp` 用于将 `ASG` 转换为 `JSON` 格式。
+3. `Ast2Asg` 类用于将 `AST` 转换为 `ASG` ；
+5. `Typing` 类用于对 `ASG` 进行类型推导和检查；
+6. `Asg2Json` 类用于将 `ASG` 转换为 `JSON` 格式。
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
-不过，在本实验中，除了词法分析器部分的前置工作，同学们只需要修改 `SYsUParser.g4` 和 `Ast2Asg.cpp/.hpp` 这两个部分即可。
+不过，在本实验中，除了词法分析器部分的前置工作，同学们只需要修改 `SYsUParser.g4` 和 `Ast2Asg.cpp/hpp` 这两个部分即可。
 
-同学们只需要编辑 `SYsUParser.g4` 以定义 `AST` 。这是完成语法分析器所需的唯一工作，除此之外这个语法分析器的其它工作已经由助教们预先在 `main.cpp` 中实现了。（感兴趣的同学可以自行通过 `main.cpp` 深入了解）
+同学们只需要编辑 `SYsUParser.g4` 以定义抽象语法树 `AST` （以 `g4` 为后缀名的文件 是 `antlr` 中用于定义词法规则和语法规则的文件）。这是完成语法分析器所需的唯一工作，除此之外这个语法分析器的其它工作已经由助教们预先在 `main.cpp` 中实现了。（感兴趣的同学可以自行借助“Task2的程序做了什么”一节深入了解）
 
-当然，本实验不会如此简单。在本实验中同学们需要将 `AST` 转换为 `ASG` 以获得额外的语义信息，为此同学们还需要完成 `Ast2Asg.cpp/.hpp` 的填写。在这个过程中，同学们需要**重点关注** `asg.hpp` ，因为 `asg.hpp` 定义了本实验的 `ASG` 结构。只有弄懂了 `ASG` 的结构，才能正确填写 `Ast2Asg.cpp/.hpp` 。
+当然，本实验不会如此简单。在本实验中同学们需要将 `AST` 转换为 `ASG` 以获得额外的语义信息，为此同学们还需要完成 `Ast2Asg.cpp/hpp` 的填写。在这个过程中，同学们需要**重点关注** `asg.hpp` ，因为 `asg.hpp` 定义了本实验的 `ASG` 结构。只有弄懂了 `ASG` 的结构，才能正确填写 `Ast2Asg.cpp/hpp` 。
 
 ## 任务思路
 
-### `main.cpp`相关代码（感兴趣了解）
+### Task2的程序做了什么
 
-`main.cpp` 是本实验的入口，直接反映了本实验的整体流程。正如上图所示。   
+为了让同学们对实验二在做些什么有更深的理解，让我们先来回顾一下，在实验中，当同学们触发 `cmake` 插件中的一个个按钮时，究竟发生了什么吧！
+
+![task2 build](../images/task2_antlr/task2_build.png)
+
+当同学们通过 `cmake` 插件点击小小按钮来构建task2的可执行文件时，助教们写好的各种 `CMakeLists`脚本会将 task2 所有相关代码文件编译成一个可执行文件。同学们在 `cmake` 插件中的下拉选项中看见，到底有哪些文件参与进来。
+
+![task2 build1](../images/task2_antlr/task2_build1.png)
+
+当可执行文件编译完成后，同学们可以在 `build/task/2/antlr/` 目录下找到这个task2可执行文件。
+
+![task2 excutable](../images/task2_antlr/task2_excutable.png)
+
+从某种意义上讲，这就是在本实验中需要同学们完善的程序。当我们点击“ task2-score ”时，助教们写好的评测脚本将利用这个程序，用于处理测试样例的输入，进行语法分析生成 AST 再转换为 ASG ，最终输出代表 ASG 的 JSON 文件。这就是程序的行为。随后评测脚本继续根据输出的 JSON 文件与答案中正确的 JSON 文件进行对比，给出评分。
+
+![task2 build](../images/task2_antlr/task2_build.png)
+
+为什么程序的行为是这样的呢？让我们将目光放在 `main.cpp` 上，并且通过一个测试样例来理解 `main.cpp` 的行为。
+
+`main.cpp` 是本实验的入口，直接反映了本实验的整体流程。   
 
 `main.cpp` 使用 `ANTLR` 的输入流接口和 `Lexer` 进行词法分析，生成 `token` 流。同理继续使用 `token` 流接口，通过 `Parser` 生成 `AST` 。
 
@@ -67,7 +85,17 @@
   auto ast = parser.compilationUnit();
 ```
 
-然后创建一个 `Ast2Asg` 实例，用于将 `ANTLR` 生成的 `AST` 转换为内部使用的 `ASG` 结构。然后通过 `Typing` 类对 `ASG` 中的节点执行类型检查与推导。接着创建一个 `Asg2Json` 实例，将 `ASG` 转换为 `JSON` 格式的数据。
+这短短两段代码看起来相当神奇——它一下子就完成了词法分析和文法分析的工作。`SYsULexer` 来自实验二代码目录下的 `SYsULexer` 类， `SYsUParser` 则是来自 `antlr` 根据 `SYsUParser.g4` 生成的 `SYsUParser` 类。
+
+![SYsUParser 类](../images/task2_antlr/image.png)
+
+实际上，实验二的输入和实验一的输入是一样的，都是实验零的输出，即经过预处理的测试样例代码。
+
+![input example](../images/task2_antlr/input_example.png)
+
+但是在实验二中，对输入进行词法分析后，不会像实验一一样生成 txt 文件，而是转头又直接进行语法分析，直接得到一棵抽象语法树 `ast`。
+
+接着 `main.cpp` 又进行一系列处理，最终将抽象语法树 `ast` 处理为易于打印的 `JSON` 格式的输出。
 
 ```cpp
   Obj::Mgr mgr;
@@ -85,8 +113,9 @@
   llvm::json::Value json = asg2json(asg);
 ```
 
-其中，`Obj::Mgr` 类是一个对象管理器，负责垃圾回收方面的工作。感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。
+首先，`main.cpp` 创建了一个 `Ast2Asg` 实例，用于将 `ast` 转换为抽象语法图 `ASG` 结构。对于包含着语义信息的 `ASG` ，我们无法确保 `ASG` 的语义合法性，因此 `main.cpp` 又通过 `Typing` 类对 `ASG` 中的节点执行类型检查与推导（至于具体为什么以及如何进行类型检查与推导，感兴趣的同学可以看看“其他资料推荐”一节）。最后，由于 `AST` 和 `ASG` 作为类树类图的数据结构，都不是易于打印输出的结构，因此 `main.cpp` 创建了一个 `Asg2Json` 实例，将 `ASG` 转换为 `JSON` 格式的数据，再输出到指定的路径中。
 
+其中，`Obj::Mgr` 类是一个对象管理器，负责垃圾回收方面的工作。感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。
 
 ### 填写词法分析部分（前置工作）
 
