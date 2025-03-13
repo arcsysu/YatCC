@@ -112,10 +112,13 @@
   asg::Asg2Json asg2json;
   llvm::json::Value json = asg2json(asg);
 ```
+（其中的`Obj::Mgr` 类是一个对象管理器，负责垃圾回收方面的工作。感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。）
 
-首先，`main.cpp` 创建了一个 `Ast2Asg` 实例，用于将 `ast` 转换为抽象语法图 `ASG` 结构。对于包含着语义信息的 `ASG` ，我们无法确保 `ASG` 的语义合法性，因此 `main.cpp` 又通过 `Typing` 类对 `ASG` 中的节点执行类型检查与推导（至于具体为什么以及如何进行类型检查与推导，感兴趣的同学可以看看“其他资料推荐”一节）。最后，由于 `AST` 和 `ASG` 作为类树类图的数据结构，都不是易于打印输出的结构，因此 `main.cpp` 创建了一个 `Asg2Json` 实例，将 `ASG` 转换为 `JSON` 格式的数据，再输出到指定的路径中。
+首先，`main.cpp` 创建了一个 `Ast2Asg` 实例，用于将 `ast` 转换为抽象语法图 `ASG` 结构。对于包含着语义信息的 `ASG` ，我们无法确保 `ASG` 的语义合法性，因此 `main.cpp` 又通过 `Typing` 类对 `ASG` 中的节点执行类型检查与推导（至于具体为什么以及如何进行类型检查与推导，感兴趣的同学可以看看“其他资料推荐”一节）。最后，由于 `AST` 和 `ASG` 作为类树类图的数据结构，都不是易于打印输出的结构，因此 `main.cpp` 创建了一个 `Asg2Json` 实例，将 `ASG` 转换为 `JSON` 格式的数据，再输出到指定的路径中，得到了如下输出。
 
-其中，`Obj::Mgr` 类是一个对象管理器，负责垃圾回收方面的工作。感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。
+![output example](../images/task2_antlr/output_example.png)
+
+
 
 ### 填写词法分析部分（前置工作）
 
