@@ -16,6 +16,8 @@
 
 ## 词法分析部分
 
+### SYsULerxer.g4
+
 `SYsULexer.g4`是词法分析器的核心文件，其中定义了词法分析器的规则。
 
 ANTLR 会根据`.g4`文件生成`SYsULexer.cpp`和`SYsULexer.h`两个文件，其中定义了继承自`antlr4::Lexer`的`SYsULexer`类，供主程序使用。`SYsULexer`类的定义是根据我们编写的词法规则生成的，调用这个类的方法，就可以根据规则识别出各类词法单元了。在成功构建一次 task1 之后，你可以在`/YatCC/build/antlr4_generated_src/task1-antlr/`下看到 ANTLR 的产物。
@@ -132,7 +134,7 @@ auto& vocabulary = lexer.getVocabulary();
 auto tokenTypeName = std::string(vocabulary.getSymbolicName(token->getType()));
 ```
 
-但是这个“规则名”并不是我们要在最终文件中输出的字符串，所以`main.cpp`中含定义了一个哈希表`tokenTypeMapping`来保存每个“规则名”对应的输出字符串。
+但是这个“规则名”并不是我们要在最终文件中输出的字符串，所以`main.cpp`中含定义了一个哈希表`tokenTypeMapping`来保存每个在`SYsULexer.g4`中定义的“规则名”对应的输出字符串。
 
 ```c++
 if (tokenTypeName.empty())
@@ -147,6 +149,6 @@ if (tokenTypeMapping.find(tokenTypeName) != tokenTypeMapping.end()) {
 
 - 补充词法规则：首先在`SYsULexer.g4`中编写词法分析规则，然后给`main.cpp`中的`tokenTypeMapping`添加对应的映射。
 
-- 更新状态信息：除了正确识别并输出每个词法单元的类型外，我们还需要输出每个词法单元出现在源文件中的位置和源文件路径。由于调用`fill()`是一次性处理并生成所有的`Token`，所以我们需要在循环调用`print_token()`时，根据当前拿到的`Token`，不断更新状态信息（例如行号、文件路径等）。你可能需要自己在`main.cpp`中定义一些全局变量来保存这些状态信息。
+- 更新状态信息：除了正确识别并输出每个词法单元的类型外，我们还需要输出每个词法单元出现在源文件中的位置和源文件路径（初始信息可以从以`#`开头的预处理信息中获得）。由于调用`fill()`是一次性处理并生成所有的`Token`，所以我们需要在循环调用`print_token()`时，根据当前拿到的`Token`，不断更新状态信息（例如行号、文件路径等）。你可能需要自己在`main.cpp`中定义一些全局变量来保存这些状态信息。
 
 - 输出结果：根据**当前的**状态信息，组装结果并输出到指定文件中。
