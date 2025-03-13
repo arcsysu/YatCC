@@ -2,6 +2,13 @@
 
 ## 总体框架
 
+总的来说，本实验需要同学们做的事情有两个：
+1. 同学们需要先填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，`SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。然后同学们需要在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射。这些`k`开头的`token`名字的映射将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
+
+2. `SYsUParser.g4` 用于定义 `AST` 。在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.cpp` 中对应的处理函数处做修改。如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 `AST`能够正确转换为 `ASG`。并且如果 `Ast2Asg.cpp` 中有新增函数，`hpp` 文件需要同步更新。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要整整阅读理解 `asg.hpp` 。 
+
+接下来会先向大家讲解最基本的知识，并且在“上手思路”一节中手把手教大家完成本实验的方式。经过了“上手思路”的培训，同学们就可以尽情探索本实验的后续文档和内容了~
+
 使用`antlr`完成实验时所需要用到的文件如下所示，其中`common`文件夹内的内容是不管使用`antlr`还是`bison`进行实现都需要用到的代码。
 ```bash
 -- antlr
