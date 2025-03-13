@@ -12,7 +12,7 @@ int main(){
 }
 ```
 
-其经过`clang`预处理后，会得到以下内容：
+其经过`clang`预处理后，我们可以在`/YatCC/build/test/task0/functional-0/000_main.sysu.c`得到以下内容：
 
 ```c++
 # 1 "./functional-0/000_main.sysu.c"
@@ -35,7 +35,7 @@ int main(){
 
 ---
 
-用`clang`进一步对预处理后的源代码进行词法分析，其结果如下：
+用`clang`进一步对预处理后的源代码进行词法分析，其结果如下，该信息可以在`/YatCC/build/test/task1/functional-0/000_main.sysu.c/answer.txt`找到：
 
 ```c++
 int 'int'  [StartOfLine]  Loc=<./functional-0/000_main.sysu.c:1:1>

@@ -5,7 +5,7 @@
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
 
-以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答可以在`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看，
+以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答案可以在`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看。
 
 
 ![alt text](../images/bison/task2-answer.png)
@@ -27,7 +27,7 @@
 - valueCategory: 值类别，如prvalue，表示纯右值。
 - value: 节点值，对于字面量如整数字面量，这个字段包含了具体的值。
 
-此外，通过`vscode`可以很方便地看到其结构，我们采取下述方式:鼠标点击以下图示红框部分就会显示这个文件的结构，
+此外，通过`vscode`可以很方便地看到其结构，我们采取下述方式：鼠标点击以下图示红框部分就会显示这个文件的结构。
 
 ![alt text](../images/bison/task2-json.png)
 
