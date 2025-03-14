@@ -23,7 +23,7 @@ int main() {
 
 使用 `clang -cc1 -S -emit-llvm test.c` 生成的 LLVM IR 如下：
 
-```
+```llvm
 ; ModuleID = 'test.c'
 source_filename = "test.c"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
@@ -499,7 +499,7 @@ llvm::GlobalVariable *gloVar = new llvm::GlobalVariable(
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 @glolVar = global i32 10
 ```
 
@@ -550,7 +550,7 @@ llvm::appendToGlobalCtors(TheModule, ctorFunc, 65535);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 @glolVar = global i32 0
 @llvm.global_ctors = appending global [1 x { i32, ptr, ptr }] [{ i32, ptr, ptr } { i32 65535, ptr @ctor, ptr null }]
 
@@ -573,7 +573,7 @@ LLVM IR 中的的局部变量仅出现在基本块中，且均以百分号%开�
 
 1. 分配给虚拟寄存器。这种局部变量多采用`%1=some operation`的形式来进行赋值，存储的是指令返回的结果，如整数加法指令：
 
-   ```
+   ```llvm
    ; 将寄存器 %4 和寄存器 %5 的值相加，它们的值均为 i32 类型，结果存储在寄存器 %6 中
    %6 = add i32 %4, %5
    ```
@@ -617,7 +617,7 @@ TheBuilder.CreateAlloca(arrType2D, nullptr, "a");
 
 结果如下：
 
-```
+```llvm
 %a = alloca [10 x [5 x i32]]
 ```
 
@@ -643,7 +643,7 @@ while(i < 10000) {
 
 对应的 LLVM IR 如下：
 
-```
+```llvm
 while.cond:                                       ; preds = %while.body, %entry
   ; 计算 i < 10000
   %0 = load i32, ptr %i
@@ -713,7 +713,7 @@ TheBuilder.CreateStore(TheBuilder.getInt32(10), a);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %a = alloca i32
 store i32 10, ptr %a
 ```
@@ -758,7 +758,7 @@ TheBuilder.CreateStore(aVal, b);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %a = alloca i32
 store i32 10, ptr %a
 %0 = load i32, ptr %a ; 使用寄存器分配的局部变量，存储常量10
@@ -842,7 +842,7 @@ TheBuilder.CreateStore(TheBuilder.getInt32(20), GloVarA);
 
 生成的部分 LLVM IR 如下：
 
-```
+```llvm
 @a = global i32 10        ; 创建全局变量 a
 
 ; do something
@@ -912,13 +912,13 @@ llvm::Value *val = TheBuilder.CreateInBoundsGEP(arrTy2D, arr, idxList);
 
 产生的 LLVM IR 如下：
 
-```
+```llvm
 %0 = getelementptr inbounds [10 x [5 x i32]], ptr %arr, i64 0, i64 2, i64 1
 ```
 
 llvm::IRBuilder 的 CreateInBoundsGEP() 产生的 LLVM IR 的基本语法如下：
 
-```
+```llvm
 <result> = getelementptr inbounds <ty>, ptr <ptrval> {, <ty> <idx>}
 ```
 
@@ -961,7 +961,7 @@ TheBuilder.CreateLoad(llvm::Type::getInt32Ty(TheContext), element);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 ; 取出元素指针
 %0 = getelementptr inbounds [10 x [5 x i32]], ptr %arr, i64 0, i64 2, i64 1
 ; 赋值
@@ -1010,7 +1010,7 @@ llvm::Function *func = llvm::Function::Create(
 
 对应 LLVM IR 如下：
 
-```
+```llvm
 declare void @f(i32 %0, i32 %1)
 ```
 
@@ -1029,7 +1029,7 @@ argIter->setName("b");
 
 此时 LLVM IR 如下：
 
-```
+```llvm
 declare void @f(i32 %a, i32 %b)
 ```
 
@@ -1077,7 +1077,7 @@ TheBuilder.CreateCall(
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 call void @f(i32 1, i32 2)
 ```
 
@@ -1093,7 +1093,7 @@ TheBuilder.CreateCall(func);
 
 结果如下：
 
-```
+```llvm
 call void @f()
 ```
 
@@ -1158,7 +1158,7 @@ llvm::Instruction *inst = Block->getTerminator();
 
 #### 获得当前 llvm::IRBuilder 正在插入 LLVM IR 的基本块
 
-```
+```cpp
 llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
 ```
 
@@ -1202,7 +1202,7 @@ TheBuilder.CreateAdd(valA, valB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = add i32 %0, %1
@@ -1229,7 +1229,7 @@ TheBuilder.CreateSub(valA, valB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = sub i32 %0, %1
@@ -1256,7 +1256,7 @@ TheBuilder.CreateMul(valA, valB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = mul i32 %0, %1
@@ -1284,7 +1284,7 @@ TheBuilder.CreateSDIV(valA, valB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = sdiv i32 %0, %1
@@ -1310,7 +1310,7 @@ TheBuilder.CreateSRem(valA, valB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = srem i32 %0, %1
@@ -1428,7 +1428,7 @@ TheBuilder.CreateCondBr(eq, lhsTrueBlock, landEndBlock);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 br i1 %4, label %land.rhs, label %land.end  ; %4=true 则跳转到 %land.rhs，否则跳转到 %land.end
 ```
 
@@ -1448,7 +1448,7 @@ TheBuilder.CreateBr(landEndBlock);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 br label %land.end
 ```
 
@@ -1458,7 +1458,7 @@ phi 指令（Phi Instruction）是在 LLVM IR 中用于处理基本块间值传�
 
 在 LLVM IR 中，phi 指令的语法为：
 
-```
+```llvm
 %result = phi <ty> [ %value1, %block1 ], [ %value2, %block2 ], ...
 ```
 
@@ -1495,7 +1495,7 @@ phi->addIncoming(gt, lhsTrueBlock);
 
 生成的 IR 如下：
 
-```
+```llvm
 %merge = phi i1 [ %4, %entry ], [ %5, %land.rhs ]
 ```
 
@@ -1538,7 +1538,7 @@ phi->addIncoming(bGTc, lhsTrueBlock);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 ; ........................................
   %0 = load i32, ptr %a, align 4
     %1 = load i32, ptr %b, align 4
@@ -1629,7 +1629,7 @@ phi->addIncoming(bGTc, lhsFalseBlock);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 ; ........................................
   %0 = load i32, ptr %a, align 4
   %1 = load i32, ptr %b, align 4
@@ -1670,7 +1670,7 @@ TheBuilder.CreateNot(cmp);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
 %2 = icmp sgt i32 %0, %1  ; a > b
@@ -1700,7 +1700,7 @@ TheBuilder.CreateStore(negValA, varB);
 
 生成的 LLVM IR 如下：
 
-```
+```llvm
 %0 = load i32, ptr %a
 %1 = sub i32 0, %0      ; -a
 store i32 %1, ptr %b  ; b = -a

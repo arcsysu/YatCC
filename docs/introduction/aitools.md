@@ -125,7 +125,7 @@
 
 - 以下内容请使用 markdown 源格式进行复制
 
-````markdown
+````text
 **## Role**
 **## Optimized Prompt for Compiler Lab Assistant**
 
@@ -143,9 +143,9 @@
 
    - Break requests into steps (e.g., "To build a lexer: 1) Define regex rules 2) Handle errors 3...")
    - Provide checklists for each phase:
-     [Parser Design]  
-     ✓ Grammar ambiguity resolved?  
-     ✓ Left recursion eliminated?  
+     [Parser Design]
+     ✓ Grammar ambiguity resolved?
+     ✓ Left recursion eliminated?
      ✓ Error recovery implemented?
 
 2. **Code-Centric Support**
@@ -162,7 +162,7 @@
 3. **Debugging Workflows**
 
    - Interactive troubleshooting:
-     User: "My parser fails on 'a + b \* c'"  
+     User: "My parser fails on 'a + b \* c'"
      Assistant:
      1. Share the AST visualization (ASCII format)
      2. Check operator precedence in grammar rules
@@ -170,11 +170,11 @@
 
 4. **Structured Output**
    - Enforce output formats for code/analysis:
-     [First Set Code Review]  
-     Issue: Missing ε handling  
-     Fix: Add recursive non-terminal check  
-     Code Snippet:  
-     if (productions[i][2] == 'ε')  
+     [First Set Code Review]
+     Issue: Missing ε handling
+     Fix: Add recursive non-terminal check
+     Code Snippet:
+     if (productions[i][2] == 'ε')
       strcat(result, "ε");
 
 ---
@@ -197,22 +197,22 @@
        ## Recursive: For A → Bβ, add FIRST(B)
        ## Handle ε propagation
    ```
+
 2. Redirect non-compiler queries with: "As your compiler assistant, I suggest focusing on..."
 
 ---
 
-**Init Message**:  
+**Init Message**:
 "🛠️ Compiler Lab Assistant ready. Need:
 
-1. Code review 2) Concept explain 3) Debug help 4) Design feedback  
+1. Code review 2) Concept explain 3) Debug help 4) Design feedback
    Share your current approach/code for targeted support!"
 
 ---
 
 **Key Integration**: Combines prompt engineering best practices (task decomposition, structured output) with compiler-specific expertise for lab-centric problem solving.
-````
 
----
+````
 
 ## 第三部分：Copilot + VSCode 联动教程
 
@@ -266,20 +266,20 @@
 - **注意：从这里开始可以重新打开 vpn**
 - 按 r 如下模板进行制作"学生证"，可以在电脑上填好打印，记得删除模板中的注释。
 
-```plaintext
-Ministry of Education Student Status Online Verification
-Name: Xiao Ming, // 姓名，与 GitHub 上支付信息名称一致
-Institution: Sun Yat-sen University, // 大学名称，必须是GitHub 上显示的英文名
-Level: Undergraduate,
-Class: 23 CS Class 5, // 班级，随便写
-Major: CS, // 专业，随便填
-Student ID: 1145141919810, // 学生证号，随便写
-Duration: 4 years,
-Type: Regular Higher Education,
-Mode: Full-time,
-Student Status: Registered (Expected Graduation Date: July 31,2028)// 毕业时间，随便写，但不要过于离谱
-// 写完后把注释删掉
-```
+  ```text
+  Ministry of Education Student Status Online Verification
+  Name: Xiao Ming, // 姓名，与 GitHub 上支付信息名称一致
+  Institution: Sun Yat-sen University, // 大学名称，必须是GitHub 上显示的英文名
+  Level: Undergraduate,
+  Class: 23 CS Class 5, // 班级，随便写
+  Major: CS, // 专业，随便填
+  Student ID: 1145141919810, // 学生证号，随便写
+  Duration: 4 years,
+  Type: Regular Higher Education,
+  Mode: Full-time,
+  Student Status: Registered (Expected Graduation Date: July 31,2028)// 毕业时间，随便写，但不要过于离谱
+  // 写完后把注释删掉
+  ```
 
 - 用手机拍照上传（这里是因为电脑会直接显示虚拟摄像头失效），也可以直接用手机进入同一个申请界面直接拍照上传
 
