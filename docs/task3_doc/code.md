@@ -1,17 +1,16 @@
 ## EmitIR 介绍
 
-
 ### EmitIR 类的主要职责
 
 EmitIR 类的功能就是读取 Json2Asg 类输出的抽象语义图 asg::TranslationUnit，输出 LLVM IR。
 
-```c++
+```cpp
 llvm::Module& operator()(asg::TranslationUnit* tu);
 ```
 
 EmitIR 类能够为 ASG 中的不同节点（如表达式、语句、函数等）生成其对应的 LLVM IR ，也能够递归处理 ASG 中的复杂结构，如函数内部的语句，复杂表达式中的子表达式等，生成相对应的 LLVM IR。
 
-与实验二中的 Typing 类和 Asg2Json 类的方法相似，EmitIR同样以重载 operator() 的方法，来支持以同样的调用方式，根据不同的参数匹配不同的 operator() 函数，完成对不同的 ASG 节点生成对应的 LLVM IR 的功能。
+与实验二中的 Typing 类和 Asg2Json 类的方法相似，EmitIR 同样以重载 operator() 的方法，来支持以同样的调用方式，根据不同的参数匹配不同的 operator() 函数，完成对不同的 ASG 节点生成对应的 LLVM IR 的功能。
 
 在此不对 EmitIR 的成员函数和变量继续进行更多地说明，相信大家完成了实验二后，去看 EmitIR 的成员函数，应该可以比较轻易地理解这个函数的功能，换言之，这个函数是为哪个 ASG 节点产生 LLVM IR。
 
@@ -21,9 +20,9 @@ EmitIR 类能够为 ASG 中的不同节点（如表达式、语句、函数等�
 
 本次实验中，助教已经提供了一个基本的 EmitIR 类，使实验三仅仅能通过 functional-0/000_main.sysu.c 这个测例。同时，助教也添加了 TODO 注释，提示同学们需要去做些什么。
 
-
 大家可以从最基本的处理 asg::TranslationUnit 的函数出发：
-```c++
+
+```cpp
 llvm::Module&
 EmitIR::operator()(asg::TranslationUnit* tu)
 {
@@ -35,7 +34,7 @@ EmitIR::operator()(asg::TranslationUnit* tu)
 
 然后针对不同的 Decl ，我们需要在这里添加相应的跳转。
 
-```c++
+```cpp
 void
 EmitIR::operator()(Decl* obj)
 {
@@ -58,5 +57,3 @@ EmitIR::operator()(Decl* obj)
 ## 注意点
 
 如果测评机与本地结果不一样，可能是局部变量没有初始化，如 EmitIR 类的成员变量 mCurFunc 没有在构造函数中设置为 nullptr，导致其在被赋值前为野指针。
-
-

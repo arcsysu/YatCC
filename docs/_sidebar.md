@@ -18,7 +18,7 @@
 * Task2
   * [实验介绍](task2_doc/overview.md)
   * [公用代码介绍](task2_doc/share.md)
-  * [使用 bison 完成 Task2](task2_doc/bison.md)
+  * [使用 Bison 完成 Task2](task2_doc/bison.md)
   * [使用 antlr 完成 Task2](task2_doc/antlr.md)
   * [Prompt示例](task2_doc/prompt.md)
 * Task3
