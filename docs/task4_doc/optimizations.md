@@ -186,7 +186,7 @@ ans = ans + 20 * 60;
 
 同学们可以使用[指令](https://wisesciencewise.wordpress.com/2022/10/03/steps-to-generate-llvm-call-flow-graphcfg/)来可视化查看当前 IR 的控制流图，其中第三行语句可以使用在线工具显示
 
-```
+```bash
 clang -S -emit-llvm file.c -o file.ll
 opt -dot-cfg -disable-output -enable-new-pm=0 file.ll
 dot -Tpng -ofunction.png .function.dot
@@ -228,7 +228,7 @@ int max(int a, int b) {
 
 我们有 IR 如下
 
-```
+```llvm
 define i32 @max(i32 %a, i32 %b) #0 {
 entry:
   %retval = alloca i32, align 4
@@ -259,7 +259,7 @@ return:                                           ; preds = %if.else, %if.then
 
 我们可以将其转换为如下 IR(这个不是标准的 LLVM IR，仅用来解释中间过程)
 
-```
+```llvm
 define i32 @max(i32 %a, i32 %b) {
 entry:
   %0 = icmp sgt i32 %a, %b
@@ -280,7 +280,7 @@ return:
 
 此时，可以发现我们删除了局部变量，这将节省大量运行时间(这里没有举局部数组的例子，因为想要去除数组，需要复杂的数据流分析，有兴趣的同学可以自己去了解，通常 mem2reg 优化也不会处理数组相关的变量)，但是寄存器不再是静态单赋值的了，这时候我们需要对寄存器重命名，并添加一条新指令，PHI 指令(注意，PHI 指令只能位于基本块的开头，即 PHI 指令前只能是 PHI 指令)。phi 指令的值取决于我们从哪个基本块跳转到该基本块，如果前缀块是 if.then，则其值为 retval1，否则，其值为 retval2
 
-```
+```llvm
 define i32 @max(i32 %a, i32 %b) {
 entry:
   %0 = icmp sgt i32 %a, %b
@@ -302,7 +302,7 @@ return:
 
 当然，LLVM 中并没有%retval1 = %a 这样的语句，因此实际上，我们将获得以下结果
 
-```
+```llvm
 define i32 @max(i32 %a, i32 %b) {
 entry:
   %0 = icmp sgt i32 %a, %b

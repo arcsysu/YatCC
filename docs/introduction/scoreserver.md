@@ -1,7 +1,8 @@
 # 评测服务器使用方法
 
 首先请同学们输入以下网址进入到评测服务器页面：
-```
+
+```text
 https://arcsysu.terryinc.top/login
 ```
 
@@ -36,4 +37,3 @@ https://arcsysu.terryinc.top/login
 在这里再次介绍一下我们的实验代码打包方式，请同学按照以下截图方式进行即可。（因为在其他地方也有介绍过。）
 
 ![howtopack](../images/task0_pack.jpg)
-
