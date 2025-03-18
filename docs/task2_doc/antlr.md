@@ -1,12 +1,14 @@
 # 使用 antlr 完成 Task2
 
-## 总体框架
+## 任务介绍
 
 总的来说，本实验需要同学们做的事情有两个：
 
-1. 前置工作：这是本实验的词法分析器部分。同学们需要先填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，已经写好的脚本 `SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成文件 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。然后同学们需要在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射。这些`k`开头的`token`名字的映射将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
+1. 前置工作：补充词法分析器缺失的部分。
+   *  填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，已经写好的脚本 `SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成文件 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。
+   *  在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字与`k`开头的`token`名字的映射。前者是`answer.txt`每行的第一个单词，后者将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
 
-2. 正式工作：实现语法分析器与从 `AST` 到 `ASG` 的转换`SYsUParser.g4` 用于定义 `AST` 。在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.cpp` 中对应的处理函数处做修改。如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 `AST`能够正确转换为 `ASG`。并且如果 `Ast2Asg.cpp` 中有新增函数，`hpp` 文件需要同步更新。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要认真阅读理解 `asg.hpp` 。
+2. 正式工作：补充缺失的文法规则和语义动作，实现语法分析器与从 AST 到 ASG 的转换。其中`SYsUParser.g4` 用于定义构建 AST 的文法规则，`Ast2Asg.cpp` 用于将 `antlr` 匹配得到的 AST 转换为 ASG。注意 `SYsUParser.g4` 与 `Ast2Asg.hpp/cpp` 需要同步更改：在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.hpp/cpp` 中对应的处理函数处做修改；如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 AST能够正确转换为 ASG。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要认真阅读并理解 `asg.hpp` 。
 
 接下来会先向大家讲解最基本的知识，并且在“上手思路”一节中手把手教大家完成本实验的方式。经过“上手思路”的培训后，同学们就可以尽情探索本实验的后续文档和内容了~
 
@@ -14,17 +16,17 @@
 
 ```bash
 -- antlr
-  |-- Ast2Asg.cpp
-  |-- Ast2Asg.hpp
+  |-- Ast2Asg.cpp      # 需要修改
+  |-- Ast2Asg.hpp      # 需要修改
   |-- CMakeLists.txt
   |-- README.md
-  |-- SYsULexer.cpp
-  |-- SYsULexer.hpp
+  |-- SYsULexer.cpp    # 需要修改
+  |-- SYsULexer.hpp    # 需要修改
   |-- SYsULexer.py
-  |-- SYsULexer.tokens
-  |-- SYsUParser.g4
+  |-- SYsULexer.tokens # 需要修改
+  |-- SYsUParser.g4    # 需要修改
   `-- main.cpp
--- common
+-- common              # 无需修改
    |-- Asg2Json.cpp
    |-- Asg2Json.hpp
    |-- Typing.cpp
@@ -32,25 +34,25 @@
    `-- asg.hpp
 ```
 
-这些代码使用 `antlr` 实现了一个简单的语法分析器，用于将 `SYsU_lang` 语言的源代码转换为抽象语法树（`AST`），再进一步转换为抽象语法图（`ASG`），最后再将 `ASG` 转换为 `JSON` 格式进行输出。
+这些代码使用 `antlr` 实现了一个简单的语法分析器，用于将 `SYsU_lang` 语言的源代码转换为抽象语法树（AST），再进一步转换为抽象语法图（ASG），最后再将 ASG 转换为 JSON 格式进行输出。
 
-（将 `ASG` 转换为 `JSON` 格式输出的原因是 `ASG` 是存在于内存中的不便于阅读的数据结构，输出为 `JSON` 格式方便同学们与实验标准答案对应的输出进行对比差错。）
+（将 ASG 转换为 JSON 格式输出的原因是 ASG 是存在于内存中的不便于阅读的数据结构，输出为 JSON 格式方便同学们与实验标准答案对应的输出进行对比差错。）
 
 简单来说，根据本实验的流程图，这些代码可分为 5 个部分：
 
 1. 前缀为 `SYsULexer` 的四个文件是本实验的词法分析器部分；
-2. `SYsUParser.g4` 定义了本实验的抽象语法树 `AST` ；
-3. `Ast2Asg` 类用于将 `AST` 转换为 `ASG` ；
-4. `Typing` 类用于对 `ASG` 进行类型推导和检查；
-5. `Asg2Json` 类用于将 `ASG` 转换为 `JSON` 格式。
+2. `SYsUParser.g4` 定义了本实验的抽象语法树 AST ；
+3. `Ast2Asg` 类用于将 AST 转换为 ASG ；
+4. `Typing` 类用于对 ASG 进行类型推导和检查；
+5. `Asg2Json` 类用于将 ASG 转换为 JSON 格式。
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
 不过，在本实验中，除了词法分析器部分的前置工作，同学们只需要修改 `SYsUParser.g4` 和 `Ast2Asg.cpp/hpp` 这两个部分即可。
 
-同学们只需要编辑 `SYsUParser.g4` 以定义抽象语法树 `AST` （以 `g4` 为后缀名的文件 是 `antlr` 中用于定义词法规则和语法规则的文件）。这是完成语法分析器所需的唯一工作，除此之外这个语法分析器的其它工作已经由助教们预先在 `main.cpp` 中实现了。（感兴趣的同学可以自行借助“Task2 的程序做了什么”一节深入了解）
+同学们只需要编辑 `SYsUParser.g4` 以定义抽象语法树 AST （以 `g4` 为后缀名的文件 是 `antlr` 中用于定义词法规则和语法规则的文件）。这是完成语法分析器所需的唯一工作，除此之外这个语法分析器的其它工作已经由助教们预先在 `main.cpp` 中实现了。（感兴趣的同学可以自行借助“Task2 的程序做了什么”一节深入了解）
 
-当然，本实验不会如此简单。在本实验中同学们需要将 `AST` 转换为 `ASG` 以获得额外的语义信息，为此同学们还需要完成 `Ast2Asg.cpp/hpp` 的填写。在这个过程中，同学们需要**重点关注** `asg.hpp` ，因为 `asg.hpp` 定义了本实验的 `ASG` 结构。只有弄懂了 `ASG` 的结构，才能正确填写 `Ast2Asg.cpp/hpp` 。
+当然，本实验不会如此简单。在本实验中同学们需要将 AST 转换为 ASG 以获得额外的语义信息，为此同学们还需要完成 `Ast2Asg.cpp/hpp` 的填写。在这个过程中，同学们需要**重点关注** `asg.hpp` ，因为 `asg.hpp` 定义了本实验的 ASG 结构。只有弄懂了 ASG 的结构，才能正确填写 `Ast2Asg.cpp/hpp` 。
 
 ## 任务思路
 
@@ -76,7 +78,7 @@
 
 `main.cpp` 是本实验的入口，直接反映了本实验的整体流程。
 
-`main.cpp` 使用 `ANTLR` 的输入流接口和 `Lexer` 进行词法分析，生成 `token` 流。同理继续使用 `token` 流接口，通过 `Parser` 生成 `AST` 。
+`main.cpp` 使用 `ANTLR` 的输入流接口和 `Lexer` 进行词法分析，生成 `token` 流。同理继续使用 `token` 流接口，通过 `Parser` 生成 AST 。
 
 ```cpp
   antlr4::ANTLRInputStream input(inFile);
@@ -96,9 +98,9 @@
 
 ![input example](../images/task2_antlr/input_example.png)
 
-但是在实验二中，对输入进行词法分析后，不会像实验一一样生成 txt 文件，而是转头又直接进行语法分析，直接得到一棵抽象语法树 `ast`。
+但是在实验二中，对输入进行词法分析后，不会像实验一一样生成 txt 文件，而是转头又直接进行语法分析，直接得到一棵抽象语法树 AST。
 
-接着 `main.cpp` 又进行一系列处理，最终将抽象语法树 `ast` 处理为易于打印的 `JSON` 格式的输出。
+接着 `main.cpp` 又进行一系列处理，最终将抽象语法树 AST 处理为易于打印的 JSON 格式的输出。
 
 ```cpp
   Obj::Mgr mgr;
@@ -118,7 +120,7 @@
 
 （其中的`Obj::Mgr` 类是一个对象管理器，负责垃圾回收方面的工作。感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。）
 
-首先，`main.cpp` 创建了一个 `Ast2Asg` 实例，用于将 `ast` 转换为抽象语法图 `ASG` 结构。对于包含着语义信息的 `ASG` ，我们无法确保 `ASG` 的语义合法性，因此 `main.cpp` 又通过 `Typing` 类对 `ASG` 中的节点执行类型检查与推导（至于具体为什么以及如何进行类型检查与推导，感兴趣的同学可以看看“其他资料推荐”一节）。最后，由于 `AST` 和 `ASG` 作为类树类图的数据结构，都不是易于打印输出的结构，因此 `main.cpp` 创建了一个 `Asg2Json` 实例，将 `ASG` 转换为 `JSON` 格式的数据，再输出到指定的路径中，得到了如下输出。
+首先，`main.cpp` 创建了一个 `Ast2Asg` 实例，用于将 AST 转换为抽象语法图 ASG 结构。对于包含着语义信息的 ASG ，我们无法确保 ASG 的语义合法性，因此 `main.cpp` 又通过 `Typing` 类对 ASG 中的节点执行类型检查与推导（至于具体为什么以及如何进行类型检查与推导，感兴趣的同学可以看看“其他资料推荐”一节）。最后，由于 AST 和 ASG 作为类树类图的数据结构，都不是易于打印输出的结构，因此 `main.cpp` 创建了一个 `Asg2Json` 实例，将 ASG 转换为 JSON 格式的数据，再输出到指定的路径中，得到了如下输出。
 
 ![output example](../images/task2_antlr/output_example.png)
 
@@ -165,7 +167,7 @@
 
 ### From AST to ASG
 
-`Ast2Asg.cpp` 和 `Ast2Asg.hpp` 中的 `Ast2Asg` 类负责将 `AST` 转换为 `ASG`。包括对各种语法结构（如表达式、语句、声明等）的处理方法。
+`Ast2Asg.cpp` 和 `Ast2Asg.hpp` 中的 `Ast2Asg` 类负责将 AST 转换为 ASG。包括对各种语法结构（如表达式、语句、声明等）的处理方法。
 `Ast2Asg` 相关的代码在 `main.cpp` 中是通过如下方法进行调用的。
 
 ```cpp
@@ -174,7 +176,7 @@
   auto asg = ast2asg(ast->translationUnit());
 ```
 
-上面这段代码发生了从 `AST`（抽象语法树）到 `ASG`（抽象语法图）的转换过程。下面是详细的解释：
+上面这段代码发生了从 AST（抽象语法树）到 ASG（抽象语法图）的转换过程。下面是详细的解释：
 
 ```cpp
 asg::Ast2Asg ast2asg(mgr);
@@ -186,12 +188,12 @@ asg::Ast2Asg ast2asg(mgr);
 auto asg = ast2asg(ast->translationUnit());
 ```
 
-然后，代码调用了 `ast2asg` 实例的操作符 `()` 函数，传入了由 `ANTLR` 生成的 `AST` 的根节点 —— 通常是表示整个程序的 `translationUnit` 节点。这个函数的任务是遍历 `AST`，为每个节点创建相应的 `ASG` 节点，并根据 `AST` 节点之间的关系构建 `ASG` 的结构。其中的过程细节是：
+然后，代码调用了 `ast2asg` 实例的操作符 `()` 函数，传入了由 `ANTLR` 生成的 AST 的根节点 —— 通常是表示整个程序的 `translationUnit` 节点。这个函数的任务是遍历 AST，为每个节点创建相应的 ASG 节点，并根据 AST 节点之间的关系构建 ASG 的结构。其中的过程细节是：
 
-1. 遍历`AST`：函数首先遍历 `AST` 的每个节点。`AST` 是根据源代码的语法结构自顶向下递归构建的树形结构，每个节点代表了源代码中的一个语法结构（如表达式、语句、声明等）。
-2. 节点转换：对于 `AST` 的每个节点，`Ast2Asg` 类中定义的对应的转换方法会被调用。这些方法负责将 `AST` 节点转换为 `ASG` 节点。转换过程中可能会创建新的 `ASG` 节点对象，并利用对象管理器 `mgr` 进行管理。
-3. 构建`ASG`结构：在转换各个 `AST` 节点的同时，转换方法还会根据 `AST` 节点之间的父子关系和兄弟关系来构建 `ASG` 的图形结构。这一步骤确保了转换后的 `ASG` 能够准确反映程序的逻辑结构和语法结构。
-4. 返回 ASG 的根节点：整个转换过程完成后，`ast2asg(ast->translationUnit())` 会返回转换后的 `ASG` 的根节点。这个根节点代表了整个程序的抽象语法图，是后续编译过程中进行语义分析、优化和代码生成等操作的基础。
+1. 遍历AST：函数首先遍历 AST 的每个节点。AST 是根据源代码的语法结构自顶向下递归构建的树形结构，每个节点代表了源代码中的一个语法结构（如表达式、语句、声明等）。
+2. 节点转换：对于 AST 的每个节点，`Ast2Asg` 类中定义的对应的转换方法会被调用。这些方法负责将 AST 节点转换为 ASG 节点。转换过程中可能会创建新的 ASG 节点对象，并利用对象管理器 `mgr` 进行管理。
+3. 构建ASG结构：在转换各个 AST 节点的同时，转换方法还会根据 AST 节点之间的父子关系和兄弟关系来构建 ASG 的图形结构。这一步骤确保了转换后的 ASG 能够准确反映程序的逻辑结构和语法结构。
+4. 返回 ASG 的根节点：整个转换过程完成后，`ast2asg(ast->translationUnit())` 会返回转换后的 ASG 的根节点。这个根节点代表了整个程序的抽象语法图，是后续编译过程中进行语义分析、优化和代码生成等操作的基础。
 
 从**抽象语法树（Abstract Syntax Tree，AST）**，
 
@@ -201,7 +203,7 @@ auto asg = ast2asg(ast->translationUnit());
 
 ![alt text](../images/bison/asg.png)
 
-这个“根据 `AST` 节点之间的关系构建 `ASG` 的结构”的过程，需要同学们通过修改在 `Ast2Asg` 类来完成。不断完善已有逻辑，实现新的逻辑，直至拿到满分。
+这个“根据 AST 节点之间的关系构建 ASG 的结构”的过程，需要同学们通过修改在 `Ast2Asg` 类来完成。不断完善已有逻辑，实现新的逻辑，直至拿到满分。
 
 ### 上手思路
 
@@ -337,9 +339,9 @@ additiveExpression
 auto node = make<BinaryExpr>();
 ```
 
-通过对 `BinaryExpr` 进行右键点击->转到定义，会得到如下代码，这些代码是 `asg.hpp` 中的内容，是 `ASG` 定义的一部分。（它们位于 `common` 文件夹中。`common` 文件夹中的所有代码都是不需要同学们进行修改的。）
+通过对 `BinaryExpr` 进行右键点击->转到定义，会得到如下代码，这些代码是 `asg.hpp` 中的内容，是 ASG 定义的一部分。（它们位于 `common` 文件夹中。`common` 文件夹中的所有代码都是不需要同学们进行修改的。）
 
-**注意！实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 `ASG` 的定义。只有理解了 `ASG` 的定义，才能正确理解 `AST` 到 `ASG` 的转换。**
+**注意！实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。只有理解了 ASG 的定义，才能正确理解 AST 到 ASG 的转换。**
 
 因此，认真理解 `asg.hpp` 的内容对完成实验有很大的帮助！！
 
@@ -535,7 +537,7 @@ Ast2Asg::operator()(ast::MultiplicativeExpressionContext* ctx)
 
 如此，便完成了对乘法运算的语法规则的添加。同学们可以按步骤尝试后执行评测，看看是否成功通过对应测试样例。
 
-刚刚我们提到，同学们可以查看评测中未通过的测试样例来看看需要实现什么语法规则。除此之外，同学们还可以根据 `asg.hpp` 的内容来看看整体的工作量。毕竟 `asg.hpp` 定义了 `ASG` ——实验中 `AST` 的转换目标。
+刚刚我们提到，同学们可以查看评测中未通过的测试样例来看看需要实现什么语法规则。除此之外，同学们还可以根据 `asg.hpp` 的内容来看看整体的工作量。毕竟 `asg.hpp` 定义了 ASG ——实验中 AST 的转换目标。
 
 下面是 `asg.hpp` 的主体结构。（对于一些结构体的含义不太清楚的，可以通过 `asg2json.cpp` 中的每个结构的打印方式即可知道该结构体对应的是什么。建议同学们都看看 `asg2json.cpp` 这样对结构体的含义更为清晰，也以免出错。）
 
@@ -656,15 +658,15 @@ private:
 };
 ```
 
-- 类成员变量 `Obj::Mgr& mMgr` 是对对象管理器的引用，用于创建和管理`AST`节点对象。（感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。）
+- 类成员变量 `Obj::Mgr& mMgr` 是对对象管理器的引用，用于创建和管理AST节点对象。（感兴趣的同学可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)。）
 - 构造函数接受一个对象管理器的引用，用于初始化 `mMgr` 成员。
-- `operator()` 方法被重载多次，每个重载对应处理`AST`中不同节点类型的转换逻辑。
+- `operator()` 方法被重载多次，每个重载对应处理AST中不同节点类型的转换逻辑。
 - `SpecQual` 是一个类型别名，用于表示变量或函数的类型和限定符。
 - `Symtbl` 结构是一个符号表，用于在转换过程中管理作用域内的符号信息。
 - `mSymtbl` 成员指向当前的符号表，`mCurrentFunc` 指向当前正在处理的函数声明，以便在处理表达式时可以访问函数的上下文信息。
 - `make<T>()` 模板函数用于通过对象管理器创建新的 AST 节点对象。
 
-`Ast2Asg` 类的方法主要负责将`AST`中的每个节点转换为`ASG`的对应表示。包括但不限于：
+`Ast2Asg` 类的方法主要负责将AST中的每个节点转换为ASG的对应表示。包括但不限于：
 
 - 处理整个编译单元（`TranslationUnit`）。
 - 转换类型说明符（`DeclarationSpecifiersContext`）和声明符（`DeclaratorContext`、`DirectDeclaratorContext`）。
@@ -741,9 +743,9 @@ Ast2Asg::operator()(ast::TranslationUnitContext* ctx)
 }
 ```
 
-其中这个方法负责处理整个编译单元（通常是一个文件），它接收`ANTLR`生成的 `TranslationUnitContext` 对象作为参数，这个对象代表了整个文件的`AST`根节点。
+其中这个方法负责处理整个编译单元（通常是一个文件），它接收`ANTLR`生成的 `TranslationUnitContext` 对象作为参数，这个对象代表了整个文件的AST根节点。
 
-- 首先，它创建了一个 `asg::TranslationUnit` 对象，这是 `ASG` 中对应的根节点。
+- 首先，它创建了一个 `asg::TranslationUnit` 对象，这是 ASG 中对应的根节点。
 
 ```cpp
   for (auto&& i : ctx->externalDeclaration()) {
@@ -765,7 +767,7 @@ Ast2Asg::operator()(ast::TranslationUnitContext* ctx)
   }
 ```
 
-- 然后，通过遍历 `AST` 中的所有外部声明（`externalDeclaration`），将它们转换为 `ASG` 中的声明和函数定义，并添加到 `asg::TranslationUnit` 的声明列表中。
+- 然后，通过遍历 AST 中的所有外部声明（`externalDeclaration`），将它们转换为 ASG 中的声明和函数定义，并添加到 `asg::TranslationUnit` 的声明列表中。
 - 如果遇到函数定义，还会将函数名添加到当前作用域的符号表中。
 
 二、
@@ -784,7 +786,7 @@ for (auto&& i : ctx->declarationSpecifier()) {
 }
 ```
 
-它遍历`AST`节点中的所有类型说明符，确定变量或函数的类型，并返回一个包含类型和限定符的 `SpecQual` 对象。
+它遍历AST节点中的所有类型说明符，确定变量或函数的类型，并返回一个包含类型和限定符的 `SpecQual` 对象。
 
 三、
 
@@ -814,12 +816,12 @@ operator()(ast::DeclarationContext* ctx) //转换变量声明，创建 Decl 节�
 operator()(ast::FunctionDefinitionContext* ctx) //处理函数定义，创建一个 FunctionDecl 节点，并处理函数体和参数。
 ```
 
-整体上，`Ast2Asg.cpp` 中定义的 `Ast2Asg` 类通过这些方法实现了从 `ANTLR` 的 `AST` 到 `ASG` 的转换，涵盖了编程语言的主要构造：表达式、语句、声明和函数定义。转换过程中，它还处理了类型信息和作用域信息，为后续的语义分析和代码生成提供了基础。
+整体上，`Ast2Asg.cpp` 中定义的 `Ast2Asg` 类通过这些方法实现了从 `ANTLR` 的 AST 到 ASG 的转换，涵盖了编程语言的主要构造：表达式、语句、声明和函数定义。转换过程中，它还处理了类型信息和作用域信息，为后续的语义分析和代码生成提供了基础。
 
 ## 其他资料推荐
 
 ### 类型、类型检查与推导
 
-同学们做实验的过程中，可能会发现，`ASG` 的类型系统有些复杂难以理解。可以看看这个实验路径下的文章： `/YatCC/docs/gyh-manual/类型、类型检查与推导.md`
+同学们做实验的过程中，可能会发现，ASG 的类型系统有些复杂难以理解。可以看看这个实验路径下的文章： `/YatCC/docs/gyh-manual/类型、类型检查与推导.md`
 
 这个路径下的其他文章也很值得一读，同学们会发现它们都深入到这个实验的底层设计理念，显得相当硬核，或许能给予实验中的启发。不过需要注意的是，其中的一些信息可能已经过时。
