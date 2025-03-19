@@ -4,24 +4,25 @@
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
+完成实验二的方式同实验一一样，需要同学们不断对比标准答案和当前输出，找到需要改进的内容，进行完善。至于如何改进实验二的程序以输出正确答案，将在“公用代码介绍”和“使用 XXX 完成 Task2”这几章中介绍，同学们可以根据自己选择的工具来看对应的教程。这里只介绍输出文件的格式与含义。
 
-以`000_main.sysu.c`这个最简单的测试样例为例，最终由`clang parse`生成的json文件标准答案可以在`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`文件处查看。
+以 `000_main.sysu.c` 这个最简单的测试样例为例，这个测试样例的输入可以在 `/YatCC/build/test/task0/functional-0/000_main.sysu.c` 中找到（我们默认且推荐同学们在实验二中启用复活，这样一来实验二的测试输入就是实验零的输出），而测试样例的标准输出答案则由 `clang parse` 生成，可以在 `/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json` 文件处查看。
 
 
 ![alt text](../images/bison/task2-answer.png)
 
-下面对这个文件进行一些说明：
+鉴于我们采用 JSON 格式输出 ASG 的结构，因此现在以上面这个 JSON 文件为例，进行一些解释：
 
-首先是对引号内的关键词进行解释,但是实际上我们需要关心的只有`kind`,`name`,`value`,`type`等几个。
+首先是对引号内的关键词进行解释。但是实际上我们需要关心的关键词只有 `kind` ， `name` ， `value` ， `type` 这四个。我们的评测系统只关注输出中的这四个关键字的正确性。
 
 - id: 唯一标识符，用于区分AST中的每一个节点。
-- kind: 节点类型，表示该节点代表的源代码结构的种类，如TypedefDecl（类型定义声明）、BuiltinType（内置类型）、FunctionDecl（函数声明）等。
+- kind: 节点语法类型，表示该节点代表的源代码语法结构的种类，如TypedefDecl（类型定义声明）、BuiltinType（内置类型）、FunctionDecl（函数声明）等。
 - loc: 位置信息，通常包含文件名、行号和列号，用于指示源代码中该元素的位置。
 - range: 范围信息，指出了源代码中该节点覆盖的起始和结束位置。它有begin和end两个属性，每个属性可能包含偏移量、行号、列号等信息，用于准确定位代码片段。
 - inner: 内部节点，这个列表包含了当前节点下的子节点。例如，一个FunctionDecl节点会包含它的参数和函数体等子节点。
 - isImplicit: 表示该声明是否是隐式的，即没有在源代码中直接写出来，而是由编译器自动生成的。
 - name: 节点名称，比如类型名称、函数名称等。
-- type: 节点类型，包含了类型信息，如__int128、unsigned __int128等。对于类型节点，qualType属性描述了类型的完整限定名。
+- type: 节点类型，包含了源代码的类型信息，如__int128、unsigned __int128等。对于类型节点，qualType属性描述了类型的完整限定名。
 - decl: 声明信息，某些节点（如RecordType）可能包含对声明本身的引用。
 - size: 大小，主要用于数组类型，表示数组的元素数量。
 - valueCategory: 值类别，如prvalue，表示纯右值。
