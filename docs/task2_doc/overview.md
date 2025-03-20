@@ -6,7 +6,7 @@
 
 完成实验二的方式同实验一一样，需要同学们不断对比标准答案和当前输出，找到需要改进的内容，进行完善。至于如何改进实验二的程序以输出正确答案，将在“公用代码介绍”和“使用 XXX 完成 Task2”这几章中介绍，同学们可以根据自己选择的工具来看对应的教程。这里只介绍输出文件的格式与含义。
 
-以 `000_main.sysu.c` 这个最简单的测试样例为例，这个测试样例的输入可以在 `/YatCC/build/test/task0/functional-0/000_main.sysu.c` 中找到（我们默认且推荐同学们在实验二中启用复活，这样一来实验二的测试输入就是实验零的输出），而测试样例的标准输出答案则由 `clang parse` 生成，可以在 `/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json` 文件处查看。
+在本次实验中，使用 `bison` 和 `antlr` 的输入并不相同：前者的输入为 task1 的标准输出（TOKEN流），而后者的输入为 task0 的输出（源代码）。以 `000_main.sysu.c` 这个最简单的测试样例为例，这个测试样例的输入可以在 `/YatCC/build/test/task1/functional-0/000_main.sysu.c` 或 `/YatCC/build/test/task0/functional-0/000_main.sysu.c` 中找到，而测试样例的标准输出答案则由 `clang parse` 生成，可以在 `/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json` 文件处查看。
 
 
 ![alt text](../images/bison/task2-answer.png)

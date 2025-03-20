@@ -1,10 +1,10 @@
-# 使用 bison 完成 Task2
+# 使用 Bison 完成 Task2
 
 ## 任务介绍
 
 同学们需要完成下面两个部分的内容：
 
-1. 词法分析：由于task1的标准答案是复活部分的代码输入，因此同学们需要**补充`lex.cpp`文件的`kTokenId`数据结构**，将 clang 标准输出与语法分析的输入进行匹配；
+1. 词法分析：若选择复活版本，task2 的输入为 task1 的标准输出，因此同学们需要参考 `build/test/task1/*/*/answer.txt` **补充`lex.cpp`文件的`kTokenId`数据结构**，将语法分析的输入与 task1 的 clang 标准输出进行匹配；
 2. 语法分析：类型检查和 ASG 生成 json 文件的两部分代码已经提供基本的实现。同学们需要认真阅读`common/asg.hpp`文件，了解每个非终结符对应类型的结构和操作，结合文档示例中给出的参考文法，**补充`par.y`文件中的缺少的文法和语义动作**。
 
 ## 相关知识
@@ -15,17 +15,17 @@
 
 假如同学们在学习一种新的语言，这时候我们需要一个“词典”来翻译听到或者看到的这门语言的单词。同样，在计算机领域，编程语言也需要这样一个“词典”，我们称之为“解析器”，它用来读懂程序代码。那么 Bison 就像是一个专门用来制作这种“词典”的工厂。你需要告诉 Bison 你的编程语言的规则，比如这门语言是怎样建立的，有哪些单词，单词之间又是怎样组合的等等，然后 Bison 就会根据你提供的这些规则，为你制作出一个符合这些规则的“词典”或者说“解析器”。
 
-这个“解析器”可以作为一个针对特定编程语言的阅读工具，帮助计算机更好地理解这门语言的程序代码。比如说，当计算机通过这个“解析器”读到一个程序代码时，它可以告诉计算机这个代码的意思是让计算机执行什么样的操作。通过上述的比喻，相信大家可以理解，bison 是一个语法分析器的生成器。而 flex 和 Bison 常常进行配合使用，从而共同完成词法分析和语法分析。
+这个“解析器”可以作为一个针对特定编程语言的阅读工具，帮助计算机更好地理解这门语言的程序代码。比如说，当计算机通过这个“解析器”读到一个程序代码时，它可以告诉计算机这个代码的意思是让计算机执行什么样的操作。通过上述的比喻，相信大家可以理解，Bison 是一个语法分析器的生成器。而 flex 和 Bison 常常进行配合使用，从而共同完成词法分析和语法分析。
 
-大致可以将其处理流程理解如下（更为准确地在**bison 实现原理**部分介绍）：
+大致可以将其处理流程理解如下（更为准确地在**Bison 实现原理**部分介绍）：
 
 - 输入一个文件，flex 可以对该文件进行正则表达式的匹配，从而生成一系列的 token 流（这个大家在实验一中已经很清楚了）。
 
-- lex 生成每一个 token 之后，将其传给 Bison 进行处理：bison 会对当前传入的 token 进行语法分析，即文法的匹配，并进行相应移进归约操作，从而完成语法分析。
+- lex 生成每一个 token 之后，将其传给 Bison 进行处理：Bison 会对当前传入的 token 进行语法分析，即文法的匹配，并进行相应移进归约操作，从而完成语法分析。
 
 - 同时，我们可以在 Bison 进行移进归约操作的时候，进行自定义语义动作，从而可以完成语法分析。
 
-bison 的使用方式很简单，给出下列重要的知识总结：
+Bison 的使用方式很简单，给出下列重要的知识总结：
 
 #### Flex 和 Bison 的使用范式
 
@@ -134,13 +134,13 @@ start: NUMBER STRING { $$ = $2 + $1; } ;
 
 #### Bison 实现原理（选读）
 
-首先要明白的一点是，Flex 和 Bison 的代码不是 C 和 C++源代码，严格地说它们是专用于生成词法解析器和语法解析器的领域特定语言（DSL）。bison 不是语法分析器，只是用于生成语法分析器的一种语言。使用 Bison 定义了语义分析规则之后，其会生成`y.tab.h`, `y.tab.c`, `y.output`等文件，将这些文件与 flex 生成的文件`lex.yy.c`一起进行编译运行，最后可以得到一个可执行文件，而这个文件才是用作输入文本的语法分析器所用。
+首先要明白的一点是，Flex 和 Bison 的代码不是 C 和 C++源代码，严格地说它们是专用于生成词法解析器和语法解析器的领域特定语言（DSL）。Bison 不是语法分析器，只是用于生成语法分析器的一种语言。使用 Bison 定义了语义分析规则之后，其会生成`y.tab.h`, `y.tab.c`, `y.output`等文件，将这些文件与 flex 生成的文件`lex.yy.c`一起进行编译运行，最后可以得到一个可执行文件，而这个文件才是用作输入文本的语法分析器所用。
 
 上述中间过程，我们都为同学们进行省略和遮盖，同学们以后如果需要自己用的话，这些中间过程必不可少。
 
-bison 官方文档（不建议看）
+Bison 官方文档（不建议看）
 
-https://www.gnu.org/software/bison/manual/ 这是 Bison 的官方文档，不建议看，在熟悉 Bison 以后用于查找一些具体用法比较好。
+https://www.gnu.org/software/Bison/manual/ 这是 Bison 的官方文档，不建议看，在熟悉 Bison 以后用于查找一些具体用法比较好。
 
 #### Bison 总结
 
@@ -687,11 +687,11 @@ declaration_list
 
 以 main.cpp 为入口，实验 2 首先进行语法分析：`yyparse`（在其中进行填充 ASG 的结构），然后进行类型检查 `typing(*par::gTranslationUnit)`，最后将 asg 生成 json 文件 `asg2json`，并且写入指定文件。
 
-在语法分析中，bison 的 `yyparse`中有下面的逻辑：
+在语法分析中，Bison 的 `yyparse`中有下面的逻辑：
 
 - 由于实验 2 以复活版本的进行实验，因此输入的是 task1-answer，同学们可以看下其中的一个文件：`/YatCC/build/test/task1/functional-0/000_main.sysu.c/answer.txt`，如下图所示
 
-![task1-answer](../images/bison/task1-answer.png)
+![task1-answer](../images/Bison/task1-answer.png)
 
 - Bison 会读取词法分析`lex`中的传入的`token`（`lex`每读取一个，就会传给 Bison 进行语法分析），因此将上述文件输入到实验 2 中，此时词法分析`lex`相关部分代码比起实验一会发生变化，不过这一部分的代码目前已经写好了，同学们可以自行查看。
   （其逻辑是：相比于实验一的输入直接是源文件从而进行相关的各个`token`的匹配，实验二复活版本将匹配上述输入文件的每一行，然后对每一行进行处理，提取出每行的第一个单词（`tokenId`）和每行的第二个单词中的引号内容（`tokenValue`）。例如，以一行为例，识别出的`token`：其`tokenId`为`int`，其`tokenValue`为引号内的内容，也为`int`。）
@@ -704,7 +704,7 @@ declaration_list
 对实验整体的整体过程有了把握，我们接下来看下这部分实验文件的整体结构。
 
 ```bash
--- bison
+-- Bison
    |-- lex.cpp
    |-- lex.hpp
    |-- lex.l
@@ -942,7 +942,7 @@ selection_statement
 ### yydebug
 
 yyparse 部分出现问题，即 Bison 的文法规约等出现问题，直接在 main.cpp 中加入 yydebug 为 1 的代码(如下图)，即可打印出详细的 Bison 文法移进规约栈的信息，从而进行定位。
-![alt text](../images/bison/yydebug.png)
+![alt text](../images/Bison/yydebug.png)
 
 需要提醒的是，这部分是不适合使用断点进行调试的，因为其会跳到 Bison 生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。文法的移进规约直接使用 yydebug，而其语义动作的定位需要再配合`std::cout`打印即可。
 
@@ -957,7 +957,7 @@ yyparse 部分出现问题，即 Bison 的文法规约等出现问题，直接�
 ```cpp
 void printToTxtFile(std::string message) {
     std::ofstream myfile;
-    myfile.open ("/YatCC/task/2/bison/log.txt", std::ios_base::app); // 'app' means appending to the end of the file, trunc: start of the file
+    myfile.open ("/YatCC/task/2/Bison/log.txt", std::ios_base::app); // 'app' means appending to the end of the file, trunc: start of the file
     myfile << message << "\n";
     myfile.close();
 }
@@ -968,15 +968,15 @@ void printToTxtFile(std::string message) {
 - **指针问题**
   取 type 的时候，其指针可能是空的，如果这个时候再取其 texp 对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。比如，如下图所示。
 
-  ![alt text](../images/bison/point.png)
+  ![alt text](../images/Bison/point.png)
 
 - **更改 ASG 的`Type`类型**
   更改 ASG 的`Type`类型，只能改变指针指向，不能直接去赋值。比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为 ASG 结构体的`Type`为`const Type *`类型。
 
-  ![alt text](../images/bison/type.png)
+  ![alt text](../images/Bison/type.png)
 
 ## 其他说明
 
 实验二的 BreakStmt 中的 loop 属性，这个属性不用处理不用管，本实验不会用到（实验三也不会用到）
 
-![alt text](../images/bison/loop.png)
+![alt text](../images/Bison/loop.png)
