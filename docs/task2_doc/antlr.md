@@ -6,7 +6,7 @@
 
 1. 前置工作：补充词法分析器缺失的部分。
    *  填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，已经写好的脚本 `SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成文件 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。
-   *  在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字与`k`开头的`token`名字的映射。前者是`answer.txt`每行的第一个单词，后者将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
+   *  在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字与`k`开头的`token`名字的映射。前者是`build/task1/*/*/answer.txt`每行的第一个单词，后者将在本实验的 `SYsUParser.g4` 充当词法部分的 `token` 的命名。
 
 2. 正式工作：补充缺失的文法规则和语义动作，实现语法分析器与从 AST 到 ASG 的转换。其中`SYsUParser.g4` 用于定义构建 AST 的文法规则，`Ast2Asg.cpp` 用于将 `antlr` 匹配得到的 AST 转换为 ASG。注意 `SYsUParser.g4` 与 `Ast2Asg.hpp/cpp` 需要同步更改：在 `SYsUParser.g4` 中修改了已有的规则就需要在 `Ast2Asg.hpp/cpp` 中对应的处理函数处做修改；如果在 `SYsUParser.g4` 中添加了新的规则就需要在 `Ast2Asg.cpp` 中添加新的处理函数，以保证 AST能够正确转换为 ASG。实现 `Ast2Asg.cpp` 的逻辑时，需要遵循 `asg.hpp` 中对 ASG 的定义。因此同学们需要认真阅读并理解 `asg.hpp` 。
 
@@ -48,7 +48,7 @@
 
 ![实验二总览](../images/task2_antlr/lab2_overview.jpg)
 
-不过，在本实验中，除了词法分析器部分的前置工作，同学们只需要修改 `SYsUParser.g4` 和 `Ast2Asg.cpp/hpp` 这两个部分即可。
+不过在本实验中，除了词法分析器部分的前置工作，同学们只需要修改 `SYsUParser.g4` 和 `Ast2Asg.cpp/hpp` 这两个部分即可。
 
 同学们只需要编辑 `SYsUParser.g4` 以定义抽象语法树 AST （以 `g4` 为后缀名的文件 是 `antlr` 中用于定义词法规则和语法规则的文件）。这是完成语法分析器所需的唯一工作，除此之外这个语法分析器的其它工作已经由助教们预先在 `main.cpp` 中实现了。（感兴趣的同学可以自行借助“Task2 的程序做了什么”一节深入了解）
 
