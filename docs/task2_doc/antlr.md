@@ -21,7 +21,7 @@
   |-- CMakeLists.txt
   |-- README.md
   |-- SYsULexer.cpp    # 需要修改
-  |-- SYsULexer.hpp    # 需要修改
+  |-- SYsULexer.hpp
   |-- SYsULexer.py
   |-- SYsULexer.tokens # 需要修改
   |-- SYsUParser.g4    # 需要修改
