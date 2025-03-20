@@ -21,7 +21,7 @@
   |-- CMakeLists.txt
   |-- README.md
   |-- SYsULexer.cpp    # 需要修改
-  |-- SYsULexer.hpp    # 需要修改
+  |-- SYsULexer.hpp
   |-- SYsULexer.py
   |-- SYsULexer.tokens # 需要修改
   |-- SYsUParser.g4    # 需要修改
@@ -134,10 +134,10 @@
 
 ```bash
 -- antlr
-  |-- SYsULexer.cpp
+  |-- SYsULexer.cpp     # 需要修改
   |-- SYsULexer.hpp
   |-- SYsULexer.py
-  `-- SYsULexer.tokens
+  `-- SYsULexer.tokens  # 需要修改
 ```
 
 我们提前为同学们手写了 `SYsULexer` 类，同学们需要先填写 `SYsULexer.tokens` 中所有测试样例需要用到的`token`名字。在构建项目时，`SYsULexer.py` 会根据 `SYsULexer.tokens` 来生成 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`字母开头的`constexper`定义。然后同学们需要在 `SYsULexer.cpp` 中对应位置添加`clang`风格的`token`名字（也就是`answer.txt`每行的第一个单词）与`k`开头的`token`名字的映射。
