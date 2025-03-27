@@ -173,7 +173,7 @@ start
 
 - 由于实验 2 以复活版本的进行实验，因此输入的是 task1-answer，同学们可以看下其中的一个文件：`/YatCC/build/test/task1/functional-0/000_main.sysu.c/answer.txt`，如下图所示
 
-![task1-answer](../images/Bison/task1-answer.png)
+![task1-answer](../images/bison/task1-answer.png)
 
 - Bison 会读取词法分析`lex`中的传入的`token`（`lex`每读取一个，就会传给 Bison 进行语法分析），因此将上述文件输入到实验 2 中，此时词法分析`lex`相关部分代码比起实验一会发生变化，不过这一部分的代码目前已经写好了，同学们可以自行查看。
   （其逻辑是：相比于实验一的输入直接是源文件从而进行相关的各个`token`的匹配，实验二复活版本将匹配上述输入文件的每一行，然后对每一行进行处理，提取出每行的第一个单词（`tokenId`）和每行的第二个单词中的引号内容（`tokenValue`）。例如，以一行为例，识别出的`token`：其`tokenId`为`int`，其`tokenValue`为引号内的内容，也为`int`。）
@@ -424,7 +424,7 @@ selection_statement
 ### yydebug
 
 yyparse 部分出现问题，即 Bison 的文法规约等出现问题，直接在 main.cpp 中加入 yydebug 为 1 的代码(如下图)，即可打印出详细的 Bison 文法移进规约栈的信息，从而进行定位。
-![alt text](../images/Bison/yydebug.png)
+![alt text](../images/bison/yydebug.png)
 
 需要提醒的是，这部分是不适合使用断点进行调试的，因为其会跳到 Bison 生成的代码进行状态的不断跳转，根本不知道文法到底归约到哪里了。文法的移进规约直接使用 yydebug，而其语义动作的定位需要再配合`std::cout`打印即可。
 
@@ -450,15 +450,15 @@ void printToTxtFile(std::string message) {
 - **指针问题**
   取 type 的时候，其指针可能是空的，如果这个时候再取其 texp 对象，就会终止，也不会有报错信息，最好判断一下是不是空指针再去取。比如，如下图所示。
 
-  ![alt text](../images/Bison/point.png)
+  ![alt text](../images/bison/point.png)
 
 - **更改 ASG 的`Type`类型**
   更改 ASG 的`Type`类型，只能改变指针指向，不能直接去赋值。比如，如下图所示。新建一个`ty`的`Type`对象，更改`ty`，然后改变`$2`的`type`指针的指向为更改后的`ty`。如果直接进行`$2->type->spec=...`是不运行的，因为 ASG 结构体的`Type`为`const Type *`类型。
 
-  ![alt text](../images/Bison/type.png)
+  ![alt text](../images/bison/type.png)
 
 ## 其他说明
 
 实验二的 BreakStmt 中的 loop 属性，这个属性不用处理不用管，本实验不会用到（实验三也不会用到）
 
-![alt text](../images/Bison/loop.png)
+![alt text](../images/bison/loop.png)
