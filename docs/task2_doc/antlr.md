@@ -163,7 +163,25 @@
 
 因此，同学们需要填写 `SYsUParser.g4` 以定义 AST。定义 AST 的方式大家将在或已经在课堂上学习过了，这里不再赘述。
 
-然而，由于 AST 是存在于内存中的不便于阅读的数据结构，为了确保同学们确实理解 AST 的结构，我们加入了将 AST 转换为 ASG 的任务，这是同学们的工作。从 AST 到 ASG 的转换同时增加了额外的语义信息，如作用域、类型信息、变量和函数之间的关系等。最后 ASG 会经过一系列转换得到具有可读性的 JSON 文件，不过这些转换已经实现好了。
+这里只指出一个小细节以帮助同学们入手理解 ANTLR 与 `SYsUParser.g4` ：
+
+ANTLR 根据 `SYsUParser.g4` 解析生成的上下文 Context 类内会有若干数目的子节点函数，这些子节点函数会根据子节点的出现模式来返回不同的子节点数据结构。
+
+以 `initDeclaratorList` 节点为例，可能同时存在多个相同的子节点`initDeclarator` ，则 ANTLR 为其生成的子节点函数 `p->initDeclarator()` 会返回一个 `std::vector` 类型的数组。因此在下面的代码中我们可以发现，我们需要遍历 `p->initDeclarator()` 才能获取 `initDeclarator`。
+
+![alt text](../images/task2_antlr/generate_ast-1.png)
+
+![alt text](../images/task2_antlr/generate_ast-2.png)
+
+另一种情况，在以 `unaryExpression` 节点为例的节点中，不可能存在超过一个同类型子节点， `unaryExpression` 的三类子节点不论是 `postfixExpression` ， 还是 `unarOperator` ，抑或是构成了右递归的 `UnaryExpression` ，都不可能同时存在超过一个。对于这类节点， ANTLR 为其生成的子节点函数可以直接返回子节点本身而非 `std::vector` 或其它类型的容器。
+
+![alt text](../images/task2_antlr/generate_ast-3.png)
+
+![alt text](../images/task2_antlr/generate_ast-4.png)
+
+对于其它更多情况，如果同学们想要了解 ANTLR 生成的函数究竟做了什么工作，实现了什么逻辑，返回了什么内容，大家可以 `/YatCC/build/antlr4_generated_src/task2-antlr/SYsUParser.h` 文件中深入研究。
+
+最后，由于 AST 是存在于内存中的不便于阅读的数据结构，为了确保同学们确实理解 AST 的结构，我们加入了将 AST 转换为 ASG 的任务，这是同学们的工作。从 AST 到 ASG 的转换同时增加了额外的语义信息，如作用域、类型信息、变量和函数之间的关系等。在转换过程的最后， ASG 成为了具有可读性的 JSON 文件，不过这些转换已经实现好了。
 
 ### From AST to ASG
 
