@@ -418,7 +418,7 @@ jump_statement
 
    `statement`部分的语义动作是`$$ = $1`，意味直接将右部第一个符号（`compound_statement`等）的语义值赋给左部（`statement`）。
 
-   `jump_statement`部分的语义动作显示调用函数模板`&par::gMgr.make<asg::ReturnStmt>();`构造`ReturnStmt`类型的 ASG 节点，然后填充该结构体（具体可以看`make`的代码，只要是直接或间接继承于`Obj`类型的都可以用这个构造器进行构造）。
+   `jump_statement`部分的语义动作显式调用函数模板`&par::gMgr.make<asg::ReturnStmt>();`构造`ReturnStmt`类型的 ASG 节点，然后填充该结构体（具体可以看`make`的代码，只要是直接或间接继承于`Obj`类型的都可以用这个构造器进行构造）。
 
    根据`ReturnStmt`类型节点的定义，需要填充`func`、`expr`结构，在这里只有`jump_statement : RETURN expression ';'`的情况需要填充`expr`结构。同时，将这里`expression`的语义值赋值给`
 
@@ -476,7 +476,7 @@ $$->body = $4;
 
 可以看到一个规则下有两个动作。可以从左往右看：在匹配到`declartion_specifiers`和`declarator`后，就执行第一个语义动作（即，想要他执行后面的代码），然后再匹配到`compund_statement`时，执行第二个语义动作。
 
-第二个动作中用到了`$4`，七点 hi 就代表这`compound_startement`，因为第一个动作也被 Bison 视为一个部分计数。但是这种情况不建议使用`$4`，而是直接用`$+名字`，也即`$compund_statement`，因为有时候 Bison 会进行优化，导致`$4`的值不是`compound_statement`。
+第二个动作中用到了`$4`，代表`compound_startement`，此时第一个动作也被 Bison 视为一个部分计数。但是这种情况不建议使用`$4`，而是直接用`$+名字`，也即`$compund_statement`，因为有时候 Bison 会进行优化，导致`$4`的值不是`compound_statement`。
 
 ## 如何 debug
 
