@@ -12,7 +12,7 @@
 
 ## 输入输出简介
 
-在本次实验中，使用 Bison 和 ANTLR 的输入并不相同。前者的输入为 task1 的输出（TOKEN 流，例如`/YatCC/build/test/task1/functional-0/000_main.sysu.c`），而后者的输入为 task0 的输出（经过预处理的源代码，例如`/YatCC/build/test/task0/functional-0/000_main.sysu.c`）。
+在本次实验中，使用 Bison 和 ANTLR 的输入并不相同。前者的输入为 task1 的输出（token 流，例如`/YatCC/build/test/task1/functional-0/000_main.sysu.c`），而后者的输入为 task0 的输出（经过预处理的源代码，例如`/YatCC/build/test/task0/functional-0/000_main.sysu.c`）。
 
 而输出都是由 clang parse 生成，是代表 ASG 的 JSON 文件，例如`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`（以下只截取了部分内容）：
 

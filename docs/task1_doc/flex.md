@@ -1,4 +1,4 @@
-## flex 简介
+## flex 简介 :id=flex-intro
 
 **flex**（fast lexical analyzer generator），是一个词法分析器的生成工具。在理论课上同学们应该已经了解到，有工具能够根据正则表达式形式的词法规范自动生成词法分析器。flex 就是这样一个工具。
 
