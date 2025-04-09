@@ -72,65 +72,41 @@ git stash pop	# 恢复先前暂时储藏的修改
 
 注：在同学们阅读此部分文档时，请区分解答是涉及 antlr 框架，还是 bison 框架，以免造成误解。
 
-#### 1.为什么 g4 文法可以用 ```unary_expression : postfix_expression | unary_operator unary_expression;``` 而不能用 ```(unary_operator)* postfix_expression``` ？
+#### 1.为什么 g4 文法可以用 `unary_expression : postfix_expression | unary_operator unary_expression;` 而不能用 `(unary_operator)* postfix_expression` ？
 
-在解释这个问题前，需要说明如下事项。
-
-在 task2 中，我们既可以使用“递归”的文法，也可以使用“直接”的文法，
-
-例如 expression 的这两种写法都是可以的：
+在解释这个问题前，需要说明如下事项。在 task2 中，我们既可以使用“递归”的文法，也可以使用“直接”的文法。例如 expression 的这两种写法都是可以的：
 
 ```bash
 assignment_expression | expression Comma assignment_expression
 assignment_expression (Comma assignment_expression)*
 ```
 
-但是在 task2 中，需要注意，你的 g4 的文法会影响 ```ctx->assignment_expression()``` 的返回类型：
+但是在 task2 中，需要注意，你的 g4 的文法会影响 `ctx->assignment_expression()` 的返回类型：
 
-文法是 ```assignment_expression | expression Comma assignment_expression``` 时，```ctx->assignment_expression()``` 是单个的指针；
+文法是 `assignment_expression | expression Comma assignment_expression` 时，`ctx->assignment_expression()` 是单个的指针；
 
-文法是 ```assignment_expression (Comma assignment_expression)*``` 时，```ctx->assignment_expression()``` 是一个 vector ，里面存放一堆指针。
+文法是 `assignment_expression (Comma assignment_expression)*` 时，`ctx->assignment_expression()` 是一个 vector ，里面存放一堆指针。
 
 怎么回事呢？这是因为助教们的脚本会根据你的文法，在 SYsUParser.h 中自动生成相应的类型。
 
-比如 ```assignment_expression (Comma assignment_expression)*``` ，
+比如 `assignment_expression (Comma assignment_expression)*` ，因为里面 assignment_expression 的数量是不确定的，所以需要用 vector ，`ctx->assignment_expression()` 便是一个 vector ，与此同时， expression 将会有许多的孩子分支， `auto children = ctx->children;` 之后， `children[0]` 、 `children[2]` 、 `children[4]` ...便对应各个 assignment_expression 节点。
 
-因为里面 assignment_expression 的数量是不确定的，所以需要用 vector ，```ctx->assignment_expression()``` 便是一个 vector ，
+另一个例子， `assignment_expression | expression Comma assignment_expression` ，里面 assignment_expression 的数量是确定的1，于是 `ctx->assignment_expression()` 便是单个的指针，与此同时， expression 的孩子分支要么只有一个，要么有三个（跟你写的文法是呼应的）。
 
-与此同时， expression 将会有许多的孩子分支， ```auto children = ctx->children;``` 之后， ```children[0]``` 、 ```children[2]``` 、 ```children[4]``` ...便对应各个 assignment_expression 节点。
+现在回到标题的问题，为什么一元表达式不能用非递归型的 `(unary_operator)* postfix_expression` 呢？这其实是助教的问题，因为助教在一些已实现的代码里，是按照 `ctx->unary_operator()` 是单个的指针写的代码，但是如果你把文法改成 `(unary_operator)* postfix_expression` ，就会使得 `ctx->unary_operator()` 变成一个 vector 了，于是助教们写的代码会炸。
 
-另一个例子， ```assignment_expression | expression Comma assignment_expression``` ，
+就结果而言，对一元表达式，建议使用“递归”的文法 `unary_expression : postfix_expression | unary_operator unary_expression;`。当然对于其他大多数文法规则，你用“递归”的文法或者“直接”的文法都可以！注意一下上述的“是否是vector”的问题即可。
 
-里面 assignment_expression 的数量是确定的1，于是 ```ctx->assignment_expression()``` 便是单个的指针，
+#### 2.关于 `children[i]` 与 `ctx->assignment_expression()` 的区别
 
-与此同时， expression 的孩子分支要么只有一个，要么有三个（跟你写的文法是呼应的）。
-
-现在回到标题的问题，为什么一元表达式不能用非递归型的 ```(unary_operator)* postfix_expression``` 呢？
-
-这其实是助教的问题，因为助教在一些已实现的代码里，是按照 ```ctx->unary_operator()``` 是单个的指针写的代码，
-
-但是如果你把文法改成 ```(unary_operator)* postfix_expression``` ，就会使得 ```ctx->unary_operator()``` 变成一个 vector 了，于是助教们写的代码会炸。
-
-就结果而言，对一元表达式，建议使用“递归”的文法 ```unary_expression : postfix_expression | unary_operator unary_expression;```
-
-当然对于其他大多数文法规则，你用“递归”的文法或者“直接”的文法都可以！注意一下上述的“是否vector”的问题即可。
-
-
-
-#### 2.关于 ```children[i]``` 与 ```ctx->assignment_expression()``` 的区别
-
-以文法 ```expression : assignment_expression (Comma assignment_expression)* ;``` 为例，
+以文法 `expression : assignment_expression (Comma assignment_expression)* ;` 为例，
 
 ```cpp
 auto children = ctx->children;
 for(int i=0;i<children.size();i+=2)children[i];
 ```
 
-这样取出的偶数位置的 ```children[i]``` 便对应各个 ```assignment_expression``` 节点，
-
-但需注意类型转换，因为 ```children[i]``` 还不是 ```ast::Assignment_expressionContext*``` 类型，
-
-照葫芦画瓢可以写出类似的代码，
+这样取出的偶数位置的 `children[i]` 便对应各个 `assignment_expression` 节点，但需注意类型转换，因为 `children[i]` 还不是 `ast::Assignment_expressionContext*` 类型，照葫芦画瓢可以写出类似的代码：
 
 ```cpp
 node->rht = self(dynamic_cast<ast::Assignment_expressionContext*>(children[i]));
@@ -138,26 +114,17 @@ node->rht = self(dynamic_cast<ast::Assignment_expressionContext*>(children[i]));
 
 这里稍微介绍一下这个 self 是做什么的：
 
-在task2中，你会用到大量的 ```make<???>()``` ，这个 make 函数的功能是向系统申请一小块内存空间，然后返回一个指向该实空间的指针，
+在task2中，你会用到大量的 `make<???>()` ，这个 make 函数的功能是向系统申请一小块内存空间，然后返回一个指向该实空间的指针，例如 `auto ret = make<CallExpr>();`。
 
-例如 ```auto ret = make<CallExpr>();```
+我们的函数诸如 `Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)` ，返回的便是这个 ret 指针，但重点是这个 ret 指针指向了一个实空间，这个实空间正是我们通过调用 `make<???>()` 申请得到的。
 
-我们的函数诸如 ```Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)``` ，返回的便是这个 ret 指针，但重点是这个 ret 指针指向了一个实空间，这个实空间正是我们 ```make<???>()``` 出来的。
+我们用到的许多 self 就是诸如 `Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)` 的函数中的某一种。总之， `self(???)` 返回一个指针，但具有实际价值的，是这个指针指向的实空间。
 
-我们用到的许多 self 就是诸如 ```Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)``` 的函数中的某一种，总之， ```self(???)``` 返回一个指针，但具有实际价值的，是这个指针指向的实空间。
+回归正题，介绍完 `children[i]` ，再来介绍 `ctx->assignment_expression()`。
 
-回归正题，介绍完 ```children[i]``` ，再来介绍 ```ctx->assignment_expression()```
+调用 `auto list=ctx->assignment_expression()` ，返回一个 vector ， list 里面便装着一堆 `assignment_expression`。通过 `for(int i = 0; i < list.size(); i++)list[i];` 可以访问 `expression` 的每一个 `assignment_expression` 孩子。注意我们不需要像 children 那样访问0、2、4、6这样的位置，因为 `ctx->assignment_expression()` 返回一个 vector ，里面只装了 `assignment_expression` ，而不会装有 Comma。
 
-调用 ```auto list=ctx->assignment_expression()``` ，返回一个 vector ， list 里面便装着一堆 assignment_expression
-
-```for(int i = 0; i < list.size(); i++)list[i];``` 这样可以访问 expression 的每一个 assignment_expression 孩子
-
-注意我们不需要像 children 那样访问0、2、4、6这样的位置，因为 ```ctx->assignment_expression()``` 返回一个 vector ，里面只装了 assignment_expression ，而不会装有 Comma
-
-在编写代码时，需注意 ```list[i]``` 和 ```self(list[i])``` 的区别。前文已提到了 ```self(???)``` 的作用， ```self(???)``` 实际上会调用我们写的那些函数，返回一个指针，这个指针指向一个 make 出来的实空间。而 ```list[i]``` 仅是在遍历 ctx 的孩子。我们的 task2 要做的就是让指针们指向正确的 make 出来的实空间，这个实空间往往也具备一些指针成员，指向其他的实空间，这样指来指去，把实空间和指针安排好后，就构建好了 asg 语法图。
-
-
-
+在编写代码时，需注意 `list[i]` 和 `self(list[i])` 的区别。前文已提到了 `self(???)` 的作用， `self(???)` 实际上会调用我们写的那些函数，返回一个指针，这个指针指向一个 make 出来的实空间。而 `list[i]` 仅是在遍历 ctx 的孩子。我们的 task2 要做的就是让指针们指向正确的 make 出来的实空间，这个实空间往往也具备一些指针成员，指向其他的实空间。这样指来指去，把实空间和指针安排好后，就构建好了 asg 语法图。
 
 #### 3.关于函数定义的若干问题
 
@@ -182,9 +149,7 @@ function_definition
 
 为了便于后文你理解“类型”与“限定”，此处稍作提及。
 
-你可能在代码中见过一个叫 specs 的变量，是 SpecQual 类型。
-
-SpecQual 类型包含“类型spec”与“是否限定qual”两项内容。
+你可能在代码中见过一个叫 `specs` 的变量，是 `SpecQual` 类型。`SpecQual` 类型包含“类型spec”与“是否限定qual”两项内容。
 
 下文的函数定义的代码中含有详细的注释解析，可以帮助你理解这部分具有复杂层次的内容，代码仅供参考，同学们也可以有其他实现方式。
 
