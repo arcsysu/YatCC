@@ -63,7 +63,7 @@ flex 和 Bison 之间以 Bison 为主，flex 只是辅助的可选项。Bison �
 
 在联合使用时，我们应该**首先编写 Bison 语法定义`.y`文件，在前言区用`%token`定义有哪几种词法单元，然后在 flex 的`.l`文件中包含 Bison 生成的头文件，再编写词法单元的解析规则**，这和我们实验 1 到实验 2 的顺序恰好是相反的。知道这些之后，我们就得到了基本的文件骨架：
 
-```cpp
+```bison
 // parser.y
 %code requires {
   int yylex();
@@ -93,7 +93,7 @@ flex 和 Bison 之间以 Bison 为主，flex 只是辅助的可选项。Bison �
 
 下面是一个具体的例子，用于解析正负数字：
 
-```cpp
+```bison
 // parser.y
 %code top {
 int yylex (void);
@@ -134,7 +134,7 @@ start: NUMBER | ADD NUMBER | SUB NUMBER; // 写成我们熟悉的文法产生式
 
 在前言区，使用`%union`定义**所有**可能的语义值，然后分别用`%nterm`和`%token`将非终结符和终结符与其语义值关联起来：
 
-```cpp
+```bison
 %union {
   int num;      // 可能是int 类型的语义值
   char* str;    // 也可能是 char* 类型的语义值
@@ -149,7 +149,7 @@ start: NUMBER | ADD NUMBER | SUB NUMBER; // 写成我们熟悉的文法产生式
 
 在主体区，可以使用`$n`就可以操作文法符号对应的语义值：
 
-```cpp
+```bison
 start: NUMBER STRING { $$ = $2 + $1; } ;
 ```
 
@@ -161,7 +161,7 @@ start: NUMBER STRING { $$ = $2 + $1; } ;
 
 归根到底，语义值的来源是词法分析器。词法分析器在分析过程中，每识别到一个 token，会给 token 提供一个语义值，并通过全局变量`yylval`传递给语法分析器。比如在`.l`规则的动作部分，手动设置语义值：
 
-```cpp
+```bison
 [0-9]+ {
   yylval.num = atol(yytext);
   return NUMBER;
@@ -187,7 +187,7 @@ start: NUMBER STRING { $$ = $2 + $1; } ;
 
 一个具体的例子是：
 
-```cpp
+```bison
 start
     : translation_unit // 产生式，表示 start 可以推导为translation_unit
         {
@@ -202,7 +202,7 @@ start
 
 实验文件的整体结构如下所示：
 
-```bash
+```text
 bison/
 ├── lex.cpp
 ├── lex.hpp
@@ -300,7 +300,7 @@ jump_statement
 
    为了表示上面的规则，在`par.y`文件中应该添加如下代码：
 
-   ```cpp
+   ```bison
    // 只是部分文法，并不是全面的
    statement
    : compound_statement
@@ -386,7 +386,7 @@ jump_statement
 
    有了上面的结构体，就可以填充相应的 ASG 结构。需要在原来代码的基础上，加上对应的语义动作:
 
-   ```cpp
+   ```bison
    statement // Stmt
    : compound_statement
      {
@@ -426,7 +426,7 @@ jump_statement
 
    在使用文法符号类型时，还需要在`par.y`相对应的地方进行类型的定义。以`compound_statement`为例，需要在前言区补充：
 
-   ```cpp
+   ```bison
    %union {
    asg::CompoundStmt* CompoundStmt;  // 首先添加一种语义值
    }
@@ -436,7 +436,7 @@ jump_statement
 
    最终，合法的句子会归约到开始符号，对于我们实验来说，就是生成一个`TranslationUnit`的结构体，其中包含了整个 ASG 的信息：
 
-   ```cpp
+   ```bison
    start
    : translation_unit
     {
@@ -451,7 +451,7 @@ jump_statement
 
 最后介绍一段比较特殊的的代码
 
-```cpp
+```bison
 function_definition
 : declaration_specifiers declarator
 {
@@ -511,18 +511,35 @@ void printToTxtFile(std::string message) {
 
   取类型的时候，返回的指针可能是空的，如果这个时候强行访问其 `texp` 成员，就会终止，也不会有报错信息。所以最好判断一下是不是空指针再去取，例如：
 
-  ![alt text](../images/bison/point.png)
+  ```cpp
+  auto ty = par::gMgr.make<asg::Type>();
+  if($2->type != nullptr)
+    ty->texp = $2->type->texp;
+  ```
 
 - 修改 ASG 结构体的`type`
 
-  想要修改 ASG 结构体的`type`，应该想下图这样做：
+  想要修改 ASG 结构体的`type`，应该像下面这样做：
 
-  ![alt text](../images/bison/type.png)
+  ```cpp
+  auto ty = par::gMgr.make<asg::Type>();
+  if($2->type != nullptr)
+    ty->texp = $2->type->texp;
+  ty->spec = $1->spec, ty->qual = $1->qual;
+  $2->type = ty;
+  ```
 
-  首先新建一个`Type`对象`ty`，然后修改`ty`，最后令`$2->type=ty`，从而实现`type`的修改。直接`$2->type->spec=...`是不行的，因为 ASG 结构体的`type`为`const Type *`类型。
+  首先新建一个`Type`对象`ty`，然后修改`ty`，最后令`$2->type=ty`，从而实现`type`的修改。直接`$2->type->spec=...`是不行的，因为 ASG 结构体的`type`的类型为`const Type *`。
 
 ## 其他说明
 
 task2 中 `BreakStmt` 的 `loop` 属性暂时不用处理，本实验以及实验三均不会用到：
 
-![alt text](../images/bison/loop.png)
+```cpp
+struct BreakStmt : Stmt {
+  Stmt *loop {nullptr};
+
+private:
+  void __mark__(Mark mark) override;
+};
+```
