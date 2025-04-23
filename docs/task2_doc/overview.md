@@ -91,9 +91,13 @@
 
 建议同学们在实验过程中从低到高选择不同的日志等级，比较当前输出与标准输出的区别，并逐渐完善代码。
 
-## 文法参考
+同时，强烈建议（尤其是选用 Bison 完成 task2 的）同学们在`config.cmake`中**启用复活功能**，以直接使用标准的输入，避免 task1 中实现的不完善，影响 task2 的完成。是否启用复活功能，对本次实验的成绩没有任何影响。
 
-本实验模板代码所取用的文法如下，供同学们参考。下面给出的文法是非常完整的类 C 语言的文法，同学们需要在阅读理解后选择其中符合本实验的部分文法。同学们也可以参考和学习 SysY 语言的文法解释和定义完成实验：[SysY 文法](https://gitlab.eduxiji.net/csc1/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf)。
+## 文法参考 :id=grammer-reference
+
+本实验设计时参考的文法是 SysY 语言文法。SysY 语言文法是一个非常完整的类 C 语言的文法，完成实验只需要用到其中的一部分。同学们还可以参考 [SysY 语言定义](https://gitlab.eduxiji.net/csc1/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf)，来获取更详细的解释和说明。
+
+下面是 SysY 语言文法的所有产生式，同学们只需要选取其中的一部分，即可完成实验：
 
 <details>
   <summary>
