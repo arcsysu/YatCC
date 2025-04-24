@@ -76,6 +76,18 @@
                 └── IntegerLiteral
 ```
 
+## 构建目标介绍
+
+当同学们通过 `cmake` 插件点击小小按钮来构建 task2 的可执行文件时，助教们写好的各种 `CMakeLists`脚本会将 task2 所有相关代码文件编译成一个可执行文件。同学们在 `cmake` 插件中的下拉选项中看见，到底有哪些文件参与进来。
+
+![task2 build1](../images/task2_antlr/task2_build1.png)
+
+当可执行文件编译完成后，同学们可以在 `build/task/2/antlr/` 或`build/task/2/bison/`目录下找到这个 `task2` 这个可执行文件。
+
+![task2 excutable](../images/task2_antlr/task2_excutable.png)
+
+当我们点击“ task2-score ”时，助教们写好的评测脚本`score.py`将调用这个程序，以测试样例作为输入，并将程序的输出（代表 ASG 的 JSON 文件）保存下来，最后与正确答案比较，给出评分。
+
 ## 评分标准
 
 同学们查看 JSON 文件，会发现上述每个节点里面包含了非常多的属性，除去 TypedefDecl 不用管之外，我们的评分以属性打印为准，具体如下：
