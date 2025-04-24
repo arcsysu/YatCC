@@ -1,5 +1,3 @@
-## 公共代码
-
 在本实验的 `common` 文件夹下存在如下几个代码文件：
 
 ```bash
@@ -47,6 +45,8 @@ common/
 ---
 
 总的来说，在 ASG 构建和操作过程中，所有的节点都继承自 `Obj` 类，确保了类型的统一和内存的可管理性。`Obj::Mgr`实例作为对象的容器和管理者，控制着所有对象的生命周期，并提供垃圾回收机制。在遍历或分析`ASG`时，`Obj::Walked` 用于保护遍历算法不会因循环引用而陷入死循环。
+
+感兴趣的同学还可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)，来了解更多内容。
 
 ## asg
 
@@ -156,6 +156,10 @@ Expr* Typing::assignment_cast(Expr* lft, Expr* rht) {
 
 这些方法使得 `Typing` 类可以灵活地处理各种类型相关的语义规则，包括基本的类型推导、类型兼容性检查和必要的类型转换。通过将这些功能集中在 `Typing` 类中，代码的其余部分可以在不直接处理复杂类型规则的情况下，进行语义分析和代码生成。
 
+如果同学们想要了解更多关于本实验类型系统的设计，可以看看这篇文章——[类型、类型检查与推导](https://github.com/arcsysu/YatCC/blob/main/docs/gyh-manual/%E7%B1%BB%E5%9E%8B%E3%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E4%B8%8E%E6%8E%A8%E5%AF%BC.md)
+
+[这个路径](https://github.com/arcsysu/YatCC/tree/main/docs/gyh-manual)下的其他文章也很值得一读，同学们会发现它们都深入到这个实验的底层设计理念，显得相当硬核，但相信它们会给同学们做实验时带来启发。不过需要注意的是，其中的一些信息可能已经过时。
+
 ## Asg2Json
 
 `Asg2Json.cpp` 和 `Asg2Json.hpp` 定义了一个 `Asg2Json` 类，其作用是是将抽象语法图 ASG 转换为 JSON 格式的表示。这样的转换使得 ASG 的结构可以以文本形式展示，便于调试、可视化和进一步的处理。
@@ -179,6 +183,212 @@ Expr* Typing::assignment_cast(Expr* lft, Expr* rht) {
 - `json::Object operator()(Decl* obj)` 用于处理声明。它会根据具体的声明类型（如变量声明或函数声明）调用相应的处理函数。
 
 每种具体的表达式和语句类型（如 `IntegerLiteral`, `BinaryExpr`, `CompoundStmt` 等）都有对应的处理方法，这些方法生成代表该节点的`json::Object`对象，并递归地处理节点的子节点（如果有）。
+
+## Ast2Asg 类
+
+### 类定义
+
+`Ast2Asg` 类是 ANTLR 代码框架中类，定义在`antlr/Ast2Asg.hpp`中，负责将由 ANTLR 解析器生成的 AST 转换为更方便处理的 ASG 形式。Bison 框架中，也有相同作用的东西，不过没有封装为一个类，都定义在了命名空间`par`中，可以查看`/bison/par.hpp`文件。
+
+整体上，`Ast2Asg.cpp` 中定义的 `Ast2Asg` 类通过这些方法实现了从 `ANTLR` 的 AST 到 ASG 的转换，涵盖了编程语言的主要构造：表达式、语句、声明和函数定义。转换过程中，它还处理了类型信息和作用域信息，为后续的语义分析和代码生成提供了基础。
+
+接下来以`antlr/Ast2Asg.hpp`中的定义为例，介绍 `Ast2Asg` 类的主要成员和方法：
+
+```cpp
+class Ast2Asg
+{
+public:
+  Obj::Mgr& mMgr;
+
+  Ast2Asg(Obj::Mgr& mgr)
+    : mMgr(mgr)
+  {
+  }
+
+  using SpecQual = std::pair<Type::Spec, Type::Qual>;
+
+  // 此处省略若干个 operator() 的重载
+
+private:
+  struct Symtbl;
+  Symtbl* mSymtbl{ nullptr };
+
+  FunctionDecl* mCurrentFunc{ nullptr };
+
+  template<typename T, typename... Args>
+  T* make(Args... args)
+  {
+    return mMgr.make<T>(args...);
+  }
+};
+```
+
+- `Obj::Mgr& mMgr` 是对对象管理器的引用，用于创建和管理 AST 节点对象。
+- `operator()` 方法被重载多次，每个重载对应处理 AST 中不同节点类型的转换逻辑。
+- `SpecQual` 是一个类型别名，用于表示变量或函数的类型和限定符。
+- `Symtbl` 结构是一个符号表，用于在转换过程中管理作用域内的符号信息。
+- `mSymtbl` 成员指向当前的符号表，`mCurrentFunc` 指向当前正在处理的函数声明，以便在处理表达式时可以访问函数的上下文信息。
+- `make<T>()` 模板函数用于通过对象管理器创建新的 AST 节点对象。
+
+`Ast2Asg` 类的方法主要负责将 AST 中的每个节点转换为 ASG 的对应表示。包括但不限于：
+
+- 处理整个编译单元（`TranslationUnit`）。
+- 转换类型说明符（`DeclarationSpecifiersContext`）和声明符（`DeclaratorContext`、`DirectDeclaratorContext`）。
+- 转换各种表达式（如`AssignmentExpressionContext`、`AdditiveExpressionContext`等）。
+- 转换语句（`StatementContext`、`CompoundStatementContext`等）。
+- 转换声明和函数定义（`DeclarationContext`、`FunctionDefinitionContext`等）。
+
+### 成员函数
+
+下面这个函数负责处理整个编译单元（通常是一个文件），它接收 ANTLR 生成的 `TranslationUnitContext` 对象作为参数，这个对象代表了整个文件的 AST 根节点。
+
+```cpp
+TranslationUnit*
+Ast2Asg::operator()(ast::TranslationUnitContext* ctx)
+{
+  auto ret = make<asg::TranslationUnit>();
+  if (ctx == nullptr)
+    return ret;
+
+  Symtbl localDecls(self);
+
+  for (auto&& i : ctx->externalDeclaration()) {
+    if (auto p = i->declaration()) {
+      auto decls = self(p);
+      ret->decls.insert(ret->decls.end(),
+                        std::make_move_iterator(decls.begin()),
+                        std::make_move_iterator(decls.end()));
+    }
+
+    else if (auto p = i->functionDefinition()) {
+      auto funcDecl = self(p);
+      ret->decls.push_back(funcDecl);
+
+      // 添加到声明表
+      localDecls[funcDecl->name] = funcDecl;
+    }
+
+    else
+      ABORT();
+  }
+
+  return ret;
+}
+```
+
+1. 首先，它创建了一个 `asg::TranslationUnit` 对象，这对应 ASG 的根节点。
+2. 然后，通过遍历 AST 中的所有外部声明（`externalDeclaration`），将它们转换为 ASG 中的声明和函数定义，并添加到 `asg::TranslationUnit` 的声明列表中。
+3. 如果遇到函数定义，还会将函数名添加到当前作用域的符号表中。
+
+---
+
+下面这个函数处理变量或函数的类型说明符和类型限定符。类型说明符（Specifier），用于指定变量或函数的基本类型或存储类别，例如`int`、`float`、`static`等。类型限定符（Qualifier），用于修饰类型的属性，例如 `const` 或 `volatile`等。
+
+```cpp
+Ast2Asg::SpecQual
+Ast2Asg::operator()(ast::DeclarationSpecifiersContext* ctx)
+{
+  SpecQual ret = { Type::Spec::kINVALID, Type::Qual() };
+
+  for (auto&& i : ctx->declarationSpecifier()) {
+    if (auto p = i->typeSpecifier()) {
+      if (ret.first == Type::Spec::kINVALID) {
+        if (p->Int())
+          ret.first = Type::Spec::kInt;
+        else
+          ABORT(); // 未知的类型说明符
+      }
+
+      else
+        ABORT(); // 未知的类型说明符
+    }
+    else
+      ABORT();
+  }
+
+  return ret;
+}
+```
+
+它遍历 AST 节点中的所有类型说明符，确定变量或函数的类型，并返回一个包含类型说明符和类型限定符的 `SpecQual` 对象。
+
+---
+
+部分 `operator()` 重载的简要说明：
+
+```cpp
+std::pair<TypeExpr*, std::string> Ast2Asg::operator()(ast::DeclaratorContext* ctx, TypeExpr* sub)
+// 这个方法处理声明符（declarator）。它可能包含数组、函数等更复杂的类型信息。
+// 方法接收一个声明上下文和可能的子类型表达式（例如数组的元素类型），并返回一个包含类型表达式和变量名的pair。
+
+
+Expr* Ast2Asg::operator()(各种表达式的Context* ctx)
+// 这些方法处理AST中的各种表达式类型（如赋值表达式、二元表达式、一元表达式等）。实现了将AST中的表达式节点转换为ASG节点的转换逻辑。
+// 例如，Expr* Ast2Asg::operator()(ast::AssignmentExpressionContext* ctx) 处理赋值表达式，创建并返回一个表示赋值的 Expr 节点。
+
+
+Stmt* Ast2Asg::operator()(ast::StatementContext* ctx) 和 CompoundStmt* Ast2Asg::operator()(ast::CompoundStatementContext* ctx)
+// 这些方法处理AST中的语句和复合语句。
+
+operator()(ast::StatementContext* ctx)
+// 根据语句类型调用相应的转换方法。
+
+operator()(ast::CompoundStatementContext* ctx)
+// 转换复合语句，处理其中的每一条语句或声明，并创建一个 CompoundStmt 节点。
+
+
+std::vector<Decl*> Ast2Asg::operator()(ast::DeclarationContext* ctx)
+FunctionDecl* Ast2Asg::operator()(ast::FunctionDefinitionContext* ctx)
+// 这些方法处理声明和函数定义。
+
+operator()(ast::DeclarationContext* ctx)
+// 转换变量声明，创建 Decl 节点的列表。
+
+operator()(ast::FunctionDefinitionContext* ctx)
+// 处理函数定义，创建一个 FunctionDecl 节点，并处理函数体和参数。
+```
+
+### Symtbl
+
+在`/bison/par.hpp`或`/antlr/Ast2Asg.cpp`中，定义了一个`Symtbl`结构体。以后者中的定义为例：
+
+```cpp
+struct Ast2Asg::Symtbl : public std::unordered_map<std::string, Decl*>
+{
+  Ast2Asg& m;
+  Symtbl* mPrev;
+
+  Symtbl(Ast2Asg& m)
+    : m(m)
+    , mPrev(m.mSymtbl)
+  {
+    m.mSymtbl = this;
+  }
+
+  ~Symtbl() { m.mSymtbl = mPrev; }
+
+  Decl* resolve(const std::string& name);
+};
+
+Decl*
+Ast2Asg::Symtbl::resolve(const std::string& name)
+{
+  auto iter = find(name);
+  if (iter != end())
+    return iter->second;
+  ASSERT(mPrev != nullptr); // 标识符未定义
+  return mPrev->resolve(name);
+}
+
+```
+
+`Symtbl` 用于实现符号表，它继承自 `std::unordered_map<std::string, Decl*>`，键是符号名称，值是指向声明节点的指针，由于保存当前作用域内所有声明的符号及其对应的节点之间的映射。
+
+`Symtbl`持有外层 `Ast2Asg` 对象的引用 `m`，以便于访问其成员。`mPrev` 是指向上一个符号表的指针，用于实现作用域的嵌套。
+
+`Symtbl`的构造函数，接收一个 `Ast2Asg` 对象的引用`m`，让自己的`mPrev`指向旧的符号表`m.mSymtbl`，然后将自身（一个新的符号表实例）设置为当前符号表`m.Symbtl=this`。析构函数中，则将符号表恢复到上一个符号表。
+
+`Symtbl::resolve()`方法用于在符号表中查找给定名称的符号的声明，如果当前作用域中没有找到，会递归地前往上一个作用域中查找。其接收一个`const std::string& name`，表示需要查找的符号名称；返回指向`Decl*`类型的指针，表示找到的符号的声明。如果给定名称的符号在任何一个作用域中都没有找到，则会触发一个断言错误。
 
 ## 类型的转换
 
