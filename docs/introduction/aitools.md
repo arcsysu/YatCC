@@ -12,13 +12,13 @@
 
 ### 1. 登录账号
 
-- 访问[注册网址](http://505676.proxy.nscc-gz.cn:8888/register?aff=MP23)， **使用学号(请注意必须使用学号注册，否则账号将会被删除)** 注册账号，设置好密码后点击注册。注册成功后使用学号、密码进行登录。
+<!-- - 访问[注册网址](http://505676.proxy.nscc-gz.cn:8888/register?aff=MP23)， **使用学号(请注意必须使用学号注册，否则账号将会被删除)** 注册账号，设置好密码后点击注册。注册成功后使用学号、密码进行登录。 -->
 
   > 在 2025 春季学期，如果你已经填写了教学群中的注册问卷，无需进行注册，直接使用助教发送到你邮箱的账号密码登录 API 平台即可。
 
-- ![api-登录](../images/llmtools/api-登录.png)
-- 访问[登录网址](http://505676.proxy.nscc-gz.cn:8888/login)，使用 **邮件下发** 的初始账号密码进行登录。
-- ![api-登录](../images/llmtools/api-登录.png)
+![api-登录](../images/llmtools/api-登录.png)
+- 访问[登录网址](https://llm.yatcc-ai.com/)，使用 **邮件下发** 的初始账号密码进行登录。
+![api-登录](../images/llmtools/api-登录.png)
 
 ### 2. 申请令牌
 
@@ -46,7 +46,7 @@
 
 - 安装好 VSCode（或登录使用 YatCC-AI）
 - 正常网络连接
-- 按照第一部分的内容注册好 api-key，准备好 Base URL（当前`http://505676.proxy.nscc-gz.cn:8888/v1/`）
+- 按照第一部分的内容注册好 api-key，准备好 Base URL（当前`https://llm.yatcc-ai.com/v1`）
 
 #### 配置 Roo Code
 
