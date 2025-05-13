@@ -310,7 +310,7 @@ FPM.addPass(CREATE_PASS);
 
 ### 使用 pybind11 封装 Python 调用
 
-#### pybind11 功能介绍：
+#### pybind11 功能介绍
 
 pybind11 是一个用于 在 C++ 和 Python 之间创建绑定（bindings） 的轻量级头文件库，在实验四中用于在 C++ 中嵌入并调用 Python 代码。主要有以下几个功能：
 
@@ -354,7 +354,7 @@ int main() {
 
 更多介绍请见官方文档：[pybind11 documentation](https://pybind11.readthedocs.io/)
 
-#### LLM python 模块：
+#### LLM python 模块
 
 首先调用 LLM 需要在`yatcc_llm/__init__.py`定义LLM的初始化信息，与LLM进行交互的功能主要由 chat 函数实现。
 ```
@@ -388,7 +388,7 @@ def chat(
 
 同学们可以根据自己的实际需求补充和完善LLM的调用和过滤功能。
 
-#### LLM接口封装：
+#### LLM接口封装
 
 `LLMHelper.cpp`主要目的是实现一个帮助类 `LLMHelper`，为 C++ 项目提供一个接口，用于通过 Python 模块与 LLM 交互。它将 LLM 的功能封装在 `LLMHelper`类中，屏蔽了底层实现的复杂性，方便在 C++ 项目中使用。
 
@@ -499,10 +499,10 @@ PassSequencePredict::run(llvm::Module& mod, llvm::ModuleAnalysisManager& mam)
 
 其主要部分如下：
 
-- 遍历生成 passInfo ：`pass_summary` 函数首先对比对比缓存内容、头文件和实现文件的最后修改时间判断输出文件是否已经存在或过时。通过读取`prompt`中预先定义的提示词，调用大语言模型分析用户提供的 LLVM Pass 类名，以及对应的头文件和实现文件，生成pass的基本信息
-- pass序列生成：从`prompts`中读取系统和用户提示词模板（分别位于 `PassSeqPredSysPrTpl.xml` 和 `PassSeqPredUserPrTpl.xml`）。
+- 遍历生成 passInfo ：`pass_summary` 函数首先对比对比缓存内容、头文件和实现文件的最后修改时间判断输出文件是否已经存在或过时。通过读取`prompts`中预先定义的提示词，调用大语言模型分析用户提供的 LLVM Pass 类名，以及对应的头文件和实现文件，生成 Pass的基本信息
+- pass序列生成：从`prompts`中读取系统和用户提示词模板（分别位于 `PassSeqPredSysPrTpl.xml` 和 `PassSeqPredUserPrTpl.xml`）
 创建一个与大语言模型的会话，发送模块的 IR 和 Pass 摘要，让模型生成推荐的 Pass 序列
-- 构建并执行 Pass 管理器：根据模型返回的 Pass 序列，动态构建 Pass 管理器（`llvm::ModulePassManager`），将推荐的 Pass 应用到模块上。
+- 构建并执行 Pass 管理器：根据模型返回的 Pass 序列，动态构建 Pass 管理器（`llvm::ModulePassManager`），将推荐的 Pass 应用到模块上
 
 完成`PassSequencePredict`模块的构建后就可以在主函数里进行使用。`main.cpp`主要负责输入IR文件，调用优化逻辑，并将结果写入输出文件。其中负责调用优化逻辑的函数是`opt`函数，其主要作用是配置和运行LLVM的Pass管理器，具体包括以下几个步骤：
 
