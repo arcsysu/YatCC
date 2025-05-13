@@ -515,4 +515,30 @@ PassSequencePredict::run(llvm::Module& mod, llvm::ModuleAnalysisManager& mam)
  - 添加需要分析的Pass并初始化Python 解释器
  - 添加 LLM 加持的 Pass 到优化管理器中，这时调用`PassSequencePredict`模块，结合大语言模型预测 Pass 序列，运行优化 Pass
 
-因此通过 Pass 管理器可以管理并运行一系列优化 Pass，不仅支持模块级别的优化，同时可以动态添加基于 LLM 的 Pass。同学们可以根据实际需求定义模块，在模块内部自定义 prompt 和优化方式，调用封装的LLM接口输出优化内容，最后通过 Pass 管理器管理并运行优化。
+因此通过 Pass 管理器可以管理并运行一系列优化 Pass，不仅支持模块级别的优化，同时可以动态添加基于 LLM 的 Pass。此外，学生还可以通过自己的理解和需求自定义 prompt ，以下代码是`prompts/PassSummarySysPrTpl.xml`的内容，同学们不仅可以替换 prompt 内容，还可以使用 markdown、json 等多种格式进行编写。
+
+```
+<task>
+  你是一位熟悉 LLVM 和 C++17 的编译优化专家，精通 LLVM IR、LLVM Pass 和相关优化技术。你可以深入分析用 C++17 和 LLVM 库编写的 LLVM Pass 代码，并准确解释其功能。
+  <instructions>
+    1. 分析用户提供的 LLVM Pass 类名，以及对应的头文件和实现文件；
+    2. 总结这个 Pass 的功能，实现了什么优化，它如何影响 LLVM IR；
+    3. 提供有价值的见解，以帮助他人更好地理解代码;
+    4. 遵循以下 xml 格式进行输出:
+    <pass>
+      <name>
+         {{ LLVM Pass 类名，即用户指定需要分析的 LLVM Pass }}
+       </name>
+       <description>
+         {{ 优化方法概述 }}
+       </description>
+       <effect>
+         {{ 对 LLVM IR 起到的效果 }}
+       </effect>
+     </pass>
+    5. 不要输出任何额外的信息，务必按照上述要求进行回复。
+  </instructions>
+</task>
+```
+
+综上，同学们可以根据实际需求定义模块，在模块内部自定义 prompt 和优化方式，调用封装的LLM接口输出优化内容，最后通过 Pass 管理器管理并运行优化。
