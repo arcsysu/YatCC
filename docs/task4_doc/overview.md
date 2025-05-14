@@ -6,17 +6,17 @@
 
 ## 任务描述
 
-本次实验的实验内容是实现一个LLVM IR优化器，对中间代码生成的结果进行优化。同学们需要分别使用传统方法和大语言模型方法进行实现。实验的输入与输出均为LLVM IR，要求同学们在保证代码正确性的基础上面向给定测试样例进行代码优化。在LLVM中，中端优化函数以Pass的形式存在，其作用是对输入的LLVM IR进行分析与变换，并输出变换后的LLVM IR。每个优化由一个或多个Transform Pass实现，不同优化的pass之间相互独立。在本次实验没有标准答案，同学们可以自由发挥，借助任何可能的优化方法提升程序的运行效率，并通过测评系统测评。
+本次实验分为两部分，均要求同学们去完成，实验室内容为实现一个LLVM IR优化器，对中间代码生成的结果进行优化。同学们需要分别使用传统编写 LLVM Pass 实现经典编译优化算法的方法和大语言模型辅助优化方法（为了与 LLVM 编译优化工作流耦合，也可以编写为 LLVM Pass 的形式，但是 Pass 内部执行逻辑为 LLM 工作流）进行实现，实验的输入与输出均为LLVM IR，要求同学们在保证代码正确性的基础上面向给定测试样例进行代码优化。在LLVM中，中端优化函数以Pass的形式存在，其作用是对输入的LLVM IR进行分析与变换，并输出变换后的LLVM IR。每个优化由一个或多个Transform Pass实现，不同优化的pass之间相互独立。本次实验没有标准答案，同学们可以自由发挥，借助任何可能的优化方法提升程序的运行效率，并通过测评系统测评。
 
 ## 评分标准
 
-本实验需要同时使用传统方法和大语言模型方法实现，其中，传统方法满分17分，大语言模型方法满分5分，实验四的最终分数为两种方法评分之和。
+本实验需要分别使用传统方法和大语言模型方法实现，两部分测例独立，分为面向传统编译优化方法的测例和 LLM 定向优化测例，前者可在 `YatCC/test/cases/performance/` 目录下查看，后者则在 `YatCC/test/cases/llm-performance` 目录下查看，两部分实验测例独立评分、赋分，最后分数相加作为实验四的总分。
 
-对于每种方法，实验的评分主要分为两个部分：正确性与程序运行性能。对于一个编译器而言，保证正确性是必然要求。中间代码优化实验的比较对象为`clang O2`，对于每个实验测例，我们将比较优化后的程序运行的输出与返回值：若两者相同，则进入性能测试；若两者不相同，则实验得分为0。
+对于每种方法，实验的评分主要分为两个部分：正确性与程序运行性能。对于一个编译器而言，保证正确性是必然要求。中间代码优化实验的比较对象为`clang O2`，对于每个实验测例，我们将比较优化后的程序运行的输出与返回值：若两者相同，则正确性测试通过，进入性能测试；若两者不相同，则该部分实验得分为直接为0，不会考虑其他测例的测评情况。
 
 通过正确性验证后，我们将`clang O2`优化后的程序运行时间与优化器优化后的程序运行时间求比值后开平方，再将性能测例中每个测例的分数取平均值，结果即为性能测例得分。若某测例在优化器优化后运行性能超过`clang O2`，则该测例记为满分。
 
-**实验四将综合考虑同学们实现的优化、测评系统中排行榜的排名以及性能测例得分进行赋分，性能测例分数并非实验四最终得分。**最后，经过赋分的分数将经过映射得到每种方法的最终分值（传统方法评分为0～17分，大语言模型方法为0～5分），两种方法分值相加即为实验四评分。
+**实验四将综合考虑同学们实现的优化、测评系统中排行榜的排名以及性能测例得分进行赋分，性能测例分数并非实验四最终得分。**最后，经过赋分的分数将经过映射得到每种方法的最终分值，实验四所占编译器构造实验的分值比例为 22/100，其中，传统方法满分 17 分，大语言模型方法满分 5 分，实验四的最终分数为两种方法评分之和。
 
 本次实验不允许出现以下行为，若出现以下行为将视为作弊与抄袭：
 
@@ -28,25 +28,32 @@
 * 在理解LLVM优化源代码的基础上将其简化移植
 * 使用LLVM提供的**Analysis Pass**获取优化所需的信息（Transform Pass和Analysis Pass的区别是前者执行后会修改LLVM IR，而后者仅返回信息不改变IR）
 * 鼓励同学们添加实验测例中未涉及到的优化并提供相应测例（可在实验报告中说明，我们将在分析优化效果与优化实现难度后酌情加分）
+* 鼓励同学们积极探索将 LLM 融入编译优化的方法，通过调用 LLM 来获得期望的编译优化信息辅助优化决策，实现 **LLM for Compiler**
 
 ## 调试方法
 
 ### 输出调试
 
-为了方便同学们调试优化效果，同学们可以使用本项目提供的调试功能对单个测例进行输出调试（调试准备工作参考[如何调试代码](../introduction/howtouse.md#如何调试代码)一节）。调试时使用`test4/`过滤，因为`task4/`仅执行我们实现的优化并生成优化后的LLVM IR代码，`test4/`则完成优化和评分两个任务（具体差别可以查看`YatCC/test/task4/CMakeLists.txt`）：
+同学们可以使用本项目提供的调试功能对单个测例进行输出调试，用于查看中端优化器的代码是否能编译通过，能否正常优化 LLVM IR，以及优化效果（调试准备工作参考[如何调试代码](../introduction/howtouse.md#如何调试代码)一节）。`task4/` 仅查看中端优化器能否通过编译、正常优化 LLVM IR 以及输出优化后的 LLVM IR，而 `test4/` 则在前者的基础上，增加了单个测例的评分，方便查看优化效果（具体差别可以查看`YatCC/test/task4/CMakeLists.txt`）：
 
-![](../images/task4/task4_testing.png)
+![实验四输出调试](../images/task4/task4_testing2.jpg)
 
-调试成功后可以在`/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。如果选择使用手动执行时，可以使用以下指令。手动执行需要自行保证优化器`task4`与当前task4的代码一致（即是否在代码修改后重新编译生成）：
+`task4/` 的调试结果可在 `VSCode` 的 `OUTPUT`（CTest 的输出）和 `TEST RESULTS`（程序的输出，一般为输出到标准错误 `stderr` 的内容）直接查看，而 `test4/` 调试成功后可以在`/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看输出结果。
+
+![实验四 task4/ 调试输出结果](../images/task4/task4_task_testing.jpg)
+
+如果选择使用手动执行中端优化器来生成优化后的 LLVM IR，可以使用以下指令。传统方法中端优化器的构建目标（可执行文件）为 `task4-classic`，而大语言模型方法终端优化器的构建目标为 `task4-llm`， 手动执行需要自行保证优化器 `task4-classic/llm` 与当前task4的代码一致（即是否在代码修改后重新编译生成）：
 
 ```shell
 task4_out=/YatCC/build/task/4
 test3_out=/YatCC/build/test/3
 case=functional-0/000_main.sysu.c
 output_dir=/YatCC/build/test/4/functional-0/000_main.sysu.c
+# 或者 task4=task4-llm
+task4=task4-classic
 
 # 优化LLVM IR
-${task4_out}/task4 ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${output_dir}/output.log
+${task4_out}/${task4} ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${output_dir}/output.log
 ```
 
 最终输出结果将重定向到`${output_dir}/output.log`中。
@@ -69,12 +76,14 @@ ll_path=/path/to/code.ll
 opt_path=/path/to/code_opt.ll
 bin_path=/path/to/code_opt
 CC=/opt/YatCC/llvm/install/bin/clang
+# 或者 task4=task4-llm
+task4=task4-classic
 
 # 生成LLVM IR
 ${CC} -cc1 -O0 -S -emit-llvm -isystem ${rtlib_include} ${case_path} -o ${ll_path}
 
 # 优化LLVM IR
-${task4_out}/task4 ${ll_path} ${opt_path}
+${task4_out}/${task4} ${ll_path} ${opt_path}
 
 # 将LLVM IR编译为二进制文件
 ${CC} -O0 ${opt_path} ${rtlib_path} -o ${bin_path}
