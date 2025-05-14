@@ -753,8 +753,8 @@ opt(llvm::Module& mod)
 
   // 添加 LLM 加持的 Pass 到优化管理器中
   mpm.addPass(PassSequencePredict(
-    "sk-DKVqAx50psq1EfjXA82cFeB6B55946C0B6C1Dc92BeD681D6",
-    "http://505676.proxy.nscc-gz.cn:8888/v1",
+    "<api_key>",
+    "<base_url>",
     {
       { "StaticCallCounterPrinter",
         TASK4_DIR "/StaticCallCounterPrinter.hpp",
