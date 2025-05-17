@@ -14,7 +14,7 @@
 
 ![showlog](../images/outputdis.jpg)
 
-## 1. 完成 `task0`
+## 1. 完成 task0
 
 `task0` 的任务非常简单，在 `task0` 目录下的 `main.cpp` 中大家就能看到以注释的形式所表明的任务要求。
 
@@ -60,7 +60,7 @@ main()
 
 `task0` 的任务非常简单，我们 `YatCC` 编译课程团队希望且鼓励大家尝试使用大语言模型来**辅助**实验的进行，以当前先进的 AI 技术赋能课程实验，获得第一手的 DeepSeek-R1 体验。
 
-## 2. 构建 `task0`
+## 2. 构建 task0
 
 按照下图所指引完成`task0`的构建。构建本质上是通过`cmake`构建名为`task0`的目标（对应的 cmake 指令为`cmake ... --target task0`），该指令将执行`task/0/CMakeLists.txt`中的内容，将同目录下的`main.cpp`编译为`task0`可执行文件。
 
@@ -78,7 +78,7 @@ main()
 [build] Build finished with exit code 0
 ```
 
-## 3. 构建 `task0-score`
+## 3. 构建 task0-score
 
 按照下图所指引完成`task0-score`的构建，获得 task0 的实验成绩。该构建将执行`test/task0/CMakeLists.txt`中的`task0-score`目标，运行上一步生成的`task0`并打印相关输出。
 
@@ -100,7 +100,7 @@ main()
 [build] Build finished with exit code 0
 ```
 
-## 4. 构建 `task0-pack`
+## 4. 构建 task0-pack
 
 按照下图所指引完成`task0-pack`的构建，将 task0 的相关代码打包（在 task0 该步骤仅用于测试实验环境是否完成配置，对代码内容不作要求）。
 
