@@ -1,25 +1,41 @@
-# 实验三上手教程
+# 上手教程
 
-注意，请同学们阅读本小节之前先阅读`实验介绍`以及`Emit IR 介绍`。
+本次实验中需要同学们修改的代码只有`EmitIR.cpp`和`EmitIR.hpp`。和实验二中一样，对于某一种语法结构，我们可能需要添加一个处理函数，其中这个函数的主体我们需要在`EmitIR.cpp`中编写，同时将其函数声明写到`EmitIR.hpp`中。接下来通过带领大家完善代码，通过测试样例二，让同学们了解完成实验的过程，帮助大家快速上手。
 
-本次实验中需要同学们修改的代码只有`EmitIR.cpp`和`EmitIR.hpp`。和实验二中一样，对于某一种语法结构，我们可能需要添加一个处理函数，其中这个函数的主体我们需要在`EmitIR.cpp`中编写，同时将其函数声明写到`EmitIR.hpp`中。
+---
 
-接下来以实验中的测试样例二为例，带领同学们了解这整个流程。首先通过比对测例 1 和测例 2 的源代码，
+测例 1 和测例 2 的源代码如下，
 
-![](../images/task3/test1and2.jpg)
+```c
+// 000_main.sysu.c
+int main(){
+  return 3;
+}
 
-以及实验二中测例 1 和测例 2 的 `answer.txt`的输出
+// 001_var_defn.sysu.c
+int a=3;
+int b=5;
+int main(){
+  return a + b;
+}
+```
 
-![](../images/task3/test12_task2.jpg)
+对比两份代码在实验二中的标准答案，也即 JSON 文件：
 
-我们可以发现实际上测例 2 比测例 1 多了几种语法结构需要我们进行处理，它们分别是
+![task2_answer](../images/task3/test12_task2.png)
 
-- 变量声明 VarDecl （int a = 3）
-- 声明引用表达式 DeclRefExpr (a + b 表达式中的 a 和 b)
-- 加法表达式 (a+b)
-- 隐式类型转换 (在加法运算前将左值转换为右值)
+可以发现实际上测例 2 比测例 1 多了几种语法结构需要我们进行处理，它们分别是
 
-首先我们需要在对申明进行处理的`operator()`重载函数中加入对变量申明的跳转。
+- 变量声明 `VarDecl`，对应`int a=3;`
+- 声明引用表达式 `DeclRefExpr`，对应`a + b` 表达式中的 `a` 和 `b`
+- 加法表达式，对应`a + b`
+- 隐式类型转换`ImplicitCastExpr`，在加法运算前将左值转换为右值
+
+## 处理变量声明
+
+第一步，处理`VarDecl`。
+
+我们需要在对`Decl`进行处理的`operator()`重载中，加入对变量声明`VarDecl`的跳转：
 
 ```cpp
 void
@@ -36,9 +52,11 @@ EmitIR::operator()(Decl* obj)
 }
 ```
 
-在上述的`operator()`重载函数中添加了对变量声明的处理跳转之后，我们需要在`EmitIR.cpp`中实现处理变量声明的`operator()`重载函数，并在`EmitIR.hpp`中声明它。需要同学们注意的是，第二个测试样例不仅存在变量的申明，并且还存在变量的值初始化，为了使得我们的实现更加清晰简洁，我们将变量的声明和初始化分开进行实现。
+添加了对`VarDecl`的处理跳转之后，我们需要在`EmitIR.cpp`中实现处理`VarDecl`的`operator()`重载，并在`EmitIR.hpp`中声明它。需要同学们注意的是，第二个测试样例不仅存在变量的声明，并且还存在变量的值初始化。为了使得我们的实现更加清晰简洁，我们将变量的声明和初始化分开进行实现。
 
-此时请同学们跳转到我们实验 3 文档下面的`生成 LLVM IR`，然后找到`全局变量`下面的`创建全局变量`中的内容，在其中同学们可以找到和全局变量相关的我们需要使用到的`api`
+此时请同学们跳转到 task3 文档中[LLVM API-全局变量-创建全局变量](task3_doc/apidoc.md#create-global-variable)部分，其中描述了创建全局变量的 API 以及相关的参数说明。
+
+其中创建全局变量的 API 如下：
 
 ```cpp
 #include <llvm/IR/GlobalVariable.h>
@@ -60,7 +78,7 @@ GlobalVariable(Module &M, Type *Ty,
                bool isExternallyInitialized=false);
 ```
 
-以及
+利用全局构造函数进行初始化的过程如下：
 
 ```cpp
 /// 举个简单的例子，例如：int a = 10
@@ -94,7 +112,7 @@ llvm::appendToGlobalCtors(TheModule, ctorFunc, 65535);
 
 ```
 
-所以最终我们写出的处理全局变量申明以及初始化的两个函数如下
+所以最终我们写出的处理全局变量声明以及初始化的两个函数如下
 
 ```cpp
 void
@@ -144,29 +162,24 @@ EmitIR::operator()(VarDecl* obj)
 然后在`EmitIR.hpp`中添加如下内容
 
 ```cpp
-  void operator()(asg::VarDecl* obj);
+void operator()(asg::VarDecl* obj)
 ```
 
-回顾一下我们最初提到的内容，测例 2 和测例 1 相比多了如下四个语法结构，到目前为止，我们已经实现了变量申明。
+至此，我们以及完成了对变量声明的处理。
 
-- 变量声明 VarDecl （int a = 3）
-- 声明引用表达式 DeclRefExpr (a + b 表达式中的 a 和 b)
-- 加法表达式 (a+b)
-- 隐式类型转换表达式 (在加法运算前将左值转换为右值)
+## 处理表达式
 
-接下来让我们一起继续实现剩下的三个表达式相关的内容。
+第二步，处理`DeclRefExpr`、`ImplicitCastExpr` 和 `BinaryExpr`三个表达式。
 
-首先，让我们趁热打铁，在`EmitIR.hpp`加入以下函数声明
+首先在`EmitIR.hpp`加入以下函数声明：
 
 ```cpp
-  llvm::Value* operator()(asg::BinaryExpr* obj);
-
-  llvm::Value* operator()(asg::ImplicitCastExpr* obj);
-
-  llvm::Value* operator()(asg::DeclRefExpr* obj);
+llvm::Value* operator()(asg::BinaryExpr* obj);
+llvm::Value* operator()(asg::ImplicitCastExpr* obj);
+llvm::Value* operator()(asg::DeclRefExpr* obj);
 ```
 
-然后紧接着在`EmitIR.cpp`的重载函数`EmitIR::operator()(Expr* obj)`中添加如下跳转处理，
+然后在`EmitIR.cpp`的重载函数`EmitIR::operator()(Expr* obj)`中添加如下跳转处理，
 
 ```cpp
 llvm::Value*
@@ -189,7 +202,9 @@ EmitIR::operator()(Expr* obj)
 }
 ```
 
-首先让我们来实现隐式类型转换表达式的`operator()`重载函数，首先让我们来看它的源代码
+---
+
+接着实现`ImplicitCastExpr`的`operator()`重载：
 
 ```cpp
 llvm::Value*
@@ -211,36 +226,33 @@ EmitIR::operator()(ImplicitCastExpr* obj)
 }
 ```
 
-然后请大家看代码的解释：
-**函数体**
+来逐行解释一下：
 
-- **`auto sub = self(obj->sub);`**：
+- `auto sub = self(obj->sub)`
 
   - `obj->sub` 获取 `ImplicitCastExpr` 中包含的子表达式，即要进行类型转换的表达式。
   - `self(obj->sub)` 调用 `EmitIR` 类的另一个重载运算符，用于处理子表达式并返回其在 LLVM IR 中的表示。
 
-- **`auto& irb = *mCurIrb;`**：
-  - `mCurIrb` 是指向当前 LLVM IR 构建器（`IRBuilder`）的指针，`IRBuilder` 是一个辅助类，用于生成 LLVM IR 指令。
+- `auto& irb = *mCurIrb`：
+
+  - `mCurIrb` 是指向当前 LLVM IR 构建器（`IRBuilder`）的指针。`IRBuilder` 是一个辅助类，用于生成 LLVM IR 指令。
   - 通过解引用获取当前 IR 构建器的引用，用于在接下来的代码中方便地生成各种 LLVM IR 指令。
 
-**`switch` 语句**
+- `switch` 语句：
 
-- 处理不同类型的隐式转换。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况：
-  - **`ImplicitCastExpr::kLValueToRValue`**：这种转换类型的目的是将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取其值而非地址。
+  处理不同类型的隐式转换。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况，也即将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取这个变量的值而非变量本身。
 
-**转换实现**
-
-- **`auto ty = self(obj->sub->type);`**：
-  - 获取子表达式的类型，并调用 `self` 方法将类型转换为 LLVM IR 中对应的类型表示。
-- **`auto loadVal = irb.CreateLoad(ty, sub);`**：
-  - 使用 IR 构建器创建一个 `load` 指令，从由 `sub` 指定的地址（子表达式的结果，即一个左值）加载一个值。
-  - `ty` 指定了加载值的类型，确保正确地解释内存中的数据。
-- **`return loadVal;`**：
-  - 将加载的值（现在是一个右值）作为函数的返回值。
+  - `auto ty = self(obj->sub->type)`：获取子表达式的类型，并调用 `self` 方法将类型转换为 LLVM IR 中对应的类型表示。
+  - `auto loadVal = irb.CreateLoad(ty, sub)`：
+    - 使用 IR 构建器创建一个 `load` 指令（参考[LLVM API-局部变量-load 指令](task3_doc/apidoc.md#load-instruction)），从由 `sub` 指定的地址（子表达式的结果，即一个左值）加载一个值。
+    - `ty` 指定了加载值的类型，确保正确地解释内存中的数据。
+  - `return loadVal`： 将加载的值（现在是一个右值）作为函数的返回值。
 
 由此，这段代码就实现了从左值到右值的隐式类型转换。
 
-接下来让我们实现处理声明引用的`operator()`重载函数，以下是它的源代码
+---
+
+接下来实现处理`DeclRefExpr`的`operator()`重载：
 
 ```cpp
 llvm::Value*
@@ -252,9 +264,9 @@ EmitIR::operator()(DeclRefExpr* obj)
 }
 ```
 
-在完成处理声明引用的`operator()`重载函数之后，我来到了测例二的最后一个得分点，加法表达式的实现。在进行这一小节的代码编写之前，同学们也需要先提前查阅实验 3 文档下面的`生成 LLVM IR`，然后找到`二元表达式`下面的`整数加法`相关内容。
+---
 
-然后请同学们看这个重载函数的源代码：
+最后处理加法表达式。在进行这一小节的代码编写之前，同学们也需要先提前查阅[LLVM API-二元表达式-整数加法+](task3_doc/apidoc.md#integer-addition)。具体的实现如下：
 
 ```cpp
 llvm::Value*
@@ -276,35 +288,22 @@ EmitIR::operator()(BinaryExpr* obj)
 }
 ```
 
-然后是上面代码的解释：
+来逐行解释一下：
 
-**变量定义**:
+- `llvm::Value *lftVal, *rhtVal`: 定义两个指向 `llvm::Value` 的指针，分别用来存储二元表达式左侧和右侧子表达式的结果。
 
-- **`llvm::Value *lftVal, *rhtVal;`**: 定义两个指向 `llvm::Value` 的指针，分别用来存储二元表达式左侧和右侧子表达式的结果。
+- `lftVal = self(obj->lft)`: 调用 `self()` 函数（或方法）来处理左侧子表达式 (`obj->lft`)，并获取其在 LLVM IR 中的表示。`self()` 函数处理各种类型表达式，并返回其 IR 表示。
 
-**处理左侧子表达式**:
+- `auto& irb = *mCurIrb`: 通过解引用 `mCurIrb` 指针获取当前的 `IRBuilder` 实例的引用。
 
-- **`lftVal = self(obj->lft);`**: 调用 `self()` 函数（或方法）来处理左侧子表达式 (`obj->lft`)，并获取其在 LLVM IR 中的表示。`self()` 函数处理各种类型表达式，并返回其 IR 表示。
+- `rhtVal = self(obj->rht)`: 与处理左侧子表达式类似，调用 `self()` 函数处理右侧子表达式 (`obj->rht`)，获取其 IR 表示。
 
-**获取当前 IR 构建器**:
+- `switch` 语句：根据表达式的操作符 (`obj->op`) 决定如何处理表达式。
+  - `case BinaryExpr::kAdd`: 对于加法操作符 `kAdd`，使用 `irb.CreateAdd(lftVal, rhtVal)` 生成一个加法指令。
+  - `CreateAdd()` 是 `IRBuilder` 类的一个方法，它接受两个 `llvm::Value*` 类型的参数，生成一个新的加法指令，并返回结果的 IR 表示。
 
-- **`auto& irb = *mCurIrb;`**: 通过解引用 `mCurIrb` 指针获取当前的 `IRBuilder` 实例的引用。`IRBuilder` 是 LLVM 提供的一个辅助类，用于构建 IR 指令。
+## 结果
 
-**处理右侧子表达式**:
+至此，针对样例 2，我们已经实现了所有所需的处理函数。运行评分脚本，应该能得到如下图所示的评分结果。恭喜你同学！测例二获得满分！
 
-- **`rhtVal = self(obj->rht);`**: 与处理左侧子表达式类似，调用 `self()` 函数处理右侧子表达式 (`obj->rht`)，获取其 IR 表示。
-
-**根据操作符类型生成相应的 IR 指令**:
-
-- 使用 `switch` 语句根据表达式的操作符 (`obj->op`) 决定如何处理表达式。
-  - **`case BinaryExpr::kAdd:`**: 对于加法操作符 `kAdd`，使用 `irb.CreateAdd(lftVal, rhtVal);` 生成一个加法指令。`CreateAdd()` 是 `IRBuilder` 类的一个方法，它接受两个 `llvm::Value*` 类型的参数，生成一个新的加法指令，并返回结果的 IR 表示。
-
-最终同学们就完成了我们前面提到的四个得分点的代码编写：
-
-- 变量声明 VarDecl （int a = 3）
-- 声明引用表达式 DeclRefExpr (a + b 表达式中的 a 和 b)
-- 加法表达式 (a+b)
-- 隐式类型转换表达式 (在加法运算前将左值转换为右值)
-
-然后请同学们运行评分脚本，得到如下图所示的评分结果。恭喜你同学！测例二获得满分！祝你实验三后续测例能够顺利完成！
-![](../images/task3/test2ok.jpg)
+![test2ok](../images/task3/test2ok.jpg)

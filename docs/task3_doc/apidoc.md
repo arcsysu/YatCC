@@ -1,176 +1,4 @@
-下面的资料对大家了解 LLVM IR 可能会提供不错的帮助\~\~\~
-
-[LLVM Lanaguage Reference Manual](https://llvm.org/docs/LangRef.html)
-
-[LLVM Programmers Manual](https://llvm.org/docs/ProgrammersManual.html)
-
-[The Core LLVM Class Hierarchy Reference](https://www.llvm.org/docs/ProgrammersManual.html#id128)
-
-### LLVM IR 结构
-
-对于下述源代码，假设文件名为 test.c：
-
-```c
-const int a = 10;
-int b = 5;
-
-int main() {
-  if(b < a)
-    return 1;
-  return 0;
-}
-```
-
-使用 `clang -cc1 -S -emit-llvm test.c` 生成的 LLVM IR 如下：
-
-```llvm
-; ModuleID = 'test.c'
-source_filename = "test.c"
-target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
-target triple = "x86_64-unknown-linux-gnu"
-
-@a = constant i32 10, align 4
-@b = global i32 5, align 4
-
-; Function Attrs: noinline nounwind optnone
-define dso_local i32 @main() #0 {
-entry:
-  %retval = alloca i32, align 4
-  store i32 0, i32* %retval, align 4
-  %0 = load i32, i32* @b, align 4
-  %cmp = icmp slt i32 %0, 10
-  br i1 %cmp, label %if.then, label %if.end
-
-if.then:                                          ; preds = %entry
-  store i32 1, i32* %retval, align 4
-  br label %return
-
-if.end:                                           ; preds = %entry
-  store i32 0, i32* %retval, align 4
-  br label %return
-
-return:                                           ; preds = %if.end, %if.then
-  %1 = load i32, i32* %retval, align 4
-  ret i32 %1
-}
-
-attributes #0 = { noinline nounwind optnone "frame-pointer"="none" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-features"="+cx8,+mmx,+sse,+sse2,+x87" }
-
-!llvm.module.flags = !{!0}
-!llvm.ident = !{!1}
-
-!0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{!"clang version 14.0.6"}
-```
-
-LLVM IR 文件的基本单元为 Module，一个 Module 对应于一个完整的编译单元（Translation Unit），一般来说，一个 Module 就是一个源码文件，如一个以 .c 为后缀的 c 语言文件，不过也可以将多个 Module 合并为一个 Module（通过 llvm-link 工具），本次实验中均为单文件编译，因此不涉及 Module 合并，均为单 Module。
-
-一个 Module 就是 LLVM IR 的顶层容器，其中包含了:
-
-- 注释。LLVM IR 中，所有的注释均以分号;开头，如`; ModuleID = 'test.c'`即为一句注释，表示模块 ID，编译器据此来区分不同的模块。
-- 源文件名，如`source_filename = "test.c"`。
-- 目标平台信息。`target datalayout` 表示数据布局如大小端存储、对齐方式、整数类型有哪些等等；`target triple`为描述目标平台信息的三元组，一般形式为 `<architecture>-<vendor>-<system>[-extra-info]`。
-- 元数据。以感叹号!开头，可以附加到 LLVM IR 的指令和全局对象上，为优化器和代码生成器提供关于代码的额外信息。
-- 全局标识符，以 @ 开头
-  - 全局变量 GlobalVariable。如在上述 IR 中，`@a = constant i32 10, align 4` 和 `@b = global i32 5, align 4`，`align 4` 表示 4 字节对齐。
-  - 函数 Function。定义了的函数以 define 开头，如在上述 IR 中，`define dso_local i32 @main()`，i32 表示函数的返回值为 int 类型。函数若只是声明而没有函数体，则以 declare 开头，如 `declare i32 f()`。函数也可以有参数列表，如`define i32 f(i32 %a, i32 %b)`。
-    每个定义了的函数均由若干个基本块 BasicBlock 构成。
-    - 每一个基本块都有一个属于自己的，在当前函数中唯一的标签，**每个函数执行的第一个基本块一定是标签为 entry 的基本块**，它是函数的入口基本块。在上述 IR 中，main() 函数总共有 4 个基本块，其标签分别为 entry，if.then，if.end 和 return，在开始执行 main() 函数时，一定是从 entry 基本块开始执行。
-    - 每一个基本块中都有若干条指令以及局部变量，且最后一条指令一定是一条 [终结指令](https://llvm.org/docs/LangRef.html#terminator-instructions)，如上述 IR 中 return 基本块的`ret i32 %1`，以及分支跳转指令，分支跳转指令又分为有条件跳转，如`br i1 %cmp, label %if.then, label %if.end`，如果 %cmp 为真，则跳转到 if.then 基本块，否则跳转到 if.end 基本块，和无条件跳转，如`br label %return`，直接跳转到 return 基本块。
-      一个基本块中的指令一定是从上往下顺序执行的，且一个基本块中的指令要么全都执行，要么全都不执行。
-    - 基本块中的局部变量以百分号%开头，如上述 LLVM IR 中的 %cmp，如果没有为局部变量或者基本块标签命名，则 LLVM 会自动以无符号数字，按顺序为每个局部变量和基本块标签编号，如 %1，%2。
-
-### 三个最为重要的类
-
-#### llvm::LLVMContext
-
-[llvm::LLVMContext Class Reference](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html)
-
-llvm::LLVMConext 是一个不透明的对象，它拥有和管理许多核心 LLVM 数据结构，例如类型和常量值表。**我们不需要详细了解它**，我们只需要将一个该类型的实例来传递给需要它的 API 即可。
-
-创建 LLVMContext 的实例也非常简单，[构造函数](https://llvm.org/doxygen/classllvm_1_1LLVMContext.html#a4eb1cb06b47255ef63fa4212866849e1)：
-
-```cpp
-#include <llvm/IR/LLVMContext.h>
-
-/// 构造函数：LLVMContext();
-llvm::LLVMContext TheContext;
-```
-
-#### llvm::Module
-
-[llvm::Module Class Reference](https://llvm.org/doxygen/classllvm_1_1Module.html)
-
-llvm::Module 是所有其他 LLVM IR 对象的顶层容器，包含了全局变量、函数、该模块所依赖的库/其他模块、符号表和有关目标平台的各种数据。我们生成的所有 IR 都会储存在这里。
-
-为了创建 LLVM Module 的实例，我们需要表示 Module ID 的字符串以及 LLVMContext 的引用，[构造函数](https://llvm.org/doxygen/classllvm_1_1Module.html#a378f93ece2ac999e500f07056cfe6528)：
-
-```cpp
-#include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/Module.h>
-
-llvm::LLVMContext TheContext;
-
-/// 构造函数：Module(StringRef ModuleID, LLVMContext &C)；
-llvm::Module TheModule("Module ID", TheContext);
-```
-
-#### llvm::IRBuilder
-
-[llvm::IRbuilder Class Reference](https://llvm.org/doxygen/classllvm_1_1IRBuilder.html)
-
-既然 llvm::Module 包含了生成的所有的 LLVM IR，那么该如何生成 LLVM IR 呢？或者说如何向 llvm::Module 中插入 LLVM IR 呢？这就需要用到 llvm::IRBuilder 了。
-
-LLVM::IRBuilder 用于生成 LLVM IR，其提供了统一的 API 来创建和插入指令到基本块（BasicBlock）中。我们可以使用 llvm::IRBuilder 的[构造函数](https://llvm.org/doxygen/classllvm_1_1IRBuilder.html#aa1e284a3ff6e4e6662223ed0b0cdd201)来指定 IR 的插入位置，也可以使用[SetInsertPoint 方法](https://llvm.org/doxygen/classllvm_1_1IRBuilderBase.html#ace45cae6925c65e9d6916e09dd5b17cc)来修改 IR 的插入位置。
-
-```cpp
-#include <llvm/IR/IRbuilder.h>
-
-// ====================================================================
-// 利用构造函数
-// ====================================================================
-llvm::BasicBlock *Block = /* 获得 BasicBlock 实例的指针 */;
-/// 指定当前IR插入点为 Block 的末尾
-llvm::IRBuilder<> TheBuilder(Block);
-
-/// 或者
-
-llvm::Instruction *Inst = /* 获得 IR 指令实例的指针 */;
-/// 指定当前IR插入点为指令 Inst 之前
-llvm::IRBuilder<> TheBuilder(Inst);
-
-// ====================================================================
-// 利用 SetInsertPoint 方法
-// ====================================================================
-/// 假设我们已经有了 llvm::IRBuilder 的实例TheBuilder
-llvm::BasicBlock *Block = /* 获得 BasicBlock 实例的指针 */;
-/// 指定当前IR插入点为 Block 的末尾
-TheBuilder.SetInsertPoint(Block);
-
-/// 或者
-
-llvm::Instruction *Inst = /* 获得 IR 指令实例的指针 */;
-/// 指定当前IR插入点为指令 Inst 之前
-TheBuilder.SetInsertPoint(Inst);
-```
-
-创建 llvm::IRBuilder 的实例时，也可以不在一开始就指定 IR 插入点，直接将 LLVMContext 的引用作为参数传入即可，在想要设置 IR 插入点时，可以利用 SetInsertPoint 方法：
-
-```cpp
-#include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/Module.h>
-#include <llvm/IR/IRBuilder.h>
-
-llvm::LLVMContext TheContext;
-
-llvm::Module TheModule("Module ID", TheContext);
-
-llvm::IRBuilder<> TheBuilder(TheContext);
-```
-
-llvm::IRBuilder 创建 LLVM IR 的接口可以在 [llvm::IRbuilder Class Reference](https://llvm.org/doxygen/classllvm_1_1IRBuilder.html) 中找到，不过 llvm::IRBuilder 插入 LLVM IR 的接口基本都继承自 [llvm::IRBuilderBase](https://llvm.org/doxygen/classllvm_1_1IRBuilderBase.html) ，查看 llvm::IRBuilderBase 的接口也是可以的。本文接下来也会介绍一些本次实验中常用的接口。
-
-### LLVM IR 类型系统
+## LLVM IR 类型系统
 
 [llvm::Type Class Reference](https://llvm.org/doxygen/classllvm_1_1Type.html)
 
@@ -189,7 +17,7 @@ LLVM IR 是强类型的，类型系统是 LLVM IR 中最为重要的一部分。
 llvm::Type 是 LLVM IR 类型系统中的基类，其和其派生类提供了许多静态方法来创建类型实例，部分类型也可以通过 llvm::IRBuilder 的接口来创建。
 ![alt-text](https://llvm.org/doxygen/classllvm_1_1Type__inherit__graph.png)
 
-#### Void 类型
+### Void 类型
 
 LLVM IR 中显示为：void
 
@@ -206,7 +34,7 @@ llvm::Type *type = llvm::Type::getVoidTy(TheContext);
 llvm::Type *type = TheBuilder.getVoidType();
 ```
 
-#### 1 位整数（bool）类型
+### 1 位整数（bool）类型
 
 LLVM IR 中显示为：i1
 
@@ -219,7 +47,7 @@ llvm::Type *type = llvm::Type::getInt1Ty(TheContext);
 llvm::Type *type = TheBuilder.getInt1Ty();
 ```
 
-#### 32 位整数类型
+### 32 位整数类型
 
 LLVM IR 中显示为：i32
 
@@ -232,7 +60,7 @@ llvm::Type *type = llvm::Type::getInt32Ty(TheContext);
 llvm::Type *type = TheBuilder.getInt32Ty();
 ```
 
-#### 特定位数的整数类型
+### 特定位数的整数类型
 
 LLVM IR 中显示为：iN，其中 N 为我们自己指定的位数
 
@@ -250,7 +78,7 @@ llvm::Type *type = llvm::IntegerType::get(TheContext, NumBits);
 llvm::Type *type = TheBuild.getIntNTy(NumBits);
 ```
 
-#### 函数类型
+### 函数类型
 
 ```cpp
 #include <llvm/IR/DerivedTypes.h>
@@ -303,7 +131,7 @@ while(begin != funcType->param_end()) {
 
 ```
 
-#### 数组类型
+### 数组类型
 
 ```cpp
 #include <llvm/IR/DerivedTypes.h>
@@ -330,7 +158,7 @@ uint64_t len = arrType->getNumElements();
 llvm::Type *elementType = arrType->getElementType();
 ```
 
-#### 指针类型
+### 指针类型
 
 ```cpp
 #include <llvm/IR/DerivedTypes.h>
@@ -353,7 +181,7 @@ llvm::Type *pointer = pointee->getPointerTo();
 
 例如，对于上述例子，int _ 在传统 LLVM 指针类型中，在 LLVM IR 中的表示为 i32_，但是在 LLVM 17 的 LLVM IR 中，则表示为 ptr。
 
-#### 判断是否为特定类型
+### 判断是否为特定类型
 
 当我们有了一个 llvm::Type 的实例时，可以通过下述方法判断其是否是特定类型，返回值均为 bool 类型：
 
@@ -380,7 +208,7 @@ bool isArrayTy = type->isArrayTy();
 bool isPointerTy = type->isPointerTy();
 ```
 
-### 常量
+## 常量
 
 [llvm::Constant Class Reference](https://llvm.org/doxygen/classllvm_1_1Constant.html)
 
@@ -392,7 +220,7 @@ bool isPointerTy = type->isPointerTy();
 
 LLVM IR 中，对于常量的创建，与 llvm::Type 相同，llvm::Constant 和其派生类提供了许多静态方法，以工厂模式来非常容易地创建我们需要的常量。
 
-#### 创建整数常量
+### 创建整数常量
 
 ```cpp
 #include <llvm/IR/Constants.h>
@@ -415,7 +243,7 @@ llvm::ConstantInt *constantInt = llvm::ConstantInt::get(llvm::Type::getInt32Ty(T
 llvm::ConstantInt *constantInt = TheBuilder.getInt32(10);
 ```
 
-#### 创建数组常量 :id=create-array-constant
+### 创建数组常量 :id=create-array-constant
 
 ```cpp
 #include <llvm/IR/Constants.h>
@@ -434,7 +262,7 @@ llvm::Constant *constantArray = llvm::ConstantArray::get(
       });
 ```
 
-#### 对任意类型创建 0 常量 :id=create-zero-constant
+### 对任意类型创建 0 常量 :id=create-zero-constant
 
 常用于对变量进行默认的零初始化。
 
@@ -445,11 +273,11 @@ llvm::Constant *constantArray = llvm::ConstantArray::get(
 static Constant *llvm::Constant::getNullValue(Type *Ty);
 ```
 
-### 全局变量
+## 全局变量
 
 [llvm::GlobalVariable Class Reference](https://llvm.org/doxygen/classllvm_1_1GlobalVariable.html)
 
-#### 创建全局变量 :id=create-global-variable
+### 创建全局变量 :id=create-global-variable
 
 创建全局变量可以直接使用 llvm::GlobalVariable 的构造函数
 
@@ -481,7 +309,7 @@ GlobalVariable(Module &M, Type *Ty,
 
    [Global constructors](https://llvm.org/docs/LangRef.html#the-llvm-global-ctors-global-variable)
 
-##### 第一种方法
+#### 第一种方法
 
 在创建全局变量前，我们已经求得了其的初始值，那么只需要调用 llvm::GlobalVariable 的构造函数创建全局变量就可以了
 
@@ -503,7 +331,7 @@ llvm::GlobalVariable *gloVar = new llvm::GlobalVariable(
 @glolVar = global i32 10
 ```
 
-##### 第二种方法
+#### 第二种方法
 
 有时候全局变量的初始值比较难以直接求解成一个 llvm::Constant 的实例，比如数组的初始化、值为表达式，此时我们可以使用全局构造函数来为全局变量进行初始化。
 
@@ -513,7 +341,7 @@ llvm::GlobalVariable *gloVar = new llvm::GlobalVariable(
 
 2. 创建函数（创建函数的具体细节可见[函数](#function)），完成为全局变量进行初始化的逻辑；
 
-   基本块创建可见[基本块](#basic-block)，store 指令可见[store](#store 指令)
+   基本块创建可见[基本块](#basic-block)，store 指令可见[store](#store-instruction)。
 
 3. 将函数添加至模块的全局构造函数数组中。
 
@@ -560,14 +388,14 @@ entry:
 }
 ```
 
-#### 在模块符号表中查找全局变量
+### 在模块符号表中查找全局变量
 
 ```cpp
 /// gloVarName 表示全局变量的名字
 llvm::GlobalVariable *gloVar = TheModule.getGlobalVariable(gloVarName);
 ```
 
-### 局部变量 :id=local-variable
+## 局部变量 :id=local-variable
 
 LLVM IR 中的的局部变量仅出现在基本块中，且均以百分号%开头。局部变量在 LLVM IR 中的分配方式有两种：
 
@@ -582,7 +410,7 @@ LLVM IR 中的的局部变量仅出现在基本块中，且均以百分号%开�
 
 2. 使用 alloca 指令在函数栈上进行内存分配。比如`%2=alloca i32`，表示动态分配一个能够存储 i32 整数的内存空间，地址存储在寄存器 %2 中，因此 %2 寄存器中存储的其实是一个指针。访问 %2 指向的内容或者向 %2 指向的地址存储数据时，需要分别用到 load 和 store 指令，而取虚拟寄存器中的值不需要使用 load 指令，直接使用即可。
 
-#### alloca 指令
+### alloca 指令
 
 ```cpp
 // Ty：要分配的内存空间的类型
@@ -623,7 +451,7 @@ TheBuilder.CreateAlloca(arrType2D, nullptr, "a");
 
 %a 存储的其实是指向 [10 x [10 x i32]] 类型的数组的指针。
 
-##### alloca 可能会引起的问题
+#### alloca 可能会引起的问题
 
 在 C 语言中，当一个花括号 { ... \} 中（CompoundStmt 中）的程序语句被执行完成后，会自动释放花括号中的局部变量。但是，在 LLVM IR 中，是不会自动释放由 alloca 指令分配内存的局部变量的，因此，当程序中的 alloca 指令执行许多次后，尤其是循环中的 alloca 指令，可能会造成函数栈空间不足的问题，造成程序崩溃。
 
@@ -665,11 +493,11 @@ while.end:                                        ; preds = %while.cond
 
 循环次数过多时，最终可能会导致函数的栈空间不足，程序崩溃。
 
-###### 第一种解决方法
+##### 第一种解决方法
 
 将 LLVM IR [函数](#function)中所有的 alloca 指令都放到函数的 entry [基本块](#basic-block)中，使得在一开始就为之后函数中会用到的局部变量在栈上分配内存空间，这也是 clang 的做法。
 
-###### 第二种解决方法
+##### 第二种解决方法
 
 使用 LLVM 的内建（intrinsics）函数 llvm.stacksave 和 llvm.stackrestore，在每次解析 CompoundStmt，生成 LLVM IR 时，在 LLVM IR 的开头调用 llvm.stacksave 记录当前函数的栈高度，在为 CompoundStmt 生成 LLVM IR 结束后，在 LLVM IR 的末尾调用 llvm.stackrestore 将函数的栈高度回到之前记录的高度，这有效地释放了在 CompundStmt 中通过 alloca 指令分配内存创建的任何变量。
 
@@ -685,7 +513,7 @@ auto sp = TheBuilder.CreateIntrinsic(llvm::Intrinsic::stacksave, {}, {},
 TheBuilder.CreateIntrinsic(llvm::Intrinsic::stackrestore, {}, {sp});
 ```
 
-#### store 指令 :id=store-instruction
+### store 指令 :id=store-instruction
 
 要想将数据存储在：
 
@@ -720,7 +548,7 @@ store i32 10, ptr %a
 
 在本例中就可以发现，对于 %a ，LLVM IR 使用的是类型 ptr，也就是说明 %a 的数据类型其实是指针，指向数据存放的地址。
 
-#### load 指令 :id=load-instruction
+### load 指令 :id=load-instruction
 
 当我们想要取出：
 
@@ -781,7 +609,7 @@ Value *aVal = TheBuilder.CreateLoad(a->getAllocatedType(), a);
 TheBuilder.CreateStore(aVal, b);
 ```
 
-#### 全局变量的取值和赋值
+### 全局变量的取值和赋值
 
 全局变量的存储也是需要分配内存空间的，而不是直接存储在寄存器中。因此实际上，全局变量也是指针类型。
 
@@ -856,7 +684,7 @@ store i32 20, ptr @a        ; 将常量20存入全局变量 a 中
 ; do something
 ```
 
-#### 在函数符号表中查找局部变量
+### 在函数符号表中查找局部变量
 
 了解 LLVM IR 中的函数，可见 [函数](#function)
 
@@ -869,7 +697,7 @@ llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
 llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 ```
 
-### 数组
+## 数组
 
 数组的创建可以参考 [创建全局变量](#create-global-variable) 和 [局部变量](#local-variable) 两节。
 
@@ -877,7 +705,7 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 
 使用全局构造函数来初始化全局数组和局部数组的初始化可以参考下面 [数组元素的访问](#数组元素的访问) 一节，通过 GEP 指令、[load](#load-instuction) 指令和 [store](#store-instuction) 指令来进行逐数组元素初始化。
 
-#### 数组元素的访问
+### 数组元素的访问
 
 访问数组的元素需要用到 GEP（GetElementPtr，获取元素指针）指令，这个指令用于获取聚合数据结构的子元素的**地址**，在本实验中，即为获得数组元素的**地址**。GEP 指令**仅进行地址计算**，**而不进行内存访问**，其实质是将**指针偏移量**应用于**基指针**并返回**结果指针**。
 
@@ -978,11 +806,11 @@ store i32 2, ptr %0
 
 [LLVM's getelementptr, by example](https://blog.yossarian.net/2020/09/19/LLVMs-getelementptr-by-example)
 
-### 函数 :id=function
+## 函数 :id=function
 
 [llvm::Function Class Reference](https://llvm.org/doxygen/classllvm_1_1Function.html)
 
-#### 函数声明/创建
+### 函数声明/创建
 
 ```cpp
 #include <llvm/IR/Function.h>
@@ -1033,11 +861,11 @@ argIter->setName("b");
 declare void @f(i32 %a, i32 %b)
 ```
 
-#### 函数定义
+### 函数定义
 
 在函数有了 [基本块](#basic-block) 后，其便成了定义了的函数，在 LLVM IR 中， declare 关键字将自动变成 define。
 
-#### 在模块符号表中查找函数
+### 在模块符号表中查找函数
 
 ```cpp
 /// llvm::Module 的成员函数
@@ -1052,7 +880,7 @@ Function *getFunction(StringRef Name) const;
 llvm::Function *func = TheModule.getFunction("f");
 ```
 
-#### 调用函数
+### 调用函数
 
 ```cpp
 /// llvm::IRBuilder的成员函数
@@ -1097,7 +925,7 @@ TheBuilder.CreateCall(func);
 call void @f()
 ```
 
-#### 获得函数基本块
+### 获得函数基本块
 
 ```cpp
 llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
@@ -1111,7 +939,7 @@ for(auto &Block : *func) {
 llvm::BasicBlock *entryBlock = func->getEntryBlock();
 ```
 
-#### 获得当前函数所属 Module
+### 获得当前函数所属 Module
 
 ```cpp
 llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
@@ -1119,11 +947,11 @@ llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
 llvm::Module *module = func->getParent();
 ```
 
-### 基本块 :id=basic-block
+## 基本块 :id=basic-block
 
 每一个定义了的函数都有若干个基本块，并且第一个基本块的标签（label）一定为 entry ，这是函数的入口基本块，函数执行时的第一个基本块。
 
-#### 创建基本块
+### 创建基本块
 
 ```cpp
 /// Name：  基本块的标签名，不取名则 LLVM 自动分配
@@ -1140,13 +968,13 @@ static BasicBlock *llvm::BasicBlock::Create(LLVMContext &Context,
 llvm::BasicBlock *block = llvm::BasicBlock::Create(TheContext, "entry", func);
 ```
 
-#### 获得当前基本块所属的函数
+### 获得当前基本块所属的函数
 
 ```cpp
 llvm::Function *func = block->getParent();
 ```
 
-#### 获得基本块的终结指令
+### 获得基本块的终结指令
 
 在 LLVM IR 正确组织的情况下，每一个基本块的最后一条指令都应该是一条终结指令 [Terminator instructions](https://llvm.org/docs/LangRef.html#terminator-instructions)。
 
@@ -1156,19 +984,19 @@ llvm::Function *func = block->getParent();
 llvm::Instruction *inst = Block->getTerminator();
 ```
 
-#### 获得当前 llvm::IRBuilder 正在插入 LLVM IR 的基本块
+### 获得当前 llvm::IRBuilder 正在插入 LLVM IR 的基本块
 
 ```cpp
 llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
 ```
 
-#### 基本块间跳转与变量传递
+### 基本块间跳转与变量传递
 
 参见 [二元表达式->与&&](#coditional-branch-instruction) 中短路求值的实现方法
 
-### 二元表达式
+## 二元表达式
 
-#### 整数加法+
+### 整数加法+ :id=integer-addition
 
 ```cpp
 /// LHS + RHS
@@ -1208,7 +1036,7 @@ TheBuilder.CreateAdd(valA, valB);
 %2 = add i32 %0, %1
 ```
 
-#### 整数减法-
+### 整数减法-
 
 ```c
 /// LHS - RHS
@@ -1235,7 +1063,7 @@ TheBuilder.CreateSub(valA, valB);
 %2 = sub i32 %0, %1
 ```
 
-#### 整数乘法\*
+### 整数乘法\*
 
 ```cpp
 /// LHS * RHS
@@ -1262,7 +1090,7 @@ TheBuilder.CreateMul(valA, valB);
 %2 = mul i32 %0, %1
 ```
 
-#### 整数除法/
+### 整数除法/
 
 ```cpp
 /// 有符号整数除法
@@ -1290,7 +1118,7 @@ TheBuilder.CreateSDIV(valA, valB);
 %2 = sdiv i32 %0, %1
 ```
 
-#### 整数取余%
+### 整数取余%
 
 ```cpp
 // 有符号整数取余
@@ -1316,11 +1144,11 @@ TheBuilder.CreateSRem(valA, valB);
 %2 = srem i32 %0, %1
 ```
 
-#### 整数比较
+### 整数比较
 
 比较操作的返回值均为 i1 类型，也即 bool 类型。
 
-##### 大于>
+#### 大于>
 
 ```cpp
 /// 有符号大于
@@ -1328,7 +1156,7 @@ TheBuilder.CreateSRem(valA, valB);
 Value *CreateICmpSGT(Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-##### 大于等于>=
+#### 大于等于>=
 
 ```cpp
 /// 有符号大于等于
@@ -1336,7 +1164,7 @@ Value *CreateICmpSGT(Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpSGE (Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-##### 小于<
+#### 小于<
 
 ```cpp
 /// 有符号小于
@@ -1344,7 +1172,7 @@ Value *CreateICmpSGE (Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpSLT(Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-##### 小于等于<=
+#### 小于等于<=
 
 ```cpp
 /// 有符号小于等于
@@ -1352,7 +1180,7 @@ Value *CreateICmpSLT(Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpSLE (Value *LHS, Value *RHS, const Twine &Name="")
 ```
 
-##### 相等==
+#### 相等==
 
 ```cpp
 /// 相等
@@ -1360,7 +1188,7 @@ Value *CreateICmpSLE (Value *LHS, Value *RHS, const Twine &Name="")
 Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-##### 不相等!=
+#### 不相等!=
 
 ```cpp
 /// 不相等
@@ -1368,9 +1196,9 @@ Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-#### 与&& :id=logical-and
+### 与&& :id=logical-and
 
-##### 短路求值思路参考
+#### 短路求值思路参考
 
 对于形如 exp_1 && exp_2 这样的与的表达式，其中 exp_1 和 exp_2 为具有真值的表达式，当 exp_1 和 exp_2 均为 true 时，整个表达式的值才为 true。换句话说，exp_1 或者 exp_2 为 false 时，整个表达式的值就为 false。
 
@@ -1404,7 +1232,7 @@ Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 
 注意，land.rhs 和 land.end 这些标签均可以自己取名。由于 exp_1 和 exp_2 可能不是原子逻辑表达式，即其可能嵌套了 && 或者 ||，因此处理 exp_1 或者 exp_2 时可能会涉及到多个基本块，不过子表达式基本块的控制流结构基本上也是一样的，都是对表达式处理三部分的嵌套。
 
-##### 条件跳转指令 :id=coditional-branch-instruction
+#### 条件跳转指令 :id=coditional-branch-instruction
 
 ```cpp
 /// 如果 Cond=True，则跳转到 True 基本块，否则，跳转到 False 基本块
@@ -1432,7 +1260,7 @@ TheBuilder.CreateCondBr(eq, lhsTrueBlock, landEndBlock);
 br i1 %4, label %land.rhs, label %land.end  ; %4=true 则跳转到 %land.rhs，否则跳转到 %land.end
 ```
 
-##### 无条件跳转指令
+#### 无条件跳转指令
 
 ```cpp
 /// 无条件跳转到目标基本块
@@ -1452,7 +1280,7 @@ TheBuilder.CreateBr(landEndBlock);
 br label %land.end
 ```
 
-##### phi 指令
+#### phi 指令
 
 phi 指令（Phi Instruction）是在 LLVM IR 中用于处理基本块间值传递的指令。它用于合并不同的路径上的值，通常出现在基本块的开头，用于指定从不同的前驱基本块传递过来的值。
 
@@ -1499,7 +1327,7 @@ phi->addIncoming(gt, lhsTrueBlock);
 %merge = phi i1 [ %4, %entry ], [ %5, %land.rhs ]
 ```
 
-##### 与的例子
+#### 与的例子
 
 例如，对于表达式 a > b && b > c，三者均为 i32 类型。
 
@@ -1554,9 +1382,9 @@ land.end:                                         ; preds = %land.rhs, %entry
     %merge = phi i1 [ false, %entry ], [ %4, %land.rhs ]
 ```
 
-#### 或||
+### 或||
 
-##### 短路求值思路参考
+#### 短路求值思路参考
 
 和 [与&&](#logical-and) 类似。
 
@@ -1590,7 +1418,7 @@ land.end:                                         ; preds = %land.rhs, %entry
 
    之后利用该表达式的值进行后续的操作，如处理 if 或者 while。
 
-##### 或的例子
+#### 或的例子
 
 例如，对于表达式 a > b || b > c，三者均为 i32 类型：
 
@@ -1645,9 +1473,9 @@ lor.end:                                          ; preds = %lor.rhs, %entry
   %merge = phi i1 [ true, %entry ], [ %4, %lor.rhs ]
 ```
 
-### 一元表达式
+## 一元表达式
 
-#### 非!
+### 非!
 
 ```cpp
 /// 将对 V 进行按位取反操作
@@ -1677,7 +1505,7 @@ TheBuilder.CreateNot(cmp);
 %3 = xor i1 %2, true    ; !(a > b)
 ```
 
-#### 取负-
+### 取负-
 
 ```cpp
 /// 用于创建整数的取负操作
