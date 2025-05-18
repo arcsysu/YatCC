@@ -162,7 +162,8 @@ EmitIR::operator()(VarDecl* obj)
 然后在`EmitIR.hpp`中添加如下内容
 
 ```cpp
-void operator()(asg::VarDecl* obj)
+void trans_init(llvm::Value* val, Expr* obj);
+void operator()(asg::VarDecl* obj);
 ```
 
 至此，我们以及完成了对变量声明的处理。
