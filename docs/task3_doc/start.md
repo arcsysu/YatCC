@@ -162,7 +162,7 @@ EmitIR::operator()(VarDecl* obj)
 然后在`EmitIR.hpp`中添加如下内容
 
 ```cpp
-void trans_init(llvm::Value* val, Expr* obj);
+void trans_init(llvm::Value* val, asg::Expr* obj);
 void operator()(asg::VarDecl* obj);
 ```
 
