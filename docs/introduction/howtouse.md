@@ -85,7 +85,7 @@ set(TASK4_REVIVE OFF)
 - `/YatCC/build/test/task1/Testing/Temporary/LastTest.log`：保存每个测例的输入输出路径，并记录运行测例时输出到 stdout 的内容（使用`printf`、`cout`等函数的输出结果）
 - `/YatCC/build/test/task1/functional-0/000_main.sysu.c/score.txt`：记录`functional-0/000_main.sysu.c`测例的得分（其他测例同理）
 
-## 如何调试代码
+## 如何调试代码 :id=debug
 
 在这里首先介绍如何通过肉眼比对的方式来进行 debug，在上一小节中我们介绍了如何获得当前正在做的实验的标准答案，通过对比某个测试样例下标准答案和自己的输出的 debug 方式就是肉眼比对 debug 。以`000_main.sysu.c`这个测试样例为例子，同学们可以在
 `/YatCC/build/test/task1/functional-0/`找到`000_main.sysu.c`这个文件夹，查看文件夹中的内容可以发现存在以下三个文件夹，通过查看以下三个文件夹中的内容即可进行 debug 。
