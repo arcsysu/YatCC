@@ -154,6 +154,87 @@ Expr* Typing::assignment_cast(Expr* lft, Expr* rht) {
 
 ---
 
+一个常见的隐式类型转换是利用声明过的变量初始化一个变量：
+
+```cpp
+int a = 1;
+int b = a;
+```
+
+第二行生成 ASG 时，等式右侧的`a`要首先套一层`DeclRefExpr`，表示对已声明变量的引用，再套一层`kLValueToRValue`类型的`ImplicitCastExpr`，表示将左值转换为右值（`a`这个变量名本身是一个左值，表示地址，我们这里需要`a`的值）。
+
+---
+
+另一个`Typing`类处理的细节是，对于空初始化列表：
+
+```cpp
+int a[4][2] = {};
+```
+
+右侧本来是`list`为空的`InitListExpr`，`Typing`类会将其转换为一个`ImplicitInitExpr`。但是最终打印为 JSON 时，仍然会打印为`InitListExpr`，只是没有`inner`：
+
+```json
+{
+  "kind": "VarDecl",
+  "name": "a",
+  "type": {
+    "qualType": "int[4][2]"
+  },
+  "inner": [
+    {
+      "kind": "InitListExpr",
+      "type": {
+        "qualType": "int[4][2]"
+      },
+      "valueCategory": "prvalue"
+    }
+  ]
+}
+```
+
+相对的，用非空初始化列表初始化：
+
+```cpp
+int b[4][2] = {1, 2, 3, 4, 5, 6, 7, 8};
+```
+
+生成的 JSON 应该像下面这样：
+
+```json
+{
+"kind": "VarDecl",
+"name": "b",
+"type": {
+"qualType": "int[4][2]"
+},
+"inner": [
+{
+"kind": "InitListExpr",
+"type": {
+  "qualType": "int[4][2]"
+},
+"valueCategory": "prvalue",
+"inner": [
+  {
+    "kind": "InitListExpr",
+    "type": {
+      "qualType": "int[2]"
+    },
+    "valueCategory": "prvalue",
+    "inner": [
+      {
+        "kind": "IntegerLiteral",
+        "type": {
+          "qualType": "int"
+        },
+        "valueCategory": "prvalue",
+        "value": "1"
+      },
+\\...
+```
+
+---
+
 这些方法使得 `Typing` 类可以灵活地处理各种类型相关的语义规则，包括基本的类型推导、类型兼容性检查和必要的类型转换。通过将这些功能集中在 `Typing` 类中，代码的其余部分可以在不直接处理复杂类型规则的情况下，进行语义分析和代码生成。
 
 如果同学们想要了解更多关于本实验类型系统的设计，可以看看这篇文章——[类型、类型检查与推导](https://github.com/arcsysu/YatCC/blob/main/docs/gyh-manual/%E7%B1%BB%E5%9E%8B%E3%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E4%B8%8E%E6%8E%A8%E5%AF%BC.md)
