@@ -307,11 +307,71 @@ EmitIR::operator()(BinaryExpr* obj)
   - `case BinaryExpr::kAdd`: 对于加法操作符 `kAdd`，使用 `irb.CreateAdd(lftVal, rhtVal)` 生成一个加法指令。
   - `CreateAdd()` 是 `IRBuilder` 类的一个方法，它接受两个 `llvm::Value*` 类型的参数，生成一个新的加法指令，并返回结果的 IR 表示。
 
-## 结果
+## 阶段性结果
 
-至此，针对样例 2，我们已经实现了所有所需的处理函数。运行评分脚本，应该能得到如下图所示的评分结果。恭喜你同学！测例二获得满分！
+至此，针对样例 2，我们已经实现了所有所需的处理函数。运行评分脚本，应该能得到如下图所示的评分结果，可以看到测例 2 已经拿到了满分！
 
 ![test2ok](../images/task3/test2ok.jpg)
+
+## 处理语句
+
+处理语句时，尤其是复合语句、条件语句、循环语句等，会涉及到控制流的设计，包括[基本块](task3_doc/apidoc.md#basic-block)的创建、插入点的切换以及不同基本块之间的跳转。
+
+以`if`语句为例：
+
+```c
+if(cond){ // prev
+  //then
+} else{
+  //else
+}
+//merge
+```
+
+通常可以分为这四个区域，也对应着四个基本块：
+
+- `prev`：在进入`if`语句之前的基本块，可以就在这个基本块中，开始生成关于条件表达式的 IR 代码。
+- `then`：条件为真时，应当执行的基本块。需要创建该基本块，并调整插入点到这个基本块之后，再生成这部分的 IR 代码。
+- `else`：条件为假时，应当执行的基本块。需要创建该基本块，并调整插入点到这个基本块之后，再生成这部分的 IR 代码。
+- `merge`：各个分支最终要回到的基本块，后续的 IR 代码也将会直接插入到这个基本块中（变成别的语句的`prev`）。
+
+按照上面的设计，一种参考实现如下：
+
+```cpp
+void
+EmitIR::operator()(IfStmt* obj)
+{
+  auto& irb = *mCurIrb;
+
+  auto thenBb = llvm::BasicBlock::Create(mCtx, "if.then", mCurFunc);
+  auto elseBb = llvm::BasicBlock::Create(mCtx, "if.else", mCurFunc);
+  auto mergeBb = llvm::BasicBlock::Create(mCtx, "if.end", mCurFunc);
+
+  // 直接在原基本块开始判断if的条件
+  auto condVal = self(obj->cond);
+  // 根据条件值跳转到不同的基本块
+  irb.CreateCondBr(condVal, thenBb, elseBb);
+
+  // 处理then部分
+  irb.SetInsertPoint(thenBb);
+  self(obj->then);
+  // 跳转到mergeBb
+  irb.CreateBr(mergeBb);
+
+  // 处理else部分
+  irb.SetInsertPoint(elseBb);
+  self(obj->else_);
+  // 跳转到mergeBb
+  irb.CreateBr(mergeBb);
+
+  // 调整插入点到mergeBb，方便后续的代码生成
+  mCurIrb->SetInsertPoint(mergeBb);
+}
+```
+
+注意，上面的代码仅供参考，`if`语句可能没有`else`，也可能有嵌套关系。`thenBb`和`elseBb`之中也可能有`return`直接返回了，不需要再跳转到`merge`（否则会在同一个基本块中生成了多个[终结指令](task3_doc/apidoc.md#basic-block-terminator)而报错），同学们需要考虑各种情况，并进行相应的处理。
+
+其他语句的处理也是类似的。特别地，对于`break`和`continue`语句，不是在同一个重载函数中处理，无法拿到需要跳转到的基本块。一种可能的解决方法是，给`EmitIR`类添加一个成员变量，保存所需的基本块指针，以便后续使用。
 
 ## 如何调试
 

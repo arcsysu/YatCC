@@ -960,7 +960,7 @@ llvm::BasicBlock *block = llvm::BasicBlock::Create(TheContext, "entry", func);
 llvm::Function *func = block->getParent();
 ```
 
-### 获得基本块的终结指令
+### 获得基本块的终结指令 :id=basic-block-terminator
 
 在 LLVM IR 正确组织的情况下，每一个基本块的最后一条指令都应该是一条[终结指令（Terminator instructions）](https://llvm.org/docs/LangRef.html#terminator-instructions)。
 
