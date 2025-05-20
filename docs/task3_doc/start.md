@@ -313,6 +313,8 @@ EmitIR::operator()(BinaryExpr* obj)
 
 ![test2ok](../images/task3/test2ok.jpg)
 
+接下来几个小节，选择性介绍其他语法结构的处理方式，供同学们参考。
+
 ## 处理语句
 
 处理语句时，尤其是复合语句、条件语句、循环语句等，会涉及到控制流的设计，包括[基本块](task3_doc/apidoc.md#basic-block)的创建、插入点的切换以及不同基本块之间的跳转。
@@ -372,6 +374,132 @@ EmitIR::operator()(IfStmt* obj)
 注意，上面的代码仅供参考，`if`语句可能没有`else`，也可能有嵌套关系。`thenBb`和`elseBb`之中也可能有`return`直接返回了，不需要再跳转到`merge`（否则会在同一个基本块中生成了多个[终结指令](task3_doc/apidoc.md#basic-block-terminator)而报错），同学们需要考虑各种情况，并进行相应的处理。
 
 其他语句的处理也是类似的。特别地，对于`break`和`continue`语句，不是在同一个重载函数中处理，无法拿到需要跳转到的基本块。一种可能的解决方法是，给`EmitIR`类添加一个成员变量，保存所需的基本块指针，以便后续使用。
+
+## 处理数组元素访问
+
+在我们的 LLVM API 文档中，介绍了使用`GEP`指令来实现[数组元素访问](task3_doc/apidoc.md#array-element-access)：
+
+```cpp
+/// 根据索引列表，将指针偏移量应用于基指针，获得结果指针
+/// Ty：      基指针 Ptr 指向的数据的类型
+/// Ptr：     基指针
+/// IdxList： 索引列表
+Value *CreateInBoundsGEP(Type *Ty, Value *Ptr, ArrayRef<Value *> IdxList, const Twine &Name="");
+```
+
+我们需要的三个参数，分别是基指针指向的类型、基指针和索引列表。对于一个实际的数组元素访问表达式，例如：
+
+```cpp
+// 029_const_array_defn.sysu.c
+int a[5];
+// ...
+return a[4];
+```
+
+其中的`a[4]`转化为的 AST 结构如下：
+
+```json
+"kind": "ImplicitCastExpr",
+"type": {
+  "qualType": "int"
+},
+"valueCategory": "prvalue",
+"castKind": "LValueToRValue",
+"inner": [
+  {
+    "kind": "ArraySubscriptExpr",
+    "type": {
+      "qualType": "const int"
+    },
+    "valueCategory": "lvalue",
+    "inner": [
+      {
+        "kind": "ImplicitCastExpr",
+        "type": {
+          "qualType": "const int *"
+        },
+        "valueCategory": "prvalue",
+        "castKind": "ArrayToPointerDecay",
+        "inner": [
+          {
+            "kind": "DeclRefExpr",
+            "type": {
+              "qualType": "const int[5]"
+            },
+            "valueCategory": "lvalue"
+          }
+        ]
+      },
+      {
+        "kind": "IntegerLiteral",
+        "type": {
+          "qualType": "int"
+        },
+        "valueCategory": "prvalue",
+        "value": "4"
+      }
+    ]
+  }
+]
+```
+
+对于`a`，最内层首先是一个`DeclRefExpr`，表示对变量的引用。然后再外层是一个`kArrayToPointerDecay`的`ImplicitCastExpr`，表示将数组转换为指针，在这个例子中，就是希望把`int[5]`类型的数组转换为`int*`类型。再外面是一个`ArraySubscriptExpr`，转化为 ASG 节点，是一个`kIndex`类型的`BinaryExpr`，表示数组下标访问。我们最终，就是要在`BinaryExpr`的重载中，调用`CreateInBoundsGEP()`函数。
+
+按照我们之前实现的处理`DeclRefExpr`重载，会返回一个`llvm::Value*`指针。如果对其用`getType()`，得到的是`ptr`，而不是`i32*`，这是因为在 LLVM 17 中，所有的指针类型都是[不透明指针](task3_doc/apidoc.md#pointer-type)。而且`getElementType()`以及`getPointerTo()`等函数都已经被弃用，无法根据这个指针类型，获取它所指向的类型。
+
+如果能获取到指针指向的类型，我们可以像下面这样写：
+
+```cpp
+// operator()(ImplicitCastExpr* obj)
+case kArrayToPointerDecay: {
+  auto sub = self(obj->sub);
+  auto ty = sub->getType()->getPointerElementType();
+  auto gep = irb.CreateInBoundsGEP(ty, sub, {irb.getInt32(0)});
+  return gep;
+}
+
+// operator()(BinaryExpr* obj)
+case kIndex: {
+  auto sub = self(obj->lft);
+  auto idx = self(obj->rht);
+  auto ty= sub->getType()->getPointerElementType();
+  auto gep = irb.CreateInBoundsGEP(ty, sub, {idx});
+  return gep;
+}
+```
+
+生成的 IR 类似：
+
+```llvm
+@a = constant [5 x i32]
+
+define i32 @main() #0 {
+entry:
+  %0 = load i32, ptr getelementptr inbounds ([5 x i32], ptr @a, i64 0), align 16
+  %1 = load i32, ptr getelementptr inbounds (i32, ptr %0, i64 4), align 16
+  ret i32 %1
+}
+```
+
+这与标准答案中的 IR 是等价的：
+
+```llvm
+@a = constant [5 x i32]
+
+define i32 @main() #0 {
+entry:
+  %0 = load i32, ptr getelementptr inbounds ([5 x i32], ptr @a, i64 0, i64 4), align 16
+  ret i32 %0
+}
+```
+
+但是，我们以及无法获取指针所指向的类型了。一种可能的解决方法是**利用 ASG 节点的类型信息**，也即`obj->type`。假如你已经实现了数组类型的处理函数，可以`self(obj->type)`，回返回真实的类型（一个`llvm::Type*`），可以作为`CreateInBoundsGEP()`的第一个参数了。
+
+以上思路仅供参考，具体的实现同学们可以根据自己的设计进行调整。
+
+## 处理空初始化列表
+
+在 task2 的[文档](task2_doc/share.md#type-check)中，提到空初始化列表实际上对应着一个`ImplicitInitExpr`的 ASG 节点，不要忘记给`operatoe()(Expr* obj)`添加相应的跳转处理。
 
 ## 如何调试
 

@@ -153,7 +153,7 @@ uint64_t len = arrType->getNumElements();
 llvm::Type *elementType = arrType->getElementType();
 ```
 
-### 指针类型
+### 指针类型 :id=pointer-type
 
 ```cpp
 #include <llvm/IR/DerivedTypes.h>
@@ -691,7 +691,7 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 
 使用全局构造函数来初始化全局数组和局部数组的初始化可以参考下面 [数组元素的访问](#数组元素的访问) 一节，通过 GEP 指令、[load](#load-instuction) 指令和 [store](#store-instuction) 指令来进行逐数组元素初始化。
 
-### 数组元素的访问
+### 数组元素的访问 :id=array-element-access
 
 访问数组的元素需要用到 **GEP**（GetElementPtr，**获取元素指针**）指令，这个指令用于获取聚合数据结构（在本实验中，即数组）的子元素的地址。GEP 指令仅进行地址的计算而不进行内存访问，其实质是将指针偏移量应用于基指针并返回结果指针。
 
@@ -1354,6 +1354,8 @@ phi->addIncoming(TheBuilder.getInt1(false), Block);
 phi->addIncoming(bGTc, lhsTrueBlock);
 ```
 
+记得把 PHI 节点作为返回值传递给上层。
+
 生成的 LLVM IR 如下：
 
 ```llvm
@@ -1446,6 +1448,8 @@ llvm::PHINode *phi = TheBuilder.CreatePHI(llvm::Type::getInt1Ty(TheContext), 2, 
 phi->addIncoming(TheBuilder.getInt1(true), Block);
 phi->addIncoming(bGTc, lhsFalseBlock);
 ```
+
+记得把 PHI 节点作为返回值传递给上层。
 
 生成的 LLVM IR 如下：
 
