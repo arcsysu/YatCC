@@ -133,7 +133,7 @@ Expr* Typing::operator()(IntegerLiteral* obj) {
 
 ```
 
-### 类型检查与转换
+### 类型检查与转换 :id=type-check
 
 对于赋值操作，Typing 会检查左右两侧的类型是否兼容，并在需要时插入隐式类型转换：
 

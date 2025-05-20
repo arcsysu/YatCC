@@ -241,7 +241,7 @@ EmitIR::operator()(ImplicitCastExpr* obj)
 
 - `switch` 语句：
 
-  处理不同类型的隐式转换。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况，也即将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取这个变量的值而非变量本身。
+  处理不同类型的[隐式转换](task2_doc/share.md#type-check)。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况，也即将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取这个变量的值而非变量本身。
 
   - `auto ty = self(obj->sub->type)`：获取子表达式的类型，并调用 `self` 方法将类型转换为 LLVM IR 中对应的类型表示。
   - `auto loadVal = irb.CreateLoad(ty, sub)`：
@@ -264,6 +264,10 @@ EmitIR::operator()(DeclRefExpr* obj)
   return reinterpret_cast<llvm::Value*>(obj->decl->any);
 }
 ```
+
+还记得我们在处理变量声明时，有一行`obj->any = gvar`吗？`Obj`基类的`any`成员终于派上了用场！这里我们将指向`llvm::GlobalVariable`对象的指针，转换为`llvm::Value*`类型并返回，这就相当于返回了之前声明了的变量的地址。利用这个`llvm::Value*`指针，就可以利用`CreateStore`指令将值存储到这个地址中（变量赋值）等操作了。
+
+在局部变量声明的时候，不要忘了给`any`成员赋值哦！
 
 ---
 
