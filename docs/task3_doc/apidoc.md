@@ -788,8 +788,6 @@ store i32 2, ptr %0
 
 [GEP FAQ](https://llvm.org/docs/GetElementPtr.html)
 
-[理解 getElementPtr](https://buaa-se-compiling.github.io/miniSysY-tutorial/lab7/help.html)
-
 [LLVM's getelementptr, by example](https://blog.yossarian.net/2020/09/19/LLVMs-getelementptr-by-example)
 
 ## 函数 :id=function
