@@ -8,7 +8,7 @@
   - [大模型提示工程](introduction/prompt.md)
   - [帮助我们改进实验](introduction/helptoimprove.md)
 - Task0
-  - [实验内容](task0_doc/task0.md)
+  - [实验介绍](task0_doc/task0.md)
 - Task1
   - [实验介绍](task1_doc/overview.md)
   - [使用 flex 完成 Task1](task1_doc/flex.md)
