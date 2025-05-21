@@ -1471,25 +1471,38 @@ lor.end:                                          ; preds = %lor.rhs, %entry
 
 ## 一元表达式
 
-### 非 !
+### 逻辑非 !
+
+一般意义上的非运算指按位取反（在 C 语言中用`~`表示）。
 
 ```cpp
 /// 将对 V 进行按位取反操作
 Value *CreateNot(Value *V, const Twine &Name="");
 ```
 
-例如对于`!(a>b)`，其中`a, b`均为 `i32` 类型：
+本实验中，只需要实现其中的一种特例——逻辑非（在 C 语言中用`!`表示），也即对`int1`类型进行按位取反，通常通过与`true`进行异或操作来实现。
+
+```cpp
+/// 对 V 进行逻辑非操作
+Value *CreateXor(Value *V, const Twine &Name="");
+```
+
+如果逻辑非作用的对象不是`i1`类型，则需要先与 0 比较，与 0 相等则为`true`，否则为`false`，然后再进行逻辑非操作。
+
+例如对于`!(a+b)`，其中`a, b`均为 `i32` 类型：
 
 ```cpp
 /// load 指令取出 a 和 b 的值
 llvm::Value *valA = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), varA);
 llvm::Value *valB = TheBuilder.CreateLoad(TheBuilder.getInt32Ty(), varB);
 
-// a > b
-llvm::Value *cmp = TheBuilder.CreateICmpSGT(valA, valB);
+// a + b
+llvm::Value *add = TheBuilder.CreateAdd(valA, valB);
+// 将 a + b 的值与 0 进行比较
+llvm::Value *cmp = TheBuilder.CreateICmpEQ(add, TheBuilder.getInt32(0));
 
-// 非
-TheBuilder.CreateNot(cmp);
+// 逻辑非
+TheBuilder.CreateXor(cmp, TheBuilder.getTrue());
 ```
 
 生成的 LLVM IR 如下：
@@ -1497,8 +1510,9 @@ TheBuilder.CreateNot(cmp);
 ```llvm
 %0 = load i32, ptr %a
 %1 = load i32, ptr %b
-%2 = icmp sgt i32 %0, %1  ; a > b
-%3 = xor i1 %2, true    ; !(a > b)
+%2 = add i32 %0, %1
+%3 = icmp eq i32 %2, 0
+%4 = xor i1 %3, true ; !(a+b)
 ```
 
 注意，这里通过与`true`进行异或操作来实现`i1`类型的非操作。
