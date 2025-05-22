@@ -473,7 +473,7 @@ initializer_list
   : %empty;
 ```
 
-## 如何 debug
+## 如何调试
 
 ### yydebug
 
@@ -521,7 +521,7 @@ Stack now 0 2 14
 
 ### 断点调试
 
-`Typing`和`Asg2Json`部分出先问题，可以使用断点调试，看下是哪一部分生成不到位出了问题。配合`std::cout`打印效果更佳。
+`Typing`和`Asg2Json`部分出现问题，可以使用[断点调试](introduction/howtouse.md#debug)，看下是哪一部分生成不到位出了问题。配合`std::cout`打印效果更佳。
 
 ### 输出到文件
 

@@ -133,7 +133,7 @@ Expr* Typing::operator()(IntegerLiteral* obj) {
 
 ```
 
-### 类型检查与转换
+### 类型检查与转换 :id=type-check
 
 对于赋值操作，Typing 会检查左右两侧的类型是否兼容，并在需要时插入隐式类型转换：
 
@@ -150,6 +150,87 @@ Expr* Typing::assignment_cast(Expr* lft, Expr* rht) {
   return rht;
 }
 
+```
+
+---
+
+一个常见的隐式类型转换是利用声明过的变量初始化一个变量：
+
+```cpp
+int a = 1;
+int b = a;
+```
+
+第二行生成 ASG 时，等式右侧的`a`要首先套一层`DeclRefExpr`，表示对已声明变量的引用，再套一层`kLValueToRValue`类型的`ImplicitCastExpr`，表示将左值转换为右值（`a`这个变量名本身是一个左值，表示地址，我们这里需要`a`的值）。
+
+---
+
+另一个`Typing`类处理的细节是，对于空初始化列表：
+
+```cpp
+int a[4][2] = {};
+```
+
+右侧本来是`list`为空的`InitListExpr`，`Typing`类会将其转换为一个`ImplicitInitExpr`。但是最终打印为 JSON 时，仍然会打印为`InitListExpr`，只是没有`inner`：
+
+```json
+{
+  "kind": "VarDecl",
+  "name": "a",
+  "type": {
+    "qualType": "int[4][2]"
+  },
+  "inner": [
+    {
+      "kind": "InitListExpr",
+      "type": {
+        "qualType": "int[4][2]"
+      },
+      "valueCategory": "prvalue"
+    }
+  ]
+}
+```
+
+相对的，用非空初始化列表初始化：
+
+```cpp
+int b[4][2] = {1, 2, 3, 4, 5, 6, 7, 8};
+```
+
+生成的 JSON 应该像下面这样：
+
+```json
+{
+"kind": "VarDecl",
+"name": "b",
+"type": {
+"qualType": "int[4][2]"
+},
+"inner": [
+{
+"kind": "InitListExpr",
+"type": {
+  "qualType": "int[4][2]"
+},
+"valueCategory": "prvalue",
+"inner": [
+  {
+    "kind": "InitListExpr",
+    "type": {
+      "qualType": "int[2]"
+    },
+    "valueCategory": "prvalue",
+    "inner": [
+      {
+        "kind": "IntegerLiteral",
+        "type": {
+          "qualType": "int"
+        },
+        "valueCategory": "prvalue",
+        "value": "1"
+      },
+\\...
 ```
 
 ---
