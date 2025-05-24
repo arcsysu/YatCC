@@ -22,9 +22,9 @@
 
 1. 我们的一些规定
 
-    - `/io/evaluation` 为代码空间的测评结果目录，初始时与远程一致，被用户修改后不保证一致。
+    1.1. `/io/evaluation` 为代码空间的测评结果目录，初始时与远程一致，被用户修改后不保证一致。
 
-    - `/io/evaluation/{eid}` 为每次提交作业的临时目录，`eid`为时间戳，不必关心生成逻辑，只需要知道他是`eid`即可。
+    1.2. `/io/evaluation/{eid}` 为每次提交作业的临时目录，`eid`为时间戳，不必关心生成逻辑，只需要知道他是`eid`即可。
 
 2. 由于目前web前端未就绪，助教为大家准备了命令行工具，需要麻烦大家手动键入命令行操作。
 
@@ -58,7 +58,7 @@
 
     ![eval-tool](../images/yatcc-aj/eval-tool-list-eid-fail.png)
 
-    5.4. 根据`taskid`列出task所有测评：`eval-tool list taskid x`
+    5.4. 根据`taskid`列出task所有测评：`eval-tool list task x`
 
     这个命令可以用于列出某个task的评测结果，具体文件在图中显示的目录中，注意只能列出0～5的task。
 
