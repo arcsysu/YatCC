@@ -20,33 +20,33 @@
 
 ## 面向代码空间开发/本地开发的用户
 
-0. 我们的一些规定
+1. 我们的一些规定
 
     - `/io/evaluation` 为代码空间的测评结果目录，初始时与远程一致，被用户修改后不保证一致。
 
     - `/io/evaluation/{eid}` 为每次提交作业的临时目录，`eid`为时间戳，不必关心生成逻辑，只需要知道他是`eid`即可。
 
-1. 由于目前web前端未就绪，助教为大家准备了命令行工具，需要麻烦大家手动键入命令行操作。
+2. 由于目前web前端未就绪，助教为大家准备了命令行工具，需要麻烦大家手动键入命令行操作。
 
-2. 命令行工具已经嵌入到大家的**代码空间**（而不是本地开发！），因此目前所有的评测操作都需要在**代码空间**操作！
+3. 命令行工具已经嵌入到大家的**代码空间**（而不是本地开发！），因此目前所有的评测操作都需要在**代码空间**操作！
 
-3. 命令行工具可以显示我们**远端测评数据**，代码空间的数据可被手动修改且无同步措施，因此请**不要修改**`/io/evaluation`下的目录，后果自负！
+4. 命令行工具可以显示我们**远端测评数据**，代码空间的数据可被手动修改且无同步措施，因此请**不要修改**`/io/evaluation`下的目录，后果自负！
 
-4. 命令行工具介绍：
+5. 命令行工具介绍：
 
-    4.1. 命令行工具：`eval-tool`
+    5.1. 命令行工具：`eval-tool`
 
     下图显示了所有指令，一般的参数我们**并不需要关心填入**，工具会默认读取。
 
     ![eval-tool](../images/yatcc-aj/eval-tool-help.png)
 
-    4.2. 列出所有测评：`eval-tool list all`
+    5.2. 列出所有测评：`eval-tool list all`
 
     列出所有测评后，可以在对应的目录下看到更新后的数据，all更新会顺带更新每一个task的数据。
 
     ![eval-tool](../images/yatcc-aj/eval-tool-list-all.png)
 
-    4.3. 根据`eid`列出某个测评：`eval-tool list eid xxx`
+    5.3. 根据`eid`列出某个测评：`eval-tool list eid xxx`
 
     根据`/io/evaluation`下的子目录，可以得到`eid`，如果你想单独列出某个`eid`对应的成绩，可以使用这个命令。
 
@@ -58,13 +58,13 @@
 
     ![eval-tool](../images/yatcc-aj/eval-tool-list-eid-fail.png)
 
-    4.4. 根据`taskid`列出task所有测评：`eval-tool list taskid x`
+    5.4. 根据`taskid`列出task所有测评：`eval-tool list taskid x`
 
     这个命令可以用于列出某个task的评测结果，具体文件在图中显示的目录中，注意只能列出0～5的task。
 
     ![eval-tool](../images/yatcc-aj/eval-tool-list-taskid.png)
 
-    4.5. 提交作业：`eval-tool submit xxx`
+    5.5. 提交作业：`eval-tool submit xxx`
 
     这个命令需要接一个**代码空间本地**已有的文件路径（绝对或相对），提交之后可以去对应的`/io/evaluation/{eid}`下查看是否已经有反馈的结果。
 
