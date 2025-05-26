@@ -315,6 +315,12 @@ EmitIR::operator()(BinaryExpr* obj)
 
 接下来几个小节，选择性介绍其他语法结构的处理方式，供同学们参考。
 
+## 处理局部变量声明
+
+刚才我们处理了全局变量的声明和初始化，如何处理局部变量的声明和初始化呢？局部变量，顾名思义，只会出现在“局部”。具体来说，是会出现在某个“函数”或者“语句块”内，也即`CompundStmt`下`DeclStmt`下的`VarDecl`，没有被`DeclStmt`包裹的`VarDecl`都是全局变量的声明。
+
+局部变量也可能在声明的同时初始化，只需查看是否有`init`成员即可；如果没有，也不用像全局变量一样，进行默认的零初始化。
+
 ## 处理语句
 
 处理语句时，尤其是复合语句、条件语句、循环语句等，会涉及到控制流的设计，包括[基本块](task3_doc/apidoc.md#basic-block)的创建、插入点的切换以及不同基本块之间的跳转。
@@ -495,13 +501,15 @@ entry:
 }
 ```
 
-但是，我们以及无法获取指针所指向的类型了。一种可能的解决方法是**利用 ASG 节点的类型信息**，也即`obj->type`。假如你已经实现了数组类型的处理函数，可以`self(obj->type)`，回返回真实的类型（一个`llvm::Type*`），可以作为`CreateInBoundsGEP()`的第一个参数了。
+---
 
-以上思路仅供参考，具体的实现同学们可以根据自己的设计进行调整。
+但是，我们以及无法获取指针所指向的类型了，一种可能的解决方法是**利用 ASG 节点的类型信息**。还是用上面的例子，在`operator()(BinaryExpr* obj)`中，我们可以通过`auto p=obj->lft->dcst<ImplicitCastExpr>()->sub`获取到`DeclRefExpr`，`p->type`就是真实的类型。假如你已经实现了数组类型的处理函数，`self(p->type)`将返回真实的类型（一个`llvm::Type*`），也即`[5 x i32]`，可以作为`CreateInBoundsGEP()`的第一个参数了。
+
+以上思路仅供参考，同学们学会使用 ASG 节点的类型信息之后，可以自由实现相应的处理函数。
 
 ## 处理空初始化列表
 
-在 task2 的[文档](task2_doc/share.md#type-check)中，提到空初始化列表实际上对应着一个`ImplicitInitExpr`的 ASG 节点，不要忘记给`operatoe()(Expr* obj)`添加相应的跳转处理。
+在 task2 的[文档](task2_doc/share.md#type-check)中，提到空初始化列表实际上对应着一个`ImplicitInitExpr`的 ASG 节点，不要忘记给`operatoe()(Expr* obj)`添加相应的跳转处理。利用空初始化列表进行初始化，隐含的意思是将所有元素初始化为 0.
 
 ## 如何调试
 
