@@ -30,7 +30,7 @@
   - [LLVM API](task3_doc/apidoc.md)
 - Task4
   - [实验介绍](task4_doc/overview.md)
-  - [框架代码介绍](task4_doc/framework.md)
+  - [代码框架介绍](task4_doc/framework.md)
   - [优化算法](task4_doc/optimizations.md)
   - [Prompt 示例](task4_doc/prompt.md)
   - [API 速查](task4_doc/apidoc.md)
