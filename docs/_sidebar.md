@@ -35,7 +35,12 @@
   - [Prompt 示例](task4_doc/prompt.md)
   - [API 速查](task4_doc/apidoc.md)
 - Task5
-  - [实验介绍](task5_doc/overview.md)
+  - [整体介绍](task5_doc/overview.md)
+  - [评分标准](task5_doc/judge.md)
+  - [API介绍](task5_doc/API.md)
+  - [指令介绍](task5_doc/ins.md)
+  - [LLM相关](task5_doc/LLM.md)
+  - [参考资料](task5_doc/cite.md)
 - Q&A
   - [常见问题与答案](QA.md)
 - 致谢
