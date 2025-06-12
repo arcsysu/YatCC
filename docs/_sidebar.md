@@ -36,6 +36,7 @@
   - [API 速查](task4_doc/apidoc.md)
 - Task5
   - [整体介绍](task5_doc/overview.md)
+  - [环境要求](task5_doc/env.md)
   - [评分标准](task5_doc/judge.md)
   - [API介绍](task5_doc/API.md)
   - [指令介绍](task5_doc/ins.md)
