@@ -46,4 +46,4 @@ Task5属于**选做实验，**提供额外的**10分**（可补前面扣的分�
 
 同学们需要修改的是 `llm/prompts/Ir2AsmSysPrTpl.xml`  `llm/prompts/Ir2AsmUserPrTpl.xml`文件，补充完成里面给LLM的Prompt。
 
-<img src="../images/task.png" alt="task.png" width="70%">
+<img src="../images/task.png" alt="task.png" style="width:70%;" />
