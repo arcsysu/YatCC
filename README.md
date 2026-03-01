@@ -92,4 +92,4 @@ cd YatCC
 
 现在，你已经准备好了，请按照每个任务的具体要求，开始你的编译器实验之旅吧！
 
-你可以在这里找到更多的参考文档：[arcsysu.github.io/YatCC/](https://arcsysu.github.io/YatCC/)。
+你可以在这里找到更多的参考文档：[docs.yatcc-ai.com](https://docs.yatcc-ai.com/#/)。
