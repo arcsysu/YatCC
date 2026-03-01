@@ -1,0 +1,19 @@
+name: Generate ol.html
+
+on:
+  push:
+    branches: [ docs ]  # 触发分支（可自定义）
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 持续自动化部署
+      - name: Trigger Deployment
+        run: |
+          curl -f -v -X POST https://portal.m.arcsysu.cn/trigger/docs_yatcc \
+            -H "X-API-KEY: ${{ secrets.TRIGGER_KEY }}" \
+            -H "Content-Type: application/json"
