@@ -1,4 +1,4 @@
-name: Generate ol.html
+name: yatcc docs CI/CD 
 
 on:
   push:
