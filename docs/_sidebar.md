@@ -4,7 +4,7 @@
   - [环境配置](introduction/environment.md)
   - [实验框架使用方法](introduction/howtouse.md)
   - [最终评测方式说明](introduction/finalscore.md)
-  - [AI 工具配置与使用方法](introduction/aitools.md)
+  - [AI 工具使用方法](introduction/agent.md)
   - [大模型提示工程](introduction/prompt.md)
   - [帮助我们改进实验](introduction/helptoimprove.md)
 - Task0
