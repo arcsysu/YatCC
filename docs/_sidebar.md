@@ -5,6 +5,7 @@
   - [实验框架使用方法](introduction/howtouse.md)
   - [最终评测方式说明](introduction/finalscore.md)
   - [AI 工具使用方法](introduction/agent.md)
+  - [vibe coding指南](introduction/vibecoding.md)
   - [大模型提示工程](introduction/prompt.md)
   - [帮助我们改进实验](introduction/helptoimprove.md)
 - Task0
