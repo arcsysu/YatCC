@@ -21,7 +21,7 @@ git stash pop	# 恢复先前暂时储藏的修改
 #### 3.MacOS + VSCode 如何进入单步调试
 
 1. 安装 VSCode 插件 `CodeLLDB`  
-   ![codeLLDB](images/codelldb.png)
+   ![codeLLDB](images/QA/codelldb.png)
 2. 在`.vscode/launch.json`中加入以下配置
 
 ```json
@@ -35,8 +35,8 @@ git stash pop	# 恢复先前暂时储藏的修改
 }
 ```
 
-![launch.json](images/VSClaunch.png) 3. 打上断点，在`测试`插件中对单个测例进行单步调试
-![alt text](images/debug.png)
+![launch.json](images/QA/VSClaunch.png) 3. 打上断点，在`测试`插件中对单个测例进行单步调试
+![alt text](images/QA/debug.png)
 
 ## 实验一
 

@@ -36,4 +36,4 @@ https://arcsysu.terryinc.top/login
 
 在这里再次介绍一下我们的实验代码打包方式，请同学按照以下截图方式进行即可。（因为在其他地方也有介绍过。）
 
-![howtopack](../images/task0_pack.jpg)
+![howtopack](../images/task0/task0_pack.jpg)

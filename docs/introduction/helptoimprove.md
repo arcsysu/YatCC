@@ -12,15 +12,15 @@
 
 首先请同学们在浏览器打开[项目仓库网址](https://github.com/arcsysu/YatCC)，点击下图所示的`fork`按钮。
 
-![fork1](../images/fork1.jpg)
+![fork1](../images/helptoimprove/fork1.jpg)
 
 然后会弹出下图所示的界面，请同学们记得将`Copy the master branch only`取消掉（因为我们的实验代码和实验文档位于两个不同的分支），再点击`create fork`按钮
 
-![fork2](../images/fork22.jpg)
+![fork2](../images/helptoimprove/fork22.jpg)
 
 最后弹出如下图所示的界面即代表完成了 fork。
 
-![fork3](../images/fork3.jpg)
+![fork3](../images/helptoimprove/fork3.jpg)
 
 ## 对代码做修改并上传
 
@@ -43,7 +43,7 @@ git branch -a
 
 会出现如下图所示的界面，可以看到存在一个 docs 的分支，在这个界面下，同学们可以在英文输入法状态按`q`键退出。
 
-![showbranch](../images/showbranch.jpg)
+![showbranch](../images/helptoimprove/showbranch.jpg)
 
 接下来请同学们输入以下命令将远端的 docs 分支拉取到本地的 docs 分支
 
@@ -61,7 +61,7 @@ Switched to a new branch 'docs'
 以下示例图片中的`howtoPR.md`位于刚刚 clone 的 fork 到我们个人账号下的文件中，
 是一个为了向同学们演示如何提交 PR 而新建的文档。
 
-![prdemo](../images/prdemo.jpg)
+![prdemo](../images/helptoimprove/prdemo.jpg)
 
 接下来请同学们输入以下命令将本地仓库中的文件 push 到我们 fork 的远端 github 仓库中。
 
@@ -73,12 +73,12 @@ git push origin docs
 
 最终同学们可以看到下图所示的结果，代表成功上传。
 
-![prdemo](../images/displaydemo.jpg)
+![prdemo](../images/helptoimprove/displaydemo.jpg)
 
 此时进入到自己账户下找到之前我们 fork 的实验仓库，同学们可以看到如下的提示，请点击`compare & pull request`
 
-![prdemo](../images/prready.jpg)
+![prdemo](../images/helptoimprove/prready.jpg)
 
 然后会显示下图所示界面，点击`create pull request`即可完成 PR 的提交。
 
-![prdemo](../images/pr11.jpg)
+![prdemo](../images/helptoimprove/pr11.jpg)

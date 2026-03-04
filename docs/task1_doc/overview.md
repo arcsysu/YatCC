@@ -71,7 +71,7 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
    在`PROJECT OUTLINE/YatCC/test/task0`中选择构建`task0-answer`。该操作将自动将所有`YatCC/test/cases/*/*.sysu.c`源代码进行预处理。预处理结果将保存在`YatCC/build/test/task0`文件夹中，作为词法分析器的输入。
 
-   ![build task0](../images/task0answer.png)
+   ![build task0](../images/task1/task0answer.png)
 
 2. 实现词法分析器
 
@@ -79,7 +79,7 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
    完成源代码编写后，可以通过`PROJECT OUTLINE/YatCC/test/task1`中选择构建`task1-score`进行实验一的评分。完成所有样例测评后，每个样例的标准输出`answer.txt`、实际输出`output.txt`和评分结果`score.txt`将保存在`YatCC/build/test/task1`文件夹中，同学们可以根据评分结果对比标准输出和实际输出，并进行代码修改。
 
-   ![score task1](../images/task1score.png)
+   ![score task1](../images/task1/task1score.png)
 
    实验要求能够正确输出除`eof`和不可见字符外的所有词法单元的别名、所属的源文件的路径以及在源文件中的位置。为了简化，对于文件结束符`eof`，我们仅判断其是否被正确识别并输出别名，而不进行词法单元位置和源文件路径的判断。
 
@@ -87,7 +87,7 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
    完成实验后，请通过构建`PROJECT OUTLINE/YatCC/task/task1-score`进行实验一源代码打包并提交至测评机进行正式测评，打包结果将保存于`/YatCC/build/task`中。
 
-   ![pack task1](../images/task1pack.png)
+   ![pack task1](../images/task1/task1pack.png)
 
 ## 评分标准
 

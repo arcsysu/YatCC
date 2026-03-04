@@ -7,7 +7,7 @@
 - 填入API key和Base URL
 - 传入IR地址以及输出地址（无需处理，助教已写好传入逻辑）
 
-![image.png](../images/api-key.png)
+![image.png](../images/task5/api-key.png)
 
 ## 第二步
 

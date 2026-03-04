@@ -14,7 +14,7 @@
 2. 按下向下的类三角形按钮，选择红色箭头所示的`Dev Containers`选项，之后同学们便会在下图所示的界面
 3. 将鼠标放到 `YatCC`（如果是手动配置的环境，容器名称可能不同）的位置，点击鼠标右键，再点击`Open Container in Current/New Window`，即可成功打开我们的实验项目环境
 
-![showlog](../images/howtoreopendev.png)
+![showlog](../images/howtouse/howtoreopendev.png)
 
 ## 如何更新项目
 
@@ -41,7 +41,7 @@ git stash pop
 
 虽然实验项目如下存在很多的文件夹，但是同学们最需要关心的只有`task`文件夹下的内容以及`config.cmake`
 
-![showlog](../images/howtodolab.png)
+![showlog](../images/howtouse/howtodolab.png)
 
 在`config.cmake`的开头存在着以下一段代码，同学们需要在这段代码中填入你的学号和姓名。在这里实验一和实验二我们提供了多种完成的方式，同学们需要使用了某种方式进行实现之后，在使用上一小节介绍的方法进行编译构建之前，需要将你选择进行实现方法填入对应的地方。此外，下面这段代码中还提到了一个词`复活`，我们默认将复活设置为开启。我们设计的实验是前后连贯的，前一个实验的输出结果有可能是后一个实验的输入，但是我们考虑到同学们可能存在上一个实验精力不济无法取得满分的情况。在这种情况下开启`复活`，可以使得当前实验的输入不受上一个实验的输出影响（此时当前实验的输入结果为助教提前设计好的标准输入）。
 
@@ -75,7 +75,7 @@ set(TASK4_REVIVE OFF)
 3. 生成 task1 答案（clang 词法分析结果），用于本地测评
 4. 编译 task1 学生代码并开始测评，最终显示学生得分
 
-![showlog](../images/howtoscorenew.png)
+![showlog](../images/howtouse/howtoscorenew.png)
 
 ## 如何查看输出与得分
 
@@ -99,11 +99,11 @@ set(TASK4_REVIVE OFF)
 在某些情况下可能会存在肉眼 debug 无法找到错误的情况，由于助教在设计实验的过程中已经把调试配置文件编写完成，所以同学们可以直接进行图形界面的调试。
 我以实验一的 flex 版本实现为例进行介绍。首先我在`main.cpp`如图所示位置打了断点。
 
-![showlog](../images/maindebug.png)
+![showlog](../images/howtouse/maindebug.png)
 
 然后点击左侧插件菜单栏中的量杯按钮`TESTING`。在对应测试样例的后面点击如下图所示的 debug 按钮即可进入调试的图形界面。若只需要测试 task1 的测例，则在搜索栏中输入 task1 进行筛选。最后，只需要点击`Debug Test`即可开启单个测例的单步调试。
 
-![showlog](../images/debugtest.png)
+![showlog](../images/howtouse/debugtest.png)
 
 ## 如何提交作业
 
@@ -111,10 +111,10 @@ set(TASK4_REVIVE OFF)
 
 1. 撰写实验报告，以 PDF 格式将报告上传至`/YatCC/task/1`文件夹内（使用在线代码空间的同学可以在左侧资源管理器的对应文件夹点击右键，选择“Upload”上传文件；或者直接将待传输文件的图标从本地拖动到网页的对应文件夹）。
 
-![packing_1](../images/packing_1.png)
+![packing_1](../images/howtouse/packing_1.png)
 
 2. 使用打包脚本将`/YatCC/task/1`文件夹打包，打包后的文件位于`/YatCC/build/task/task1.0123456789-某某某.tar.xz`。
 
-![packing_1](../images/packing_2.png)
+![packing_1](../images/howtouse/packing_2.png)
 
 3. 将打包后的文件夹下载至本地（在对应文件夹点击右键，选择“Download”下载文件），提交到超算习堂作业提交处。建议同学们在提交前将打包文件解压一遍，查看其中是否包含实验报告。

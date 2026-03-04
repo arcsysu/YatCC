@@ -22,7 +22,7 @@
 #### 作业提交评测方法
 
 打开在线评测系统后，登录界面如下图所示。**请使用 Github 登陆** (暂不支持使用邮箱注册)
-![登录界面](../images/AG_login.png)
+![登录界面](../images/autograder/AG_login.png)
 
 打开 Github 认证界面后，登录你的 Github 账号，并点选 `Authorize XXX`
 
@@ -32,30 +32,30 @@
 
 （如果你在认证登录遇到问题，你可以尝试配置网络代理）
 
-![课程菜单](../images/AG_menu.png)
+![课程菜单](../images/autograder/AG_menu.png)
 
-![账户信息](../images/AG_account.png)
+![账户信息](../images/autograder/AG_account.png)
 
 点击保存后回到主页，点击 `加入课程`，输入加课码 **D4Y4NAFD** 加入课程。
-![加入课程](../images/AG_joinclass.png)
+![加入课程](../images/autograder/AG_joinclass.png)
 成功加入课程并刷新网页后，在主页可以看到 `2024编译原理实验课`，点击进入课程，可以看到实验一的提交入口已经开放。点击进入作业提交界面。
-![课程界面](../images/AG_lab1.png)
+![课程界面](../images/autograder/AG_lab1.png)
 
 在作业提交界面中，依次点击 `上传提交`->`上传文件` 并选取先前打包的压缩包。上传成功后，点击 `提交`。
 
-![上传界面](../images/AG_upload.png)
+![上传界面](../images/autograder/AG_upload.png)
 
 提交成功后，评测机会开始评测。评测完成后，在 `提交记录`可以查看评测结果和评测报告
 
-![alt text](../images/AG_record.png)
+![alt text](../images/autograder/AG_record.png)
 
-![alt text](../images/AG_report.png)
+![alt text](../images/autograder/AG_report.png)
 
 
 #### 实验代码打包方法
 
 实验代码的打包方法在各实验文档里都有详细的说明，这里不再赘述。按照下图所述方法即可完成实验代码打包。
-![howtopack](../images/task0_pack.jpg)
+![howtopack](../images/task0/task0_pack.png)
 
 ---
 
