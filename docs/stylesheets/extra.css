@@ -128,6 +128,32 @@
   margin-top: 1.2rem;
 }
 
+.portal-actions .md-button {
+  color: var(--md-default-fg-color);
+  border-color: color-mix(in srgb, var(--md-default-fg-color) 28%, transparent);
+  background-color: color-mix(in srgb, var(--md-default-bg-color) 86%, transparent);
+}
+
+.portal-actions .md-button:hover,
+.portal-actions .md-button:focus {
+  color: var(--md-default-fg-color);
+  border-color: var(--md-accent-fg-color);
+  background-color: var(--md-accent-fg-color--transparent);
+}
+
+.portal-actions .md-button--primary {
+  color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-fg-color);
+  background-color: var(--md-primary-fg-color);
+}
+
+.portal-actions .md-button--primary:hover,
+.portal-actions .md-button--primary:focus {
+  color: var(--md-primary-bg-color);
+  background-color: var(--md-primary-fg-color--light);
+  border-color: var(--md-primary-fg-color--light);
+}
+
 .portal-cards ul,
 .portal-flow ul {
   margin: 0;

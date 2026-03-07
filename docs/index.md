@@ -13,66 +13,6 @@
   </div>
 </div>
 
-## 三个入口
-
-<div class="grid cards portal-cards" markdown>
-
--   :material-home-variant-outline:{ .lg .middle } __主页__
-
-    ---
-
-    查看项目背景、课程定位、常见问题与文档贡献信息，适合第一次了解 YatCC 的读者。
-
-    [进入主页区](home/project/)
-
--   :material-compass-outline:{ .lg .middle } __实验指引__
-
-    ---
-
-    汇总环境配置、框架使用、评测方式、自动评测平台、AI 助手与提示工程，是正式做实验前的准备区。
-
-    [进入实验指引](introduction/index/)
-
--   :material-flask-outline:{ .lg .middle } __实验内容__
-
-    ---
-
-    直接进入 Task0 到 Task5 的完整实验正文。每个 Task 都保留完整子目录，适合按实验顺序推进。
-
-    [进入实验内容](labs/index/)
-
-</div>
-
-## 推荐路径
-
-<div class="grid cards portal-flow" markdown>
-
--   __第一次接触实验__
-
-    ---
-
-    1. [环境配置](introduction/environment.md)
-    2. [实验框架使用方法](introduction/howtouse.md)
-    3. [最终评测方式说明](introduction/finalscore.md)
-
--   __需要 AI 辅助__
-
-    ---
-
-    1. [AI 工具使用方法](introduction/agent.md)
-    2. [AI 平台配置补充](introduction/aitools.md)
-    3. [大模型提示工程](introduction/prompt.md)
-
--   __直接做实验__
-
-    ---
-
-    1. [Task0：环境准备](task0_doc/task0.md)
-    2. [Task1：词法分析](task1_doc/overview.md)
-    3. [Task2：语法分析](task2_doc/overview.md)
-
-</div>
-
 ## 实验路线图
 
 | 阶段 | 目标 | 对应文档 |
