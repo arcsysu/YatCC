@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap');
+
+:root {
+  --yat-font-text: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --yat-font-heading: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  --yat-font-code: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+body,
+input,
+button,
+label {
+  font-family: var(--yat-font-text);
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6,
+.md-tabs__link,
+.md-nav__title,
+.md-header__title {
+  font-family: var(--yat-font-heading);
+}
+
+code,
+kbd,
+pre,
+.md-typeset code,
+.md-typeset pre,
+.highlight code,
+.highlight pre {
+  font-family: var(--yat-font-code);
+}
