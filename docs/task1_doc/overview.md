@@ -1,3 +1,17 @@
+# 实验介绍
+
+<div class="quote-card">
+   <p class="quote-card__eyebrow">Task 1 · 词法分析 / Lexical Analysis</p>
+   <p class="quote-card__text">&quot;The limits of my language mean the limits of my world.&quot;</p>
+   <p class="quote-card__translation">（我语言的局限，即是我世界的局限。）</p>
+   <p class="quote-card__author">Ludwig Wittgenstein</p>
+</div>
+
+!!! note "先让输出接近 clang，再追求实现优雅"
+
+      Task1 最有效的做法是不断对照标准输出，把 token、位置信息和额外标志逐项补齐。
+      先建立正确性，再考虑代码结构是否足够整洁。
+
 ## 任务描述
 
 本次实验中需要实现一个简单的词法分析器，它接收经过预处理的源代码，输出词法分析的结果。
@@ -28,6 +42,11 @@ int main(){
 ```
 
 相比源代码，多了一些以`#`开头的行。这些行是`clang`在预处理过程中插入的，称之为**行标记**（Linemarkers）。
+
+!!! warning "不要把行标记当成普通源码内容"
+
+   Task1 最容易忽略的就是这些以 `#` 开头的预处理信息。它们虽然不是待识别的普通 token，但却决定了后续文件名、行号和列号能否对齐。
+   如果这里处理思路错了，后面的 Loc 基本都会跟着错。
 
 行标记的基本格式是`# linenum filename flags`，它的含义是**下一行**来自于`filename`文件的第`linenum`行。例如`# 1 "./functional-0/000_main.sysu.c 2"`表示下一行`int main(){`来自于`./functional-0/000_main.sysu.c`文件的第 1 行。
 
@@ -65,6 +84,11 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
 同学们可能会想，实现这样的一个词法分析器的工程量应该很大吧？设计实验以及编写文档的助教和大家的想法是一样的！所以肯定不会让大家从零开始实现一个词法分析器。在`task1`中我们提供了`flex`和`antlr`两种框架来实现我们的词法分析器，其中`antlr`在`task2`中还会继续用到。同学们可以自由选择自己喜欢的框架进行实现。
 
+!!! tip "如果你打算继续走 ANTLR，Task1 就尽量选同一路线"
+
+   ANTLR 在 Task2 中还会继续使用。如果你已经确定后面想沿用同一套工具链，Task1 直接用 ANTLR 往往能减少切换成本。
+   如果你更想先快速理解词法规则与匹配过程，flex 也会更直接。
+
 ## 实验步骤
 
 1. 预处理源代码
@@ -83,6 +107,11 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
    实验要求能够正确输出除`eof`和不可见字符外的所有词法单元的别名、所属的源文件的路径以及在源文件中的位置。为了简化，对于文件结束符`eof`，我们仅判断其是否被正确识别并输出别名，而不进行词法单元位置和源文件路径的判断。
 
+   !!! note "先保大头分，再补细节"
+
+      调试顺序建议是：先让 token 别名正确，再补 Loc，最后补 `[StartOfLine]` 和 `[LeadingSpace]`。
+      不要一开始就同时追四类输出，否则很难判断当前到底是哪一部分出了问题。
+
 3. 打包提交
 
    完成实验后，请通过构建`PROJECT OUTLINE/YatCC/task/task1-score`进行实验一源代码打包并提交至测评机进行正式测评，打包结果将保存于`/YatCC/build/task`中。
@@ -96,6 +125,11 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 - 是否识别出其他无关的字符 (10 分)
 
 注：`eof`这个 token 的位置和源文件路径不计入评分。
+
+!!! danger "不要被 eof 细节拖住进度"
+
+   `eof` 需要被识别，但它的位置和源文件路径不计分。
+   如果你已经在别名、Loc 和空白标志上还有明显缺口，不要把大量时间花在 `eof` 的边角行为上。
 
 ## 脚本说明
 

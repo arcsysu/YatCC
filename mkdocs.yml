@@ -39,8 +39,6 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
-    - navigation.prune
     - navigation.indexes
     - navigation.footer
     - navigation.tracking
@@ -74,6 +72,7 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js
   - javascripts/katex.js
+  - javascripts/navigation-accordion.js
 exclude_docs: |
   index.html
   _sidebar.md
@@ -84,6 +83,7 @@ nav:
     - 首页: index.md
     - 项目介绍: home/project.md
     - 常见问题与答案: QA.md
+    - 文档开发指南: home/development.md
     - 主要贡献者: contributors.md
   - 实验指引:
     - 导览: introduction/index.md
@@ -96,7 +96,6 @@ nav:
       - yatcc-aj 工具: introduction/yatcc-aj.md
     - AI 与辅助工具:
       - AI 工具使用方法: introduction/agent.md
-      - AI 平台配置补充: introduction/aitools.md
       - vibe coding指南: introduction/vibecoding.md
       - 大模型提示工程: introduction/prompt.md
     - 参与与反馈:

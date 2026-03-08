@@ -4,7 +4,7 @@
   <p class="portal-kicker">Compiler Systems · LLVM · AI-Native Learning</p>
   <h1>从环境准备到后端代码生成，一站式进入 YatCC 编译实验</h1>
   <p class="portal-lead">
-    这里不是简单的文档首页，而是实验入口。你可以从实验指引快速完成环境、评测与 AI 工具配置，也可以直接进入 Task0 到 Task5 的完整实验内容。
+    这里不是简单的文档汇总，而是融合了专属Agent的一站式实验指引。你可以从实验指引快速完成环境、评测与 AI 工具配置，也可以直接探索 Task0 到 Task5 的完整实验内容。
   </p>
   <div class="portal-actions">
     <a class="md-button md-button--primary" href="introduction/">进入实验指引</a>

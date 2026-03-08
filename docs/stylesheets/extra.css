@@ -61,6 +61,291 @@
   letter-spacing: 0.01em;
 }
 
+.md-sidebar--primary {
+  font-size: 0.64rem;
+}
+
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > label,
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__title,
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__container {
+  font-weight: 600;
+}
+
+.md-sidebar--primary .md-nav__item > .md-nav__link,
+.md-sidebar--primary .md-nav__item > label,
+.md-sidebar--primary .md-nav__item > .md-nav__title,
+.md-sidebar--primary .md-nav__item > .md-nav__container,
+.md-sidebar--primary .md-nav__item > .md-nav__container > .md-nav__link,
+.md-sidebar--primary .md-nav__item > .md-nav__container > label {
+  margin: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.3rem;
+  padding-top: 0.16rem;
+  padding-bottom: 0.16rem;
+}
+
+.md-sidebar--primary .md-nav__item .md-nav__list {
+  margin-left: 0;
+  padding-left: 0.72rem;
+  border-left: 0;
+}
+
+.md-sidebar--primary .md-nav__item .md-nav__item .md-nav__link,
+.md-sidebar--primary .md-nav__item .md-nav__item > label,
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__title,
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__container > .md-nav__link,
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__container > label {
+  font-size: 0.64rem;
+  line-height: 1.28;
+}
+
+.md-sidebar--primary .md-nav__item--nested > .md-nav__link,
+.md-sidebar--primary .md-nav__item--nested > label,
+.md-sidebar--primary .md-nav__item--nested > .md-nav__container,
+.md-sidebar--primary .md-nav__item--nested > .md-nav__container > .md-nav__link,
+.md-sidebar--primary .md-nav__item--nested > .md-nav__container > label {
+  background: transparent;
+}
+
+.md-sidebar--primary .md-nav__item--active > .md-nav__link,
+.md-sidebar--primary .md-nav__item--active > label,
+.md-sidebar--primary .md-nav__item--active > .md-nav__container,
+.md-sidebar--primary .md-nav__item--active > .md-nav__container > .md-nav__link,
+.md-sidebar--primary .md-nav__item--active > .md-nav__container > label,
+.md-sidebar--primary .md-nav__link--active {
+  background: transparent;
+  color: var(--md-primary-fg-color);
+}
+
+.md-sidebar--primary .md-nav__title {
+  font-size: 0.64rem;
+}
+
+.md-sidebar--primary .md-ellipsis {
+  display: inline-block;
+}
+
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__link::before,
+.md-sidebar--primary .md-nav__item .md-nav__item > label::before,
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__container > .md-nav__link::before,
+.md-sidebar--primary .md-nav__item .md-nav__item > .md-nav__container > label::before {
+  content: '';
+  display: inline-block;
+  width: 0.34rem;
+}
+
+.md-sidebar--primary .md-sidebar__scrollwrap {
+  scrollbar-width: none;
+}
+
+.md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar {
+  display: none;
+}
+
+.md-typeset img {
+  display: block;
+  max-width: min(100%, 46rem);
+  max-height: 32rem;
+  height: auto;
+  margin: 1.2rem auto;
+  border-radius: 1rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+body.yat-page--series .md-content__inner .md-typeset {
+  counter-reset: yat-h2;
+}
+
+body.yat-page--series .md-content__inner .md-typeset > h2 {
+  counter-increment: yat-h2;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+body.yat-page--series .md-content__inner .md-typeset > h2::before {
+  content: counter(yat-h2, decimal-leading-zero);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--md-primary-fg-color), var(--md-primary-fg-color--light));
+  color: var(--md-primary-bg-color);
+  box-shadow: 0 10px 24px rgba(76, 29, 149, 0.18);
+  font-family: var(--yat-font-code);
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.quote-card {
+  position: relative;
+  overflow: hidden;
+  margin: 1.15rem 0 1.35rem;
+  padding: 1.15rem 1.2rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--md-accent-fg-color) 20%, transparent);
+  border-radius: 1.15rem;
+  background:
+    radial-gradient(circle at top right, rgba(216, 180, 254, 0.36), transparent 28%),
+    linear-gradient(135deg, rgba(91, 33, 182, 0.96), rgba(124, 58, 237, 0.88));
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(76, 29, 149, 0.24);
+}
+
+.quote-card::after {
+  content: '“';
+  position: absolute;
+  top: -0.55rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.18);
+  font-family: var(--yat-font-heading);
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.quote-card__eyebrow {
+  margin: 0 0 0.45rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.quote-card__text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--yat-font-heading);
+  font-size: 1.02rem;
+  line-height: 1.75;
+}
+
+.quote-card__translation {
+  position: relative;
+  z-index: 1;
+  margin: 0.85rem 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.quote-card__author {
+  position: relative;
+  z-index: 1;
+  margin: 0.9rem 0 0;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  overflow: hidden;
+}
+
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-color: #78c850;
+  background: #eaf7df;
+}
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: #e0bf3b;
+  background: #fff6cc;
+}
+
+.md-typeset .admonition.warning,
+.md-typeset details.warning,
+.md-typeset .admonition.danger,
+.md-typeset details.danger {
+  border-color: #e58a8a;
+  background: #fde4e4;
+}
+
+.md-typeset .admonition.note > .admonition-title,
+.md-typeset details.note > summary {
+  background: #5b8f29;
+  color: #fff;
+}
+
+.md-typeset .admonition.tip > .admonition-title,
+.md-typeset details.tip > summary {
+  background: #b38f00;
+  color: #fff;
+}
+
+.md-typeset .admonition.warning > .admonition-title,
+.md-typeset details.warning > summary,
+.md-typeset .admonition.danger > .admonition-title,
+.md-typeset details.danger > summary {
+  background: #b3261e;
+  color: #fff;
+}
+
+.md-typeset .admonition.note > .admonition-title::before,
+.md-typeset details.note > summary::before,
+.md-typeset .admonition.tip > .admonition-title::before,
+.md-typeset details.tip > summary::before,
+.md-typeset .admonition.warning > .admonition-title::before,
+.md-typeset details.warning > summary::before,
+.md-typeset .admonition.danger > .admonition-title::before,
+.md-typeset details.danger > summary::before {
+  background-color: #fff;
+}
+
+.md-typeset .highlight {
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #f2f4f7;
+  box-shadow: none;
+}
+
+.md-typeset .highlight pre,
+.md-typeset .highlight code,
+.md-typeset pre > code {
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media screen and (max-width: 76.2344em) {
+  .md-sidebar--primary .md-nav__item .md-nav__list {
+    margin-left: 0;
+    padding-left: 0.62rem;
+  }
+}
+
+@media screen and (max-width: 44.9375em) {
+  body.yat-page--series .md-content__inner .md-typeset > h2 {
+    gap: 0.55rem;
+  }
+
+  body.yat-page--series .md-content__inner .md-typeset > h2::before {
+    min-width: 1.75rem;
+    padding-inline: 0.45rem;
+    font-size: 0.72rem;
+  }
+
+  .quote-card {
+    padding: 1rem 0.95rem 0.9rem;
+  }
+
+  .quote-card__text {
+    font-size: 0.94rem;
+  }
+
+  .quote-card__translation {
+    font-size: 0.88rem;
+  }
+}
+
 .md-typeset .admonition,
 .md-typeset details {
   border-radius: 0.9rem;

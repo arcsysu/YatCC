@@ -39,11 +39,13 @@
 }
 
 .yat-agent__fab {
-  display: inline-grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 3.8rem;
   height: 3.8rem;
   padding: 0;
+  line-height: 0;
   border: 1px solid color-mix(in srgb, var(--md-primary-fg-color) 35%, transparent);
   border-radius: 999px;
   background: linear-gradient(135deg, var(--md-primary-fg-color), var(--md-primary-fg-color--light));
@@ -60,9 +62,13 @@
 }
 
 .yat-agent__fab-logo {
-  width: 2.15rem;
-  height: 2.15rem;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1.95rem;
+  height: 1.95rem;
   object-fit: contain;
+  object-position: center;
+  transform: translate(-0.04rem, -0.06rem);
 }
 
 .yat-agent__panel {

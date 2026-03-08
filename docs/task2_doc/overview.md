@@ -1,3 +1,16 @@
+# 实验介绍
+
+<div class="quote-card">
+    <p class="quote-card__eyebrow">Task 2 · 语法分析 / Syntax Analysis</p>
+    <p class="quote-card__text">&quot;Language is a process of free creation; its laws and principles are fixed, but the manner in which the principles of generation are used is free and infinitely varied.&quot;</p>
+    <p class="quote-card__translation">（语言是一个自由创造的过程；它的法则和原则是固定的，但生成原则的使用方式却是自由且千变万化的。）</p>
+    <p class="quote-card__author">Noam Chomsky</p>
+</div>
+
+!!! tip "先读清输入输出，再决定走 Bison 还是 ANTLR"
+
+        这两个路线在输入形式、调试习惯和代码组织上都不同。先把评测目标和中间表示看明白，再选实现框架，会少走很多弯路。
+
 ## 任务描述
 
 实验一中我们实现了一个词法分析器，源代码文件输入词法分析器后将会生成 token 流。而在本次实验中，我们首先需要使用 Bison 或 ANTLR 完成一个语法分析器，token 流输入到语法分析器之后会生成语法分析树 AST。AST 主要反映了程序的结构，但不足以全面表示程序的语义信息。语法分析图 ASG 在 AST 的基础上增加了额外的语义信息，如作用域、类型信息、变量和函数之间的关系等，这有助于接下里的编译优化、类型检查和代码生成等步骤。但是在本次实验中不管是 AST 还是 ASG，都是位于比较复杂的数据结构，不便于同学们打印出来以协助调试，也不便于实验评分，所以最终我们还需要实现从 ASG 到 JSON 转换。虽然是从 ASG 转换到 JSON，但 JSON 是树型结构，代表的仍然是 AST。
@@ -10,11 +23,21 @@
 
 完成实验二的方式同实验一一样，需要同学们不断对比标准答案和当前输出，找到需要改进的内容，进行完善。至于如何改进实验二的程序以输出正确答案，将在“公用代码介绍”以及具体的实验章节中介绍。同学们可以选择 Bison 或 ANTLR 来完成本次实验。
 
+!!! note "先把树结构看懂，再写代码"
+
+    task2 的难点往往不在语法规则本身，而在你是否真正理解了目标输出的树形结构。
+    开始写解析逻辑前，建议先把几个 answer.json 手动展开看一遍。
+
 ## 输入输出简介
 
 在本次实验中，使用 Bison 和 ANTLR 的输入并不相同。前者的输入为 task1 的输出（token 流，例如`/YatCC/build/test/task1/functional-0/000_main.sysu.c`），而后者的输入为 task0 的输出（经过预处理的源代码，例如`/YatCC/build/test/task0/functional-0/000_main.sysu.c`）。
 
 而输出都是由 clang parse 生成，是代表 ASG 的 JSON 文件，例如`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`（以下只截取了部分内容）：
+
+!!! warning "不要只盯着 kind"
+
+    虽然评分重点在 kind、name、value、type，但很多同学调试时只看 kind，最后会在细节键值上丢分。
+    对照输出时，建议把关键字段逐个核对，而不是只看节点名字是否大致对上。
 
 ```json
 {
@@ -88,6 +111,11 @@
 
 当我们点击“ task2-score ”时，助教们写好的评测脚本`score.py`将调用这个程序，以测试样例作为输入，并将程序的输出（代表 ASG 的 JSON 文件）保存下来，最后与正确答案比较，给出评分。
 
+!!! tip "看 score 之前，先抽一两个 answer.json 对照阅读"
+
+    如果你没有先建立对目标树形结构的直觉，只看评分日志通常很难马上定位问题。
+    先手动比对少量样例，再让 score 帮你放大差异，效率会更高。
+
 ## 评分标准
 
 同学们查看 JSON 文件，会发现上述每个节点里面包含了非常多的属性，除去 TypedefDecl 不用管之外，我们的评分以属性打印为准，具体如下：
@@ -104,6 +132,11 @@
 建议同学们在实验过程中从低到高选择不同的日志等级，比较当前输出与标准输出的区别，并逐渐完善代码。
 
 同时，强烈建议（尤其是选用 Bison 完成 task2 的）同学们在`config.cmake`中**启用复活功能**，以直接使用标准的输入，避免 task1 中实现的不完善，影响 task2 的完成。是否启用复活功能，对本次实验的成绩没有任何影响。
+
+!!! note "复活机制是隔离问题，不是偷懒"
+
+    当前一阶段还不稳定时，先用标准输入把 task2 自身打通，是很合理的调试策略。
+    先把问题边界切干净，再回头联调整个流水线。
 
 ## 文法参考 :id=grammer-reference
 
