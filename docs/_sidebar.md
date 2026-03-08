@@ -46,4 +46,4 @@
 - Q&A
   - [常见问题与答案](QA.md)
 - 致谢
-  - [贡献者](contributors.md)
+  - [主要贡献者](contributors.md)
