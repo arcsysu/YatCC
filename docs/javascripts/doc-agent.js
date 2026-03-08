@@ -3,8 +3,8 @@ import { marked } from 'https://esm.sh/marked@15.0.7';
 import DOMPurify from 'https://esm.sh/dompurify@3.2.6';
 
 const OPENAI_CONFIG = {
-  baseURL: 'http://726541.proxy.nscc-gz.cn:8888/v1',
-  apiKey: 'sk-VfaA0oKVvHCuQZ3FD525242719044891B6FbF9AeCaF6CdA0',
+  baseURL: 'https://api.deepseek.com',
+  apiKey: 'sk-f5393eefb65648f5beed802ba3be1179',
   model: 'deepseek-chat',
 };
 const MAX_HISTORY_TURNS = 6;
