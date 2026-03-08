@@ -13,7 +13,18 @@ jobs:
 
       # 持续自动化部署
       - name: Trigger Deployment
+        continue-on-error: true
         run: |
-          curl -f -v -X POST https://portal.m.arcsysu.cn/trigger/docs_yatcc \
+          set -eu
+          if curl --fail --show-error --silent \
+            --connect-timeout 10 \
+            --max-time 30 \
+            --retry 2 \
+            --retry-delay 3 \
+            -X POST https://portal.m.arcsysu.cn/trigger/docs_yatcc \
             -H "X-API-KEY: ${{ secrets.TRIGGER_KEY }}" \
-            -H "Content-Type: application/json"
+            -H "Content-Type: application/json"; then
+            echo "External deployment trigger succeeded."
+          else
+            echo "Warning: external deployment trigger failed or timed out; GitHub Pages deployment remains unaffected."
+          fi
