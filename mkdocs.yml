@@ -84,7 +84,7 @@ nav:
     - 首页: index.md
     - 项目介绍: home/project.md
     - 常见问题与答案: QA.md
-    - 文档贡献者: contributors.md
+    - 主要贡献者: contributors.md
   - 实验指引:
     - 导览: introduction/index.md
     - 环境与流程:
