@@ -1,5 +1,5 @@
 {% set src = page.file.src_uri %}
-<!-- {% set article_page =
+{% set article_page =
   src == 'index.md'
   or src.startswith('introduction/') and src != 'introduction/index.md'
   or src.startswith('task0_doc/')
@@ -8,7 +8,7 @@
   or src.startswith('task3_doc/')
   or src.startswith('task4_doc/')
   or src.startswith('task5_doc/')
-%} -->
+%}
 {% if article_page and not page.meta.no_comments %}
 <section class="md-comments" aria-label="评论区">
   <script
