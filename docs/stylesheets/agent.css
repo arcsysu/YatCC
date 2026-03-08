@@ -163,12 +163,46 @@
   margin-bottom: 0;
 }
 
+.yat-agent__message-body > * {
+  line-height: 1.48;
+}
+
 .yat-agent__message-body p + p,
 .yat-agent__message-body ul,
 .yat-agent__message-body ol,
 .yat-agent__message-body pre,
 .yat-agent__message-body blockquote {
-  margin-top: 0.6rem;
+  margin-top: 0.36rem;
+}
+
+.yat-agent__message-body ul,
+.yat-agent__message-body ol,
+.yat-agent__message-body blockquote,
+.yat-agent__message-body pre {
+  margin-bottom: 0.36rem;
+}
+
+.yat-agent__message-body ul,
+.yat-agent__message-body ol {
+  padding-left: 1.1rem;
+}
+
+.yat-agent__message-body li + li {
+  margin-top: 0.18rem;
+}
+
+.yat-agent__message-body h1,
+.yat-agent__message-body h2,
+.yat-agent__message-body h3,
+.yat-agent__message-body h4,
+.yat-agent__message-body h5,
+.yat-agent__message-body h6 {
+  margin: 0.2rem 0 0.32rem;
+  line-height: 1.3;
+}
+
+.yat-agent__message-body pre {
+  font-size: 0.82rem;
 }
 
 .yat-agent__message-body code {
