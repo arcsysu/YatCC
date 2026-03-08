@@ -299,6 +299,48 @@ body.yat-page--series .md-content__inner .md-typeset > h2::before {
   background-color: #fff;
 }
 
+[data-md-color-scheme='slate'] .md-typeset .admonition.note,
+[data-md-color-scheme='slate'] .md-typeset details.note,
+[data-md-color-scheme='slate'] .md-typeset .admonition.tip,
+[data-md-color-scheme='slate'] .md-typeset details.tip,
+[data-md-color-scheme='slate'] .md-typeset .admonition.warning,
+[data-md-color-scheme='slate'] .md-typeset details.warning,
+[data-md-color-scheme='slate'] .md-typeset .admonition.danger,
+[data-md-color-scheme='slate'] .md-typeset details.danger {
+  color: #1f2937;
+}
+
+[data-md-color-scheme='slate'] .md-typeset .admonition.note > :not(.admonition-title),
+[data-md-color-scheme='slate'] .md-typeset details.note > :not(summary),
+[data-md-color-scheme='slate'] .md-typeset .admonition.tip > :not(.admonition-title),
+[data-md-color-scheme='slate'] .md-typeset details.tip > :not(summary),
+[data-md-color-scheme='slate'] .md-typeset .admonition.warning > :not(.admonition-title),
+[data-md-color-scheme='slate'] .md-typeset details.warning > :not(summary),
+[data-md-color-scheme='slate'] .md-typeset .admonition.danger > :not(.admonition-title),
+[data-md-color-scheme='slate'] .md-typeset details.danger > :not(summary) {
+  color: #1f2937;
+}
+
+[data-md-color-scheme='slate'] .md-typeset .admonition.note a,
+[data-md-color-scheme='slate'] .md-typeset details.note a,
+[data-md-color-scheme='slate'] .md-typeset .admonition.tip a,
+[data-md-color-scheme='slate'] .md-typeset details.tip a,
+[data-md-color-scheme='slate'] .md-typeset .admonition.warning a,
+[data-md-color-scheme='slate'] .md-typeset details.warning a,
+[data-md-color-scheme='slate'] .md-typeset .admonition.danger a,
+[data-md-color-scheme='slate'] .md-typeset details.danger a {
+  color: #6d28d9;
+}
+
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__item--active > .md-nav__link,
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__item--active > label,
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__item--active > .md-nav__container,
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__item--active > .md-nav__container > .md-nav__link,
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__item--active > .md-nav__container > label,
+[data-md-color-scheme='slate'] .md-sidebar--primary .md-nav__link--active {
+  color: #c084fc;
+}
+
 .md-typeset .highlight {
   overflow: hidden;
   border-radius: 1rem;
@@ -313,6 +355,12 @@ body.yat-page--series .md-content__inner .md-typeset > h2::before {
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+[data-md-color-scheme='slate'] .md-typeset .highlight,
+[data-md-color-scheme='slate'] .md-typeset pre > code {
+  background: #111827;
+  border: 1px solid rgba(192, 132, 252, 0.14);
 }
 
 @media screen and (max-width: 76.2344em) {
