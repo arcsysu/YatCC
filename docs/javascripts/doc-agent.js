@@ -253,6 +253,8 @@ if (root) {
   }
 
   async function generateAnswer(question, docs) {
+    ensureEndpointUsable();
+
     const client = new OpenAI({
       apiKey: OPENAI_CONFIG.apiKey,
       baseURL: OPENAI_CONFIG.baseURL,
@@ -362,5 +364,16 @@ if (root) {
 
   function normalize(value) {
     return String(value || '').toLowerCase();
+  }
+
+  function ensureEndpointUsable() {
+    const pageProtocol = window.location.protocol;
+    const endpoint = new URL(OPENAI_CONFIG.baseURL, window.location.href);
+
+    if (pageProtocol === 'https:' && endpoint.protocol === 'http:') {
+      throw new Error(
+        '当前站点运行在 HTTPS 下，但配置的 LLM 接口是 HTTP，浏览器会直接拦截该请求。接口本身可用，但必须换成 HTTPS 接口，或通过同源 HTTPS 反向代理后才能在已部署页面中调用。'
+      );
+    }
   }
 }
