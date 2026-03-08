@@ -68,6 +68,7 @@ markdown_extensions:
 extra_css:
   - stylesheets/fonts.css
   - stylesheets/extra.css
+  - stylesheets/agent.css
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js

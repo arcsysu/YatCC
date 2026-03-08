@@ -1,11 +1,12 @@
 import OpenAI from 'https://esm.sh/openai@6.27.0?bundle';
+import { marked } from 'https://esm.sh/marked@15.0.7';
+import DOMPurify from 'https://esm.sh/dompurify@3.2.6';
 
 const OPENAI_CONFIG = {
   baseURL: 'http://726541.proxy.nscc-gz.cn:8888/v1',
   apiKey: 'sk-VfaA0oKVvHCuQZ3FD525242719044891B6FbF9AeCaF6CdA0',
   model: 'deepseek-chat',
 };
-const NUDGE_STORAGE_KEY = 'yatcc-doc-agent-nudge-dismissed';
 const MAX_HISTORY_TURNS = 6;
 const MAX_CONTEXT_DOCS = 6;
 
@@ -32,7 +33,6 @@ if (root) {
   const statusEl = root.querySelector('[data-agent-status]');
 
   setPanelOpen(false);
-  hydrateNudge();
   attachEvents();
 
   function attachEvents() {
@@ -82,8 +82,7 @@ if (root) {
     });
 
     input.addEventListener('input', () => {
-      input.style.height = 'auto';
-      input.style.height = `${Math.min(input.scrollHeight, 140)}px`;
+      autoResizeInput();
     });
 
     input.addEventListener('keydown', (event) => {
@@ -105,9 +104,7 @@ if (root) {
     root.classList.toggle('yat-agent--open', open);
     fab.setAttribute('aria-expanded', String(open));
     if (open) {
-      dismissNudge(false);
-    }
-    if (open) {
+      autoResizeInput();
       input.focus();
     }
   }
@@ -125,12 +122,15 @@ if (root) {
     statusEl.dataset.ready = ready ? 'true' : 'false';
   }
 
+  function autoResizeInput() {
+    input.style.height = 'auto';
+    input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
+  }
+
   function hydrateNudge() {
-    if (!nudge) {
-      return;
+    if (nudge) {
+      nudge.hidden = false;
     }
-    const dismissed = localStorage.getItem(NUDGE_STORAGE_KEY) === '1';
-    nudge.hidden = dismissed;
   }
 
   function dismissNudge(persist = true) {
@@ -138,9 +138,6 @@ if (root) {
       return;
     }
     nudge.hidden = true;
-    if (persist) {
-      localStorage.setItem(NUDGE_STORAGE_KEY, '1');
-    }
   }
 
   async function ensureSearchIndex() {
@@ -339,7 +336,11 @@ if (root) {
 
     const body = document.createElement('div');
     body.className = 'yat-agent__message-body';
-    body.textContent = text;
+    if (role === 'assistant') {
+      body.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    } else {
+      body.textContent = text;
+    }
     article.appendChild(body);
 
     if (role === 'assistant' && docs.length) {
