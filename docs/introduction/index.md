@@ -25,7 +25,8 @@
 如果你需要 AI 辅助完成实验，可以继续阅读：
 
 1. [AI 工具使用方法](agent.md)
-2. [大模型提示工程](prompt.md)
+2. [vibe coding指南](vibecoding.md)
+3. [大模型提示工程](prompt.md)
 
 !!! tip "把这三类资料分开用"
 
