@@ -91,9 +91,6 @@ nav:
       - 环境配置: introduction/environment.md
       - 实验框架使用方法: introduction/howtouse.md
       - 最终评测方式说明: introduction/finalscore.md
-      - 自动评测平台: introduction/autograder.md
-      - 成绩服务器: introduction/scoreserver.md
-      - yatcc-aj 工具: introduction/yatcc-aj.md
     - AI 与辅助工具:
       - AI 工具使用方法: introduction/agent.md
       - vibe coding指南: introduction/vibecoding.md
