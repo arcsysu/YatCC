@@ -86,6 +86,19 @@ add_custom_target(
 
 add_dependencies(task1-diy-answer task0-diy-answer)
 
+# 对 diy 实验进行评分
+add_custom_target(
+  task1-diy-score
+  COMMAND
+    ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/score.py
+    ${DIY_TEST_CASES_DIR} ${CMAKE_CURRENT_BINARY_DIR}/diy-cases
+    ${DIY_TEST_CASES_TXT} ${CTEST_COMMAND} ${TASK1_LOG_LEVEL}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  USES_TERMINAL
+  SOURCES score.py)
+
+add_dependencies(task1-diy-score task1 task1-diy-answer)
+
 # 为每个 diy 测例创建一个测试和评分
 foreach(_diy_case ${DIY_TEST_CASES})
   set(_diy_output_dir ${CMAKE_CURRENT_BINARY_DIR}/diy-cases/${_diy_case})
