@@ -218,6 +218,14 @@ if __name__ == "__main__":
 
     log_level = args.log_level
 
+    # 检测是否为 diy 模式：diy-cases 子目录下没有 CTestTestfile.cmake
+    if not osp.exists(osp.join(args.bindir, "CTestTestfile.cmake")):
+        ctest_dir = osp.dirname(osp.abspath(args.bindir))
+        ctest_prefix = "task1-diy"
+    else:
+        ctest_dir = args.bindir
+        ctest_prefix = "task1"
+
     if case_name := args.single:
         for case in cases_helper.cases:
             if case.name == case_name:
@@ -236,9 +244,9 @@ if __name__ == "__main__":
                 [
                     args.ctest_exe,
                     "--test-dir",
-                    args.bindir,
+                    ctest_dir,
                     "-R",
-                    "^task1/" + case_name,
+                    "^" + ctest_prefix + "/" + case_name,
                     # 注意这里一定不能写成 test1/，否则会无限递归下去
                 ],
                 stdout=out,
@@ -260,9 +268,9 @@ if __name__ == "__main__":
                 [
                     args.ctest_exe,
                     "--test-dir",
-                    args.bindir,
+                    ctest_dir,
                     "-R",
-                    "^task1/.*",
+                    "^" + ctest_prefix + "/.*",
                 ],
                 stdout=out,
                 stderr=err,
