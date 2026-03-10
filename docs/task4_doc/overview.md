@@ -68,7 +68,7 @@
 
 ### 输出调试
 
-同学们可以使用本项目提供的[调试功能](introduction/howtouse.md#debug)对单个测例进行调试：
+同学们可以使用本项目提供的[调试功能](../introduction/howtouse.md#debug)对单个测例进行调试：
 
 ![实验四输出调试](../images/task4/task4_testing2.jpg)
 

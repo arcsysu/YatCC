@@ -223,7 +223,7 @@ dot -Tpng -ofunction.png .function.dot
 
 ![control flow graph of binary search](../images/task4/binary_search_CFG.png)
 
-在 task3 的[文档](task3_doc/start.md#debug)中，有更详细的介绍。
+在 task3 的[文档](../task3_doc/start.md#debug)中，有更详细的介绍。
 
 ---
 
@@ -235,7 +235,6 @@ dot -Tpng -ofunction.png .function.dot
 
 1. **删除基本块**：不可达的或者只包含一条 `return` 指令的基本块，在做必要调整后可以删除
 2. **合并基本块**：
-
    - 如果一个基本块 B 只有一个前缀基本块 A（也即只有 A 可以到达 B），且该前缀基本块只有一个后缀基本块（也即 A 只能到达 B），则可以将这 A 和 B 两个基本块合并，并删除 A 中的跳转指令。
    - 如果多个块跳转到同一个块，且跳转的目标块以 `ret` 结尾，则可以考虑将目标块拷贝多份与前缀块进行合并。注意，这种合并未必是有利的。
 
