@@ -36,8 +36,10 @@ file(WRITE ${TEST_CASES_TXT} "${_lines}")
 set(DIY_TEST_CASES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/diy-cases)
 
 # 搜索所有 diy 测例，添加到 DIY_TEST_CASES
+# CONFIGURE_DEPENDS 使构建系统在每次构建时检查目录变化，自动触发重新配置
 file(
   GLOB DIY_TEST_CASES
+  CONFIGURE_DEPENDS
   RELATIVE ${DIY_TEST_CASES_DIR}
   "${DIY_TEST_CASES_DIR}/*.sysu.c")
 
