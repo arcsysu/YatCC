@@ -56,7 +56,7 @@ common/
 └── asg.hpp
 ```
 
-其中 `common/` 文件夹包含了一系列公用代码，在[公用代码介绍](task2_doc/share.md)中已经详细介绍过了。
+其中 `common/` 文件夹包含了一系列公用代码，在[公用代码介绍](../task2_doc/share.md)中已经详细介绍过了。
 
 `antlr/` 则是使用 ANTLR 完成实验会涉及到的代码，接下来在各个小节详细介绍。
 
@@ -259,7 +259,7 @@ additiveExpression
     ;
 ```
 
-众所周知，运算之间有优先级关系，我们怎样编写语法规则才能“先匹配乘法，再匹配加法”呢？同学们可以查看[文法参考](task2_doc/overview.md?id=grammer-reference)部分，其中是这样写的：
+众所周知，运算之间有优先级关系，我们怎样编写语法规则才能“先匹配乘法，再匹配加法”呢？同学们可以查看[文法参考](../task2_doc/overview.md?id=grammer-reference)部分，其中是这样写的：
 
 ```text
 unary_expression

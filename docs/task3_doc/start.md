@@ -54,7 +54,7 @@ EmitIR::operator()(Decl* obj)
 
 添加了对`VarDecl`的处理跳转之后，我们需要在`EmitIR.cpp`中实现处理`VarDecl`的`operator()`重载，并在`EmitIR.hpp`中声明它。需要同学们注意的是，第二个测试样例不仅存在变量的声明，并且还存在变量的值初始化。为了使得我们的实现更加清晰简洁，我们将变量的声明和初始化分开进行实现。
 
-此时请同学们跳转到 task3 文档中[LLVM API-全局变量-创建全局变量](task3_doc/apidoc.md#create-global-variable)部分，其中描述了创建全局变量的 API 以及相关的参数说明。
+此时请同学们跳转到 task3 文档中[LLVM API-全局变量-创建全局变量](../task3_doc/apidoc.md#create-global-variable)部分，其中描述了创建全局变量的 API 以及相关的参数说明。
 
 其中创建全局变量的 API 如下：
 
@@ -230,22 +230,19 @@ EmitIR::operator()(ImplicitCastExpr* obj)
 来逐行解释一下：
 
 - `auto sub = self(obj->sub)`
-
   - `obj->sub` 获取 `ImplicitCastExpr` 中包含的子表达式，即要进行类型转换的表达式。
   - `self(obj->sub)` 调用 `EmitIR` 类的另一个重载运算符，用于处理子表达式并返回其在 LLVM IR 中的表示。
 
 - `auto& irb = *mCurIrb`：
-
   - `mCurIrb` 是指向当前 LLVM IR 构建器（`IRBuilder`）的指针。`IRBuilder` 是一个辅助类，用于生成 LLVM IR 指令。
   - 通过解引用获取当前 IR 构建器的引用，用于在接下来的代码中方便地生成各种 LLVM IR 指令。
 
 - `switch` 语句：
 
-  处理不同类型的[隐式转换](task2_doc/share.md#type-check)。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况，也即将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取这个变量的值而非变量本身。
-
+  处理不同类型的[隐式转换](../task2_doc/share.md#type-check)。这里只处理了 `ImplicitCastExpr::kLValueToRValue` 一种情况，也即将一个左值（例如变量的地址）转换为一个右值（例如变量的内容）。这在 C++中很常见，比如在表达式中使用变量时通常需要获取这个变量的值而非变量本身。
   - `auto ty = self(obj->sub->type)`：获取子表达式的类型，并调用 `self` 方法将类型转换为 LLVM IR 中对应的类型表示。
   - `auto loadVal = irb.CreateLoad(ty, sub)`：
-    - 使用 IR 构建器创建一个 `load` 指令（参考[LLVM API-局部变量-load 指令](task3_doc/apidoc.md#load-instruction)），从由 `sub` 指定的地址（子表达式的结果，即一个左值）加载一个值。
+    - 使用 IR 构建器创建一个 `load` 指令（参考[LLVM API-局部变量-load 指令](../task3_doc/apidoc.md#load-instruction)），从由 `sub` 指定的地址（子表达式的结果，即一个左值）加载一个值。
     - `ty` 指定了加载值的类型，确保正确地解释内存中的数据。
   - `return loadVal`： 将加载的值（现在是一个右值）作为函数的返回值。
 
@@ -271,7 +268,7 @@ EmitIR::operator()(DeclRefExpr* obj)
 
 ---
 
-最后处理加法表达式。在进行这一小节的代码编写之前，同学们也需要先提前查阅[LLVM API-二元表达式-整数加法+](task3_doc/apidoc.md#integer-addition)。具体的实现如下：
+最后处理加法表达式。在进行这一小节的代码编写之前，同学们也需要先提前查阅[LLVM API-二元表达式-整数加法+](../task3_doc/apidoc.md#integer-addition)。具体的实现如下：
 
 ```cpp
 llvm::Value*
@@ -323,7 +320,7 @@ EmitIR::operator()(BinaryExpr* obj)
 
 ## 处理语句
 
-处理语句时，尤其是复合语句、条件语句、循环语句等，会涉及到控制流的设计，包括[基本块](task3_doc/apidoc.md#basic-block)的创建、插入点的切换以及不同基本块之间的跳转。
+处理语句时，尤其是复合语句、条件语句、循环语句等，会涉及到控制流的设计，包括[基本块](../task3_doc/apidoc.md#basic-block)的创建、插入点的切换以及不同基本块之间的跳转。
 
 以`if`语句为例：
 
@@ -377,7 +374,7 @@ EmitIR::operator()(IfStmt* obj)
 }
 ```
 
-注意，上面的代码仅供参考，`if`语句可能没有`else`，也可能有嵌套关系。`thenBb`和`elseBb`之中也可能有`return`直接返回了，不需要再跳转到`merge`（否则会在同一个基本块中生成了多个[终结指令](task3_doc/apidoc.md#basic-block-terminator)而报错），同学们需要考虑各种情况，并进行相应的处理。
+注意，上面的代码仅供参考，`if`语句可能没有`else`，也可能有嵌套关系。`thenBb`和`elseBb`之中也可能有`return`直接返回了，不需要再跳转到`merge`（否则会在同一个基本块中生成了多个[终结指令](../task3_doc/apidoc.md#basic-block-terminator)而报错），同学们需要考虑各种情况，并进行相应的处理。pi
 
 同时，使用`CreateCondBr`指令时，条件值`condVal`的类型需要是`i1`，也即布尔值。我们在处理条件表达式时，可能会得到一个整型值（例如`int a = 0; if(a) {}`），这时需要将其转换为布尔值。可以通过使用`CreateICmpNE()`函数与`true`进行比较来实现。
 
@@ -385,7 +382,7 @@ EmitIR::operator()(IfStmt* obj)
 
 ## 处理数组元素访问
 
-在我们的 LLVM API 文档中，介绍了使用`GEP`指令来实现[数组元素访问](task3_doc/apidoc.md#array-element-access)：
+在我们的 LLVM API 文档中，介绍了使用`GEP`指令来实现[数组元素访问](../task3_doc/apidoc.md#array-element-access)：
 
 ```cpp
 /// 根据索引列表，将指针偏移量应用于基指针，获得结果指针
@@ -453,7 +450,7 @@ return a[4];
 
 对于`a`，最内层首先是一个`DeclRefExpr`，表示对变量的引用。然后再外层是一个`kArrayToPointerDecay`的`ImplicitCastExpr`，表示将数组转换为指针，在这个例子中，就是希望把`int[5]`类型的数组转换为`int*`类型。再外面是一个`ArraySubscriptExpr`，转化为 ASG 节点，是一个`kIndex`类型的`BinaryExpr`，表示数组下标访问。我们最终，就是要在`BinaryExpr`的重载中，调用`CreateInBoundsGEP()`函数。
 
-按照我们之前实现的处理`DeclRefExpr`重载，会返回一个`llvm::Value*`指针。如果对其用`getType()`，得到的是`ptr`，而不是`i32*`，这是因为在 LLVM 17 中，所有的指针类型都是[不透明指针](task3_doc/apidoc.md#pointer-type)。而且`getElementType()`以及`getPointerTo()`等函数都已经被弃用，无法根据这个指针类型，获取它所指向的类型。
+按照我们之前实现的处理`DeclRefExpr`重载，会返回一个`llvm::Value*`指针。如果对其用`getType()`，得到的是`ptr`，而不是`i32*`，这是因为在 LLVM 17 中，所有的指针类型都是[不透明指针](../task3_doc/apidoc.md#pointer-type)。而且`getElementType()`以及`getPointerTo()`等函数都已经被弃用，无法根据这个指针类型，获取它所指向的类型。
 
 如果能获取到指针指向的类型，我们可以像下面这样写：
 
@@ -509,7 +506,7 @@ entry:
 
 ## 处理空初始化列表
 
-在 task2 的[文档](task2_doc/share.md#type-check)中，提到空初始化列表实际上对应着一个`ImplicitInitExpr`的 ASG 节点，不要忘记给`operatoe()(Expr* obj)`添加相应的跳转处理。利用空初始化列表进行初始化，隐含的意思是将所有元素初始化为 0.
+在 task2 的[文档](../task2_doc/share.md#type-check)中，提到空初始化列表实际上对应着一个`ImplicitInitExpr`的 ASG 节点，不要忘记给`operatoe()(Expr* obj)`添加相应的跳转处理。利用空初始化列表进行初始化，隐含的意思是将所有元素初始化为 0.
 
 ## 如何调试 :id=debug
 
@@ -521,7 +518,7 @@ entry:
 
 运行评分脚本后，如果某个样例报错**运行输出结果时出错/编译输出结果时出错**，大概率是因为你的代码没有覆盖某种结构，导致`emitIR()`函数提前中止，没能生成完整的 LLVM IR 文件（或者干脆为空），根据 IR 编译或者运行编译出的二进制文件时，自然会出错。
 
-你可以通过[断点调试](introduction/howtouse.md#debug)，单独测试这个样例，定位具体是在`EmitIR.cpp`的哪里中止。你可以在代码中灵活添加`ABORT()`或者`printf()`等，帮助你定位。
+你可以通过[断点调试](../introduction/howtouse.md#debug)，单独测试这个样例，定位具体是在`EmitIR.cpp`的哪里中止。你可以在代码中灵活添加`ABORT()`或者`printf()`等，帮助你定位。
 
 也可以手动调用二进制：
 

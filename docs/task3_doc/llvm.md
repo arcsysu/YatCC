@@ -167,4 +167,4 @@ TheBuilder.SetInsertPoint(...);
 
 `llvm::IRBuilder`创建 LLVM IR 的接口可以在 [llvm::IRbuilder Class Reference](https://llvm.org/doxygen/classllvm_1_1IRBuilder.html) 中找到，不过 `llvm::IRBuilder` 插入 LLVM IR 的接口基本都继承自 [llvm::IRBuilderBase](https://llvm.org/doxygen/classllvm_1_1IRBuilderBase.html) ，查看 `llvm::IRBuilderBase` 的接口也是可以的。
 
-本次实验中常用的 API，在[LLVM API](task3_doc/apidoc.md)中进行介绍。
+本次实验中常用的 API，在[LLVM API](../task3_doc/apidoc.md)中进行介绍。

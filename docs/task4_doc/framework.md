@@ -28,7 +28,7 @@ task4/
 └── main.cpp
 ```
 
-实验四主目录下，除`main.cpp`外，是传统方法相关的代码文件，代表各种 LLVM Pass，例如常量折叠`ConstantFolding`、内存到寄存器`Mem2Reg` 和函数调用计数器 `StaticCallCounter`，供同学们参考。更详细的介绍可以查阅[传统方法](#classic-method)以及[优化算法](task4_doc/optimizations.md)两个章节。
+实验四主目录下，除`main.cpp`外，是传统方法相关的代码文件，代表各种 LLVM Pass，例如常量折叠`ConstantFolding`、内存到寄存器`Mem2Reg` 和函数调用计数器 `StaticCallCounter`，供同学们参考。更详细的介绍可以查阅[传统方法](#classic-method)以及[优化算法](../task4_doc/optimizations.md)两个章节。
 
 主目录下的 `llm` 文件夹中，是大语言模型方法相关的代码文件，包括`LLMHelper`类的实现、调用 LLM 辅助优化的 LLVM Pass（例如 `PassSequencePredict`） 是一个示例参考。`llm` 文件夹下的 `prompts` 文件夹中是预先设置好的模版提示词，供同学们参考。更详细的介绍可以查阅下面的 [大语言模型方法](#llm-method) 一节。
 
@@ -127,7 +127,7 @@ opt(llvm::Module& mod)
 
 需要注意的是 Transform Pass 的执行顺序与第三部分 Transform Pass 注册的顺序相同，因此在需要考虑优化次序对优化结果的影响，谨慎确定注册的顺序。而 Analysis Pass 只会在被使用时执行，因此 Analysis Pass 的注册顺序不影响执行顺序。
 
-实例化 Transform Pass 时我们传入了`llvm::errs()`，将 Pass 过程的中间结果输出到标准错误流中，方便同学们进行[调试](task4_doc/overview.md#debug)。
+实例化 Transform Pass 时我们传入了`llvm::errs()`，将 Pass 过程的中间结果输出到标准错误流中，方便同学们进行[调试](../task4_doc/overview.md#debug)。
 
 ### 实现 Transform Pass
 

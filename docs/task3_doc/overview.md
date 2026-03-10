@@ -48,7 +48,7 @@ task3/
 └─ main.cpp
 ```
 
-- `Obj.hpp/cpp`，`asg.hpp/cpp`：这四个文件已经在实验二的[公用代码介绍](task2_doc/share.md)中详细说明过了，这里不再赘述。
+- `Obj.hpp/cpp`，`asg.hpp/cpp`：这四个文件已经在实验二的[公用代码介绍](../task2_doc/share.md)中详细说明过了，这里不再赘述。
 
 - `Json2Asg.hpp/cpp`：这两个文件实现了 `Json2Asg` 类。这个类的功能是读取 JSON 文件（ `llvm::json::Value` ），输出 ASG（`asg::TranslationUnit`）。助教们已经实现了这个类，同学们无需修改。
 
@@ -56,7 +56,7 @@ task3/
 
 - `main.cpp`：这个文件是实验三中间代码生成器的程序入口，负责创建 `Json2Asg` 实例读取 JSON 文件并生成 `asg::TranslationUnit` ，然后传给 `EmitIR` 实例生成 LLVM IR，最后输出到指定文件中。这个文件也无需修改。
 
-总结一下，在实验三中，同学们需要仔细阅读实验文档，并完善 `EmitIR` 类（主要是修改补充 `EmitIR.hpp` 和 `EmitIR.cpp`），以确保能够通过所有测试用例，实现一个完整的中间代码生成器。在此过程中，同学们将会使用到很多 LLVM API，可以查阅[实验文档](task3_doc/apidoc.md)，必要时借助大模型等工具，深入了解相关 API 的使用方法。
+总结一下，在实验三中，同学们需要仔细阅读实验文档，并完善 `EmitIR` 类（主要是修改补充 `EmitIR.hpp` 和 `EmitIR.cpp`），以确保能够通过所有测试用例，实现一个完整的中间代码生成器。在此过程中，同学们将会使用到很多 LLVM API，可以查阅[实验文档](../task3_doc/apidoc.md)，必要时借助大模型等工具，深入了解相关 API 的使用方法。
 
 !!! tip "把输出 IR 当成第一调试现场"
 
