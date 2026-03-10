@@ -10,7 +10,7 @@
 
 - 输出结果：每次调用`main.cpp`的`print_token()`函数会根据**当前的**状态信息`G g`组装结果并输出到指定文件中，因此我们需要根据需要修改`print_token()`函数，使得输出与标准答案一致。
 
-## flex 简介 :id=flex-intro
+## flex 简介
 
 **flex**（fast lexical analyzer generator），是一个词法分析器的生成工具。在理论课上同学们应该已经了解到，有工具能够根据正则表达式形式的词法规范自动生成词法分析器。flex 就是这样一个工具。
 
@@ -104,7 +104,7 @@ struct G
 };
 ```
 
-### lex.cpp 文件 :id=lex-cpp
+### lex.cpp 文件
 
 `lex.cpp`包含了`lex.hpp`中声明的函数的定义，并实例化了一个`G`结构体变量`g`。
 

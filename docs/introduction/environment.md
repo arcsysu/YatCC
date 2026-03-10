@@ -102,7 +102,7 @@ wsl --install -d Ubuntu         # 安装 Ubuntu 系统
 
 其次是 git 的安装，git 是一个开源的分布式版本控制系统，用于有效地处理从小到大的项目版本管理。同学们直接在[官方网站](https://git-scm.com/downloads)下载，并进行图形界面的安装即可。
 
-### Docker 安装 :id=docker-install
+### Docker 安装
 
 Docker 可以将代码、运行所需的运行时、系统工具和库进行打包成镜像。助教们已经将实验所需的开发环境打包成镜像，这可以使得同学进行实验代码开发的环境和我们助教开发实验时保持一致，减少了同学们环境配置的繁琐操作。**如果同学们使用[可选方案 1](#option-1)进行环境配置，就必须安装 Docker 才能启用 Dev Containers 功能。**
 
@@ -145,11 +145,11 @@ systemctl start docker   #启动 docker 服务
 
 最后是 VSCode 的安装，VSCode 是一款可以安装多种强大插件的开源代码编辑器，如果同学们选择 VSCode 作为本次实验的代码编辑器，助教提前设计好的工作流将大幅提升你的开发效率。如果同学们选择其他代码编辑器将不能享受到这样的福利。VSCode 直接在[官方网站](https://code.visualstudio.com/)下载，并进行图形界面的安装即可.
 
-## 可选方案 1 ⸺ Dev Containers 自动配置（需安装 Docker） :id=option-1
+## 可选方案 1 ⸺ Dev Containers 自动配置（需安装 Docker）
 
 此章节的步骤分为两种，取决于同学们前面[安装 Docker](#docker-install) 的方式，如采用第一种方式安装 Docker 的同学，请看[从 Windows 启动 Dev Containers](#start-dev-container-from-windows)，如果是用第二种方式安装 Docker 的同学，请跳至[从 WSL2 启动 Dev Containers](#start-dev-container-from-wsl2) 继续操作。
 
-### 从 Windows 启动 Dev Containers :id=start-dev-container-from-windows
+### 从 Windows 启动 Dev Containers
 
 同学们首先需要从`https://github.com/arcsysu/YatCC`代码仓库中下载代码（使用`git clone`或手动下载 zip 包）。下载后打开 VSCode 代码编辑器，并打开下载好的代码文件夹。
 
@@ -197,7 +197,7 @@ docker rmi db0053e9d7eb
 
 成功删除旧容器与镜像后重新按照本节方法创建 Dev Containers 容器即可。
 
-### 从 WSL2 启动 Dev Containers :id=start-dev-container-from-wsl2
+### 从 WSL2 启动 Dev Containers
 
 同学们如果使用第二种方式安装 Docker，配置步骤会稍显不同。首先我们需要打开 Windows 终端机进入 WSL2 命令行界面。
 

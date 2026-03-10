@@ -138,7 +138,7 @@
     当前一阶段还不稳定时，先用标准输入把 task2 自身打通，是很合理的调试策略。
     先把问题边界切干净，再回头联调整个流水线。
 
-## 文法参考 :id=grammer-reference
+## 文法参考
 
 本实验设计时参考的文法是 SysY 语言文法。SysY 语言文法是一个非常完整的类 C 语言的文法，完成实验只需要用到其中的一部分。同学们还可以参考 [SysY 语言定义](https://gitlab.eduxiji.net/csc1/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf)，来获取更详细的解释和说明。
 

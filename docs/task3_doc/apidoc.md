@@ -153,7 +153,7 @@ uint64_t len = arrType->getNumElements();
 llvm::Type *elementType = arrType->getElementType();
 ```
 
-### 指针类型 :id=pointer-type
+### 指针类型
 
 ```cpp
 #include <llvm/IR/DerivedTypes.h>
@@ -233,7 +233,7 @@ llvm::ConstantInt *constantInt = llvm::ConstantInt::get(llvm::Type::getInt32Ty(T
 llvm::ConstantInt *constantInt = TheBuilder.getInt32(10);
 ```
 
-### 创建数组常量 :id=create-array-constant
+### 创建数组常量
 
 ```cpp
 #include <llvm/IR/Constants.h>
@@ -252,7 +252,7 @@ llvm::Constant *constantArray = llvm::ConstantArray::get(
       });
 ```
 
-### 创建任意类型的 0 常量 :id=create-zero-constant
+### 创建任意类型的 0 常量
 
 常用于对变量进行默认的零初始化。
 
@@ -267,7 +267,7 @@ static Constant *llvm::Constant::getNullValue(Type *Ty);
 
 [llvm::GlobalVariable Class Reference](https://llvm.org/doxygen/classllvm_1_1GlobalVariable.html)
 
-### 创建全局变量 :id=create-global-variable
+### 创建全局变量
 
 创建全局变量可以使用 `llvm::GlobalVariable` 类的构造函数
 
@@ -381,7 +381,7 @@ entry:
 llvm::GlobalVariable *gloVar = TheModule.getGlobalVariable(gloVarName);
 ```
 
-## 局部变量 :id=local-variable
+## 局部变量
 
 LLVM IR 中的的局部变量仅出现在基本块中，且均以百分号`%`开头。局部变量在 LLVM IR 中的分配方式有两种：
 
@@ -497,7 +497,7 @@ auto sp = TheBuilder.CreateIntrinsic(llvm::Intrinsic::stacksave, {}, {},
 TheBuilder.CreateIntrinsic(llvm::Intrinsic::stackrestore, {}, {sp});
 ```
 
-### store 指令 :id=store-instruction
+### store 指令
 
 要想将数据存储在：
 
@@ -532,7 +532,7 @@ store i32 10, ptr %a
 
 这个例子再次说明了，对于 `%a` ，LLVM IR 使用的是类型 `ptr`，也即 `%a` 的数据类型其实是指针。
 
-### load 指令 :id=load-instruction
+### load 指令
 
 当我们想要取出：
 
@@ -691,7 +691,7 @@ llvm::Value* var = func->getValueSymbolTable()->lookup(VarName);
 
 使用全局构造函数来初始化全局数组和局部数组的初始化可以参考下面 [数组元素的访问](#数组元素的访问) 一节，通过 GEP 指令、[load](#load-instuction) 指令和 [store](#store-instuction) 指令来进行逐数组元素初始化。
 
-### 数组元素的访问 :id=array-element-access
+### 数组元素的访问
 
 访问数组的元素需要用到 **GEP**（GetElementPtr，**获取元素指针**）指令，这个指令用于获取聚合数据结构（在本实验中，即数组）的子元素的地址。GEP 指令仅进行地址的计算而不进行内存访问，其实质是将指针偏移量应用于基指针并返回结果指针。
 
@@ -790,7 +790,7 @@ store i32 2, ptr %0
 
 [LLVM's getelementptr, by example](https://blog.yossarian.net/2020/09/19/LLVMs-getelementptr-by-example)
 
-## 函数 :id=function
+## 函数
 
 [llvm::Function Class Reference](https://llvm.org/doxygen/classllvm_1_1Function.html)
 
@@ -931,7 +931,7 @@ llvm::Function *func = /* 获得 llvm::Function 实例指针 */;
 llvm::Module *module = func->getParent();
 ```
 
-## 基本块 :id=basic-block
+## 基本块
 
 每一个定义了的函数都有若干个基本块，并且第一个基本块的标签一定为 `entry` 。`entry`基本块是函数的入口基本块，一定是第一个被执行的基本块。
 
@@ -960,7 +960,7 @@ llvm::BasicBlock *block = llvm::BasicBlock::Create(TheContext, "entry", func);
 llvm::Function *func = block->getParent();
 ```
 
-### 获得基本块的终结指令 :id=basic-block-terminator
+### 获得基本块的终结指令 
 
 在 LLVM IR 正确组织的情况下，每一个基本块的最后一条指令都应该是一条[终结指令（Terminator instructions）](https://llvm.org/docs/LangRef.html#terminator-instructions)。
 
@@ -970,7 +970,7 @@ llvm::Function *func = block->getParent();
 llvm::Instruction *inst = Block->getTerminator();
 ```
 
-### 获得当前 llvm::IRBuilder 正在插入 LLVM IR 的基本块 :id=now-insert-block
+### 获得当前 llvm::IRBuilder 正在插入 LLVM IR 的基本块
 
 ```cpp
 llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
@@ -982,7 +982,7 @@ llvm::BasicBlock *curBlock = TheBuilder.GetInsertBlock();
 
 ## 二元表达式
 
-### 整数加法 + :id=integer-addition
+### 整数加法 +
 
 ```cpp
 /// LHS + RHS
@@ -1182,9 +1182,9 @@ Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-### 逻辑与 && :id=logical-and
+### 逻辑与 && 
 
-#### 短路求值思路参考 :id=short-circuit-evaluation
+#### 短路求值思路参考 
 
 对于形如 `exp_1 && exp_2` 这样的与的表达式，其中 `exp_1` 和 `exp_2` 为具有真值的表达式。当 `exp_1` 和 `exp_2` 均为 `true` 时，整个表达式的值才为 `true`。换句话说，`exp_1`和`exp_2`其中一个为 `false` 时，整个表达式的值就为 `false`。
 
@@ -1218,7 +1218,7 @@ Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 
 注意，`land.rhs` 和 `land.end` 这些标签均可以自己取名。由于 `exp_1` 和 `exp_2` 可能不是原子逻辑表达式，即其可能嵌套了 `&&` 或者 `||`，因此处理 `exp_1` 或者 `exp_2` 时可能会涉及到多个基本块，不过子表达式基本块的控制流结构基本上也是一样的，都是对表达式处理三部分的嵌套。
 
-#### 条件跳转指令 :id=coditional-branch-instruction
+#### 条件跳转指令
 
 ```cpp
 /// 如果 Cond=True，则跳转到 True 基本块，否则，跳转到 False 基本块

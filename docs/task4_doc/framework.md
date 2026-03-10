@@ -67,7 +67,7 @@ main(int argc, char** argv)
 }
 ```
 
-## 传统方法 :id=classic-method
+## 传统方法 
 
 本次实验的传统方法框架主要分为以下两部分：
 
@@ -391,7 +391,7 @@ PreservedAnalyses FlattenCFGPass::run(Function &F,
 - [LLVM Pass 其一：PassManager](https://cloud.tencent.com/developer/article/2259878)
 - [LLVM Pass 其二：Analysis 与 AnalysisManager](https://cloud.tencent.com/developer/article/2259881)
 
-## 大语言模型方法 :id=llm-method
+## 大语言模型方法 
 
 本次实验的大语言模型方法框架主要分为以下两部分：
 
