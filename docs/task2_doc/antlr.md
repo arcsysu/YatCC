@@ -5,7 +5,6 @@
 在本次实验中，在本次实验中，同学们需要完成以下任务：
 
 1. 词法分析：补充词法分析器缺失的部分。
-
    - 补全 `SYsULexer.tokens`，使其包含测试用例涉及的所有 token 种类。在构建项目时，`SYsULexer.py` 脚本会根据 `SYsULexer.tokens` 生成 `SYsULexer.tokens.hpp`，来为 `SYsULexer.cpp` 提供一些`k`开头的 token 类型定义。
    - 补全`SYsULexer.cpp` 中的`kClangTokens`，实现 Clang 风格的 token 名到`k`开头的 token 名之间的映射。
 
@@ -259,7 +258,7 @@ additiveExpression
     ;
 ```
 
-众所周知，运算之间有优先级关系，我们怎样编写语法规则才能“先匹配乘法，再匹配加法”呢？同学们可以查看[文法参考](../task2_doc/overview.md?id=grammer-reference)部分，其中是这样写的：
+众所周知，运算之间有优先级关系，我们怎样编写语法规则才能“先匹配乘法，再匹配加法”呢？同学们可以查看[文法参考](../task2_doc/overview.md#文法参考)部分，其中是这样写的：
 
 ```text
 unary_expression
