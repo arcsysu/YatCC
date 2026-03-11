@@ -18,22 +18,29 @@
 
 ## 如何更新项目
 
-由于我们的代码仍处于不断更新与完善的阶段，同学们在实验发布或更新时需要重新拉取位于 Github 上的代码。若当前仓库使用通过`Download ZIP`直接下载源代码，此时`/path/to/YatCC`目录下不包含`.git`文件夹，此时我们需要使用以下代码跟踪远端代码仓库并拉取代码：
+由于我们的代码仍处于不断更新与完善的阶段，同学们在实验发布或更新时需要重新拉取位于 Github 上的代码。
 
-```shell
-git init
-git branch -m main
-git remote add origin https://ghfast.top/https://github.com/arcsysu/YatCC.git
-```
+1. 在线实验平台更新
 
-完成上述操作后，YatCC 目录下会出现`.git`文件夹，说明当前项目已关联远端代码仓库。若当前目录已包含`.git`文件夹，则执行`git init`时会出现`Reinitialized existing Git repository in ...`提示。跟踪远端代码仓库后，使用以下指令保存当前修改并更新代码：
+    若是使用我们提供的 [YatCC-OL 在线实验平台](https://ol.yatcc.arcsysu.cn/)，当实验更新时，同学们需要在实验平台上使用 `Ctrl + ~` 唤出终端，使用以下指令保存当前修改并更新代码：
 
-```shell
-git fetch origin main
-git reset --soft origin/main
-git stash
-git stash pop
-```
+    ```shell
+    git fetch origin main
+    git reset --soft origin/main
+    git stash
+    git stash pop
+    ```
+
+2. 本地更新
+    若当前仓库使用通过`Download ZIP`直接下载源代码，此时`/path/to/YatCC`目录下不包含`.git`文件夹，此时我们需要使用以下代码跟踪远端代码仓库并拉取代码：
+
+    ```shell
+    git init
+    git branch -m main
+    git remote add origin https://ghfast.top/https://github.com/arcsysu/YatCC.git
+    ```
+
+    完成上述操作后，YatCC 目录下会出现`.git`文件夹，说明当前项目已关联远端代码仓库。
 
 完成上述操作后，实验代码已和远端代码仓库同步，同学们可以继续开始实验。
 
@@ -43,7 +50,9 @@ git stash pop
 
 ![showlog](../images/howtouse/howtodolab.png)
 
-在`config.cmake`的开头存在着以下一段代码，同学们需要在这段代码中填入你的学号和姓名。在这里实验一和实验二我们提供了多种完成的方式，同学们需要使用了某种方式进行实现之后，在使用上一小节介绍的方法进行编译构建之前，需要将你选择进行实现方法填入对应的地方。此外，下面这段代码中还提到了一个词`复活`，我们默认将复活设置为开启。我们设计的实验是前后连贯的，前一个实验的输出结果有可能是后一个实验的输入，但是我们考虑到同学们可能存在上一个实验精力不济无法取得满分的情况。在这种情况下开启`复活`，可以使得当前实验的输入不受上一个实验的输出影响（此时当前实验的输入结果为助教提前设计好的标准输入）。
+在`config.cmake`的开头存在着以下一段代码，同学们需要在这段代码中填入你的学号和姓名。在这里实验一和实验二我们提供了多种完成的方式，同学们需要使用了某种方式进行实现之后，在使用上一小节介绍的方法进行编译构建之前，需要将你选择进行实现方法填入对应的地方。
+
+此外，下面这段代码中还提到了一个词 `复活`，我们默认将复活设置为开启。我们设计的实验是前后连贯的，前一个实验的输出结果有可能是后一个实验的输入，但是我们考虑到同学们可能存在上一个实验精力不济无法取得满分的情况。在这种情况下开启`复活`，可以使得当前实验的输入不受上一个实验的输出影响（此时当前实验的输入结果为助教提前设计好的标准输入）。
 
 ```cmake
 # 你的学号
