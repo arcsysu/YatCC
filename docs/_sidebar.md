@@ -5,15 +5,15 @@
   - [实验框架使用方法](introduction/howtouse.md)
   - [最终评测方式说明](introduction/finalscore.md)
   - [AI 工具使用方法](introduction/agent.md)
-  - [vibe coding指南](introduction/vibecoding.md)
+  - [Vibe coding 指南](introduction/vibecoding.md)
   - [大模型提示工程](introduction/prompt.md)
   - [帮助我们改进实验](introduction/helptoimprove.md)
 - Task0
   - [实验介绍](task0_doc/task0.md)
 - Task1
   - [实验介绍](task1_doc/overview.md)
-  - [使用 flex 完成 Task1](task1_doc/flex.md)
   - [使用 antlr 完成 Task1](task1_doc/antlr.md)
+  - [使用 flex 完成 Task1](task1_doc/flex.md)
   - [Prompt 示例](task1_doc/prompt.md)
   - [API 速查](task1_doc/apidoc.md)
 - Task2
@@ -39,9 +39,9 @@
   - [整体介绍](task5_doc/overview.md)
   - [环境要求](task5_doc/env.md)
   - [评分标准](task5_doc/judge.md)
-  - [API介绍](task5_doc/API.md)
+  - [API 介绍](task5_doc/API.md)
   - [指令介绍](task5_doc/ins.md)
-  - [LLM相关](task5_doc/LLM.md)
+  - [LLM 相关](task5_doc/LLM.md)
   - [参考资料](task5_doc/cite.md)
 - Q&A
   - [常见问题与答案](QA.md)
