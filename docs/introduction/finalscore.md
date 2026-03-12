@@ -22,7 +22,7 @@
 
 Token 用量查看：
 
-将鼠标悬停在气泡左下角的圆环上即可查看每个对话使用的 Token。
+将鼠标悬停在气泡左下角上的圆环即可。
 
 ![查看Token](../images/finalscore/查看Token用量.gif)
 
