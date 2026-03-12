@@ -73,6 +73,7 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js
   - javascripts/katex.js
   - javascripts/navigation-accordion.js
+  - javascripts/image-lightbox.js
 exclude_docs: |
   index.html
   _sidebar.md
