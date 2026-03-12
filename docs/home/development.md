@@ -1,10 +1,11 @@
 # 文档开发指南
 
 这篇文档面向维护 YatCC 文档的实验室同学与外部贡献者，说明：
-1. 如何配置好编写文档所需的环境
-2. 当前仓库基本结构
-3. 如何使用 MkDocs 编写文档、编写文档需要遵守的规范
-4. 如何在本地检查、预览并提交文档
+
+1. 如何配置好编写文档所需的环境  
+2. 当前仓库基本结构  
+3. 如何使用 MkDocs 编写文档、编写文档需要遵守的规范  
+4. 如何在本地检查、预览并提交文档  
 
 !!! note "先跑通预览和严格构建，再开始大改"
 
@@ -14,6 +15,7 @@
 ## 环境配置
 
 本站使用 Mkdocs 构建，请确保已经安装 Python 并将可执行文件添加到 PATH 环境变量。参考：
+
 > [Python 安装](https://www.python.org/downloads/)
 > [MkDocs 安装](https://www.mkdocs.org/user-guide/installation/)
 
@@ -133,6 +135,7 @@ pip install mkdocs mkdocs-material
 1. 块级元素（标题、段落、列表、代码块、引用区块、表格）之间前后留有空行
 2. 图片引用与其它元素之间前后留有空行
 3. 行内代码规范：
+
     1. 以下场景使用行内代码
         - 终端命令与参数
         - 代码元素（函数、变量等）
@@ -152,12 +155,12 @@ pip install mkdocs mkdocs-material
 本地预览命令如下：
 
 ```bash
-source .venv/bin/activate
-
 # Linux/MacOS
+source .venv/bin/activate
 NO_MKDOCS_2_WARNING=1 mkdocs serve -a 127.0.0.1:8000       
 
 # Windows Powershell
+.\.venv\Scripts\activate
 $env:NO_MKDOCS_2_WARNING=1
 mkdocs serve -a 127.0.0.1:8000
 ```
@@ -173,8 +176,14 @@ mkdocs serve -a 127.0.0.1:8000
 提交前建议至少执行一次严格构建：
 
 ```bash
+# Linux/MacOS
 source .venv/bin/activate
 NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+
+# Windows Powershell
+.\.venv\Scripts\activate
+$env:NO_MKDOCS_2_WARNING=1
+mkdocs build --strict
 ```
 
 这一步主要用于发现：
