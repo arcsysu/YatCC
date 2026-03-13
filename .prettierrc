@@ -1,0 +1,23 @@
+{
+  "proseWrap": "always",
+  "arrowParens": "always",
+  "parser": "markdown",
+  "spaceAroundAlphabet": true,
+  "spaceAroundNumber": true,
+  "spaceAroundCode": true,
+  "spaceAroundLink": true,
+  "noDuplicatePunctuation": false,
+  "noSpaceAroundFullwidth": true,
+  "noSpaceBetweenNumberUnit": ["%", "°C", "°"],
+
+  "plugins":  ["prettier-plugin-zh"],
+
+  "overrides": [
+    {
+      "files": "**/*.md",
+      "options": {
+        "embeddedLanguageFormatting": "off"
+      }
+    }
+  ]
+}
