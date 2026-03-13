@@ -167,7 +167,7 @@ systemctl start docker   #启动 docker 服务
 
 在 VSCode 中点击下图红色三角形所示的按钮，进入到插件管理界面搜寻 `Dev Containers` 进行插件安装。
 
-![VSCode 插件安装](../images/environment/VSCodeplugin.png)
+![VSCode 插件安装](../images/environment/vscodeplugin.png)
 
 请同学们确保 Docker 服务处于**启动状态**后，请点击 VSCode 左下角的红色箭头所指的齿轮，然后再点击另外红色箭头所指的按钮打开命令面板，或使用快捷键 `Ctrl`+`Shift`+`P` 唤出命令面板。
 
