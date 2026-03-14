@@ -99,7 +99,7 @@ function normalizeLeadingIndentToSpaces(line) {
   return " ".repeat(width) + match[2];
 }
 
-function autoFixMaterialBlocks(markdownText) {
+export function autoFixMaterialBlocks(markdownText) {
   const eol = detectEol(markdownText);
   const rawLines = markdownText.split(/\r?\n/);
   const lines = rawLines.map((l) => normalizeLeadingIndentToSpaces(l));
@@ -113,15 +113,48 @@ function autoFixMaterialBlocks(markdownText) {
   let state = null; // { kind: 'admonition'|'tab', base: number, hasBody: boolean }
   let lastLineWasBlankInBlock = false;
   let fence = null; // { ch: '`'|'~', len: number } | null
+  let docFence = null; // { ch: '`'|'~', len: number } | null
 
   const result = [];
   for (let i = 0; i < lines.length; i += 1) {
+    const rawLine = rawLines[i];
     const line = lines[i];
 
     const currentIndentMatch = /^(\s*)(.*)$/.exec(line);
     const indent = currentIndentMatch ? currentIndentMatch[1].length : 0;
     const content = currentIndentMatch ? currentIndentMatch[2] : line;
     const isBlank = content.trim().length === 0;
+
+    // Never try to interpret MkDocs Material syntax inside fenced code blocks.
+    // Otherwise, examples like:
+    //
+    // ```md
+    // !!! note "Title"
+    // ```
+    //
+    // would be treated as real admonitions and rewritten.
+    if (!state) {
+      const rawMatch = /^(\s*)(.*)$/.exec(rawLine);
+      const rawContent = rawMatch ? rawMatch[2] : rawLine;
+      const rawTrimmed = rawContent.trimStart();
+      const rawFenceMatch = fenceRe.exec(rawTrimmed);
+      if (docFence) {
+        if (
+          rawFenceMatch &&
+          rawFenceMatch[1][0] === docFence.ch &&
+          rawFenceMatch[1].length >= docFence.len
+        ) {
+          docFence = null;
+        }
+        result.push(rawLine);
+        continue;
+      }
+      if (rawFenceMatch) {
+        docFence = { ch: rawFenceMatch[1][0], len: rawFenceMatch[1].length };
+        result.push(rawLine);
+        continue;
+      }
+    }
 
     const admonitionStart = admonitionHeaderRe.exec(line);
     const tabStart = tabHeaderRe.exec(line);
@@ -332,4 +365,6 @@ function main() {
   process.exit(Math.max(fixStatus, lintStatus));
 }
 
-main();
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
+  main();
+}

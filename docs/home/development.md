@@ -68,20 +68,13 @@ pip install mkdocs mkdocs-material
    `introduction/index.md`
 
 ### 文档提交前格式修正集成功能
-1. 第一次使用（仅需一次）
-在仓库根目录执行：
-npm.cmd install
-2. 日常提交前
-只处理你这次改动过的文档（速度快）：
-npm.cmd run docs:format
-3. 只整理某一个文件
-例如只整理 Task4 的 overview：
-npm.cmd run docs:format -- docs/task4_doc/overview.md
-4. 全量整理整个 docs
-npm.cmd run docs:format:all
-5. 已经装过依赖，想跳过 install
-npm.cmd run docs:format -- --no-install
 
+1. 第一次使用（仅需一次）在仓库根目录执行：npm.cmd install
+2. 日常提交前只处理你这次改动过的文档（速度快）：npm.cmd run docs:format
+3. 只整理某一个文件例如只整理 Task4 的 overview：npm.cmd run docs:format --
+   docs/task4_doc/overview.md
+4. 全量整理整个 docs npm.cmd run docs:format:all
+5. 已经装过依赖，想跳过 install npm.cmd run docs:format -- --no-install
 
 !!! tip "优先复用现有写法"
 
@@ -92,7 +85,8 @@ npm.cmd run docs:format -- --no-install
 
 可以直接复用 Material 支持的写法：
 
-```````````md
+```md
+
 !!! note "提示标题"
 
     这里写绿色提示块内容。
@@ -104,7 +98,8 @@ npm.cmd run docs:format -- --no-install
 !!! tip "建议标题"
 
     这里写黄色建议块内容。
-    ```
+
+```
 
 ### 样式与脚本改动
 
@@ -125,9 +120,9 @@ npm.cmd run docs:format -- --no-install
 
 当前文档站点包含一个文档 Agent 面板，用于辅助用户查询文档内容。维护时建议了解以下位置：
 
-- 面板结构：`docs/overrides/partials/agent.html`
-- 样式：`docs/stylesheets/agent.css`
-- 脚本入口：`docs/javascripts/doc-agent.js`
+- 面板结构： `docs/overrides/partials/agent.html`
+- 样式： `docs/stylesheets/agent.css`
+- 脚本入口： `docs/javascripts/doc-agent.js`
 
 如果只是改文案、按钮文案、占位符或提示信息，通常修改模板即可；如果涉及位置、尺寸、对齐、配色等，则需要同步调整 CSS。
 
@@ -150,18 +145,17 @@ npm.cmd run docs:format -- --no-install
 1. 块级元素（标题、段落、列表、代码块、引用区块、表格）之间前后留有空行
 2. 图片引用与其它元素之间前后留有空行
 3. 行内代码规范：
-
-    1. 以下场景使用行内代码
-        - 终端命令与参数
-        - 代码元素（函数、变量等）
-        - 文件路径与文件名
-        - 配置项、环境变量与字面值，如 `PATH`、`127.0.0.1`等
-        - 键盘按键，如“按下 `Ctrl`+`C` 唤出终端”
-    2. 以下场景不要使用行内代码
-        - 技术概念、协议、架构名称，如 TCP/IP
-        - 软件、工具和项目的名称，如 ANTLR
-        - 常规的英文缩写与专有名词，如 CPU
-        - 用于强调。应使用加粗来达到强调的目的
+   1. 以下场景使用行内代码
+      - 终端命令与参数
+      - 代码元素（函数、变量等）
+      - 文件路径与文件名
+      - 配置项、环境变量与字面值，如 `PATH`、 `127.0.0.1` 等
+      - 键盘按键，如“按下 `Ctrl` + `C` 唤出终端”
+   2. 以下场景不要使用行内代码
+      - 技术概念、协议、架构名称，如 TCP/IP
+      - 软件、工具和项目的名称，如 ANTLR
+      - 常规的英文缩写与专有名词，如 CPU
+      - 用于强调。应使用加粗来达到强调的目的
 
 ## 本地预览
 
@@ -176,8 +170,6 @@ NO_MKDOCS_2_WARNING=1 mkdocs serve -a 127.0.0.1:8000
 .\.venv\Scripts\activate
 $env:NO_MKDOCS_2_WARNING=1
 mkdocs serve -a 127.0.0.1:8000
-```
-
 ```
 
 启动后在浏览器访问 `http://127.0.0.1:8000` 即可预览。
@@ -196,14 +188,12 @@ mkdocs serve -a 127.0.0.1:8000
 
 # Linux/MacOS
 
-source .venv/bin/activate
-NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+source .venv/bin/activate NO_MKDOCS_2_WARNING=1 mkdocs build --strict
 
 # Windows Powershell
 
-.\.venv\Scripts\activate
-$env:NO_MKDOCS_2_WARNING=1
-mkdocs build --strict
+.\.venv\Scripts\activate $env:NO_MKDOCS_2_WARNING=1 mkdocs build --strict
+
 ```
 
 这一步主要用于发现：
@@ -232,15 +222,3 @@ mkdocs build --strict
 
     尤其是字体、图片和其他静态资源，提交前要确认它们确实被引用、格式正确、内容不是错误页面。
     资源文件如果进入提交历史，后续清理成本会更高。
-    ```
-    ```
-    ```
-    ```
-    ````
-    `````
-    ``````
-    ```````
-    ````````
-    `````````
-    ``````````
-    ```````````
