@@ -96,7 +96,7 @@ eof ''  Loc=<./functional-0/000_main.sysu.c:3:2>
 
    本次实验可以选择使用 `flex` 或 `antlr` 实现词法分析器，需要在 `/YatCC/config.cmake` 中设置`TASK1_WITH`为 `"flex"` 或 `"antlr"`。设置完成后，同学们可以自由编写 `YatCC/task/1/flex`或`YatCC/task/1/antlr` 中的源代码。
 
-   完成源代码编写后，可以通过 `PROJECT OUTLINE/YatCC/test/task1` 中选择构建 `task1-score` 进行实验一的评分。完成所有样例测评后，每个样例的标准输出 `answer.txt`、实际输出 `output.txt` 和评分结果 `score.txt` 将保存在 `YatCC/build/test/task1` 文件夹中，同学们可以根据评分结果对比标准输出和实际输出，并进行代码修改。
+   完成源代码编写后，可以通过 `PROJECT OUTLINE/YatCC/test/task1` 中选择构建 `task1-pack` 进行实验一的评分。完成所有样例测评后，每个样例的标准输出 `answer.txt`、实际输出 `output.txt` 和评分结果 `score.txt` 将保存在 `YatCC/build/test/task1` 文件夹中，同学们可以根据评分结果对比标准输出和实际输出，并进行代码修改。
 
    ![score task1](../images/task1/task1score.png)
 
