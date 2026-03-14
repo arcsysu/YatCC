@@ -1,0 +1,16 @@
+{
+  "customRules": ["mkdocs-material-linter"],
+  "config": {
+    "material-admonition-types": true,
+    "material-admonition-indentation": true,
+    "material-admonition-empty": true,
+    "material-admonition-empty-title": true,
+    "material-content-tabs": true,
+    "material-code-annotations": true,
+    "material-navigation-structure": true,
+    "material-shell-language-standardization": true,
+    "material-bundle-exec-shell-type": true,
+    "material-blank-lines-spacing": true,
+    "material-code-block-syntax": true
+  }
+}

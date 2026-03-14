@@ -5,11 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+    "docs:lint": "markdownlint-cli2 \"docs/**/*.md\"",
+    "docs:fix": "markdownlint-cli2 \"docs/**/*.md\" --fix",
+    "docs:ready": "markdownlint-cli2 \"docs/**/*.md\" --fix && markdownlint-cli2 \"docs/**/*.md\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "markdownlint-cli2": "^0.21.0",
+    "mkdocs-material-linter": "^1.5.3",
     "prettier": "^3.8.1",
     "prettier-plugin-zh": "^0.7.0"
   }
