@@ -15,12 +15,12 @@
 
 ## 实验路线图
 
-| 阶段 | 目标 | 对应文档 |
-| --- | --- | --- |
-| 准备阶段 | 配环境、理解实验流程、接入评测与 AI 工具 | [实验指引](introduction/) |
-| 前端阶段 | 词法分析与语法分析 | [Task1](task1_doc/overview.md)、[Task2](task2_doc/overview.md) |
-| 中端阶段 | LLVM IR 生成与优化 | [Task3](task3_doc/overview.md)、[Task4](task4_doc/overview.md) |
-| 后端阶段 | 指令生成与评分对接 | [Task5](task5_doc/overview.md) |
+| 阶段     | 目标                                     | 对应文档                                                        |
+| -------- | ---------------------------------------- | --------------------------------------------------------------- |
+| 准备阶段 | 配环境、理解实验流程、接入评测与 AI 工具 | [实验指引](introduction/)                                       |
+| 前端阶段 | 词法分析与语法分析                       | [Task1](task1_doc/overview.md)、 [Task2](task2_doc/overview.md) |
+| 中端阶段 | LLVM IR 生成与优化                       | [Task3](task3_doc/overview.md)、 [Task4](task4_doc/overview.md) |
+| 后端阶段 | 指令生成与评分对接                       | [Task5](task5_doc/overview.md)                                  |
 
 ## 你现在可以从这里开始
 

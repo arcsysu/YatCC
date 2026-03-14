@@ -2,10 +2,10 @@
 
 这篇文档面向维护 YatCC 文档的实验室同学与外部贡献者，说明：
 
-1. 如何配置好编写文档所需的环境  
-2. 当前仓库基本结构  
-3. 如何使用 MkDocs 编写文档、编写文档需要遵守的规范  
-4. 如何在本地检查、预览并提交文档  
+1. 如何配置好编写文档所需的环境
+2. 当前仓库基本结构
+3. 如何使用 MkDocs 编写文档、编写文档需要遵守的规范
+4. 如何在本地检查、预览并提交文档
 
 !!! note "预览无误、通过严格构建后再提交"
 
@@ -64,7 +64,24 @@ pip install mkdocs mkdocs-material
 1. 普通页面优先使用 Markdown，放在 `docs/` 下合适的位置
 2. 新页面如果需要出现在导航中，必须同步更新 `mkdocs.yml` 的 `nav`
 3. 图片统一放到 `docs/images/` 的对应子目录，再用相对路径引用
-4. 站内链接尽量使用**相对路径**，例如 `../task3_doc/overview.md` 或 `introduction/index.md`
+4. 站内链接尽量使用**相对路径**，例如 `../task3_doc/overview.md` 或
+   `introduction/index.md`
+
+### 文档提交前格式修正集成功能
+1. 第一次使用（仅需一次）
+在仓库根目录执行：
+npm.cmd install
+2. 日常提交前
+只处理你这次改动过的文档（速度快）：
+npm.cmd run docs:format
+3. 只整理某一个文件
+例如只整理 Task4 的 overview：
+npm.cmd run docs:format -- docs/task4_doc/overview.md
+4. 全量整理整个 docs
+npm.cmd run docs:format:all
+5. 已经装过依赖，想跳过 install
+npm.cmd run docs:format -- --no-install
+
 
 !!! tip "优先复用现有写法"
 
@@ -75,7 +92,7 @@ pip install mkdocs mkdocs-material
 
 可以直接复用 Material 支持的写法：
 
-```md
+```````````md
 !!! note "提示标题"
 
     这里写绿色提示块内容。
@@ -153,12 +170,14 @@ pip install mkdocs mkdocs-material
 ```shell
 # Linux/MacOS
 source .venv/bin/activate
-NO_MKDOCS_2_WARNING=1 mkdocs serve -a 127.0.0.1:8000       
+NO_MKDOCS_2_WARNING=1 mkdocs serve -a 127.0.0.1:8000
 
 # Windows Powershell
 .\.venv\Scripts\activate
 $env:NO_MKDOCS_2_WARNING=1
 mkdocs serve -a 127.0.0.1:8000
+```
+
 ```
 
 启动后在浏览器访问 `http://127.0.0.1:8000` 即可预览。
@@ -171,12 +190,17 @@ mkdocs serve -a 127.0.0.1:8000
 
 提交前建议至少执行一次严格构建：
 
-```shell
+```
+
+``shell
+
 # Linux/MacOS
+
 source .venv/bin/activate
 NO_MKDOCS_2_WARNING=1 mkdocs build --strict
 
 # Windows Powershell
+
 .\.venv\Scripts\activate
 $env:NO_MKDOCS_2_WARNING=1
 mkdocs build --strict
@@ -208,3 +232,15 @@ mkdocs build --strict
 
     尤其是字体、图片和其他静态资源，提交前要确认它们确实被引用、格式正确、内容不是错误页面。
     资源文件如果进入提交历史，后续清理成本会更高。
+    ```
+    ```
+    ```
+    ```
+    ````
+    `````
+    ``````
+    ```````
+    ````````
+    `````````
+    ``````````
+    ```````````

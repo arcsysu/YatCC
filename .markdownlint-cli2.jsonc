@@ -19,10 +19,10 @@
     "material-admonition-empty-title": true,
     "material-content-tabs": true,
     "material-code-annotations": true,
-    "material-navigation-structure": true,
+    "material-navigation-structure": false,
     "material-shell-language-standardization": true,
     "material-bundle-exec-shell-type": true,
-    "material-blank-lines-spacing": true,
-    "material-code-block-syntax": true
+    "material-blank-lines-spacing": false,
+    "material-code-block-syntax": false
   }
 }

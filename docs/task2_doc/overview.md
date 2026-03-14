@@ -9,7 +9,7 @@
 
 !!! tip "先读清输入输出，再决定走 Bison 还是 ANTLR"
 
-        这两个路线在输入形式、调试习惯和代码组织上都不同。先把评测目标和中间表示看明白，再选实现框架，会少走很多弯路。
+    这两个路线在输入形式、调试习惯和代码组织上都不同。先把评测目标和中间表示看明白，再选实现框架，会少走很多弯路。
 
 ## 任务描述
 
@@ -30,25 +30,28 @@
 
 ## 输入输出简介
 
-在本次实验中，使用 Bison 和 ANTLR 的输入并不相同。前者的输入为 task1 的输出（token 流，例如`/YatCC/build/test/task1/functional-0/000_main.sysu.c`），而后者的输入为 task0 的输出（经过预处理的源代码，例如`/YatCC/build/test/task0/functional-0/000_main.sysu.c`）。
+在本次实验中，使用 Bison 和 ANTLR 的输入并不相同。前者的输入为 task1 的输出（token 流，例如
+`/YatCC/build/test/task1/functional-0/000_main.sysu.c`），而后者的输入为 task0 的输出（经过预处理的源代码，例如
+`/YatCC/build/test/task0/functional-0/000_main.sysu.c`）。
 
-而输出都是由 clang parse 生成，是代表 ASG 的 JSON 文件，例如`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`（以下只截取了部分内容）：
+而输出都是由 clang parse 生成，是代表 ASG 的 JSON 文件，例如
+`/YatCC/build/test/task2/functional-0/000_main.sysu.c/answer.json`（以下只截取了部分内容）：
 
 !!! warning "不要只盯着 kind"
 
     虽然评分重点在 kind、name、value、type，但很多同学调试时只看 kind，最后会在细节键值上丢分。
     对照输出时，建议把关键字段逐个核对，而不是只看节点名字是否大致对上。
 
-```json
-{
-  "id": "0x55d4efa4f008",
-  "kind": "TranslationUnitDecl",
-  "loc": {},
-  "range": {
+    ```json
+    {
+    "id": "0x55d4efa4f008",
+    "kind": "TranslationUnitDecl",
+    "loc": {},
+    "range": {
     "begin": {},
     "end": {}
-  },
-  "inner": [
+    },
+    "inner": [
     {
       "id": "0x55d4efa4f838",
       "kind": "TypedefDecl",
@@ -62,29 +65,40 @@
       "type": {
         "qualType": "__int128"
       },
-// ...
-```
+    // ...
+    ```
 
-以上面这个 JSON 文件为例，进行一些解释（实际上同学们只需要关心 `kind` ， `name` ， `value` ， `type` 这四个关键词，我们的评测系统也只关注输出中的这四个关键字的正确性）：
+以上面这个 JSON 文件为例，进行一些解释（实际上同学们只需要关心 `kind`， `name`，
+`value`， `type`
+这四个关键词，我们的评测系统也只关注输出中的这四个关键字的正确性）：
 
-- `id`: 唯一标识符，用于区分 AST 中的每一个节点。
-- `kind`: 节点语法类型，表示该节点代表的源代码语法结构的种类，如 `TypedefDecl`（类型定义声明）、`BuiltinType`（内置类型）、`FunctionDecl`（函数声明）等。
-- `loc`: 位置信息，通常包含文件名、行号和列号，用于指示源代码中该元素的位置。
-- `range`: 范围信息，指出了源代码中该节点覆盖的起始和结束位置。它有 begin 和 end 两个属性，每个属性可能包含偏移量、行号、列号等信息，用于准确定位代码片段。
-- `inner`: 内部节点，这个列表包含了当前节点下的子节点。例如，一个 `FunctionDecl` 节点会包含它的参数和函数体等子节点。
-- `isImplicit`: 表示该声明是否是隐式的，即没有在源代码中直接写出来，而是由编译器自动生成的。
-- `name`: 节点名称，比如类型名称、函数名称等。
-- `type`: 节点类型，包含了源代码的类型信息，如`__int128`、`unsigned __int128` 等。对于类型节点，`qualType` 属性描述了类型的完整限定名。
-- `decl`: 声明信息，某些节点（如 `RecordType`）可能包含对声明本身的引用。
-- `size`: 大小，主要用于数组类型，表示数组的元素数量。
-- `valueCategory`: 值类别，如 `prvalue` 表示纯右值。
-- `value`: 节点值，对于字面量如整数字面量，这个字段包含了具体的值。
+- `id` : 唯一标识符，用于区分 AST 中的每一个节点。
+- `kind` : 节点语法类型，表示该节点代表的源代码语法结构的种类，如
+  `TypedefDecl`（类型定义声明）、 `BuiltinType`（内置类型）、
+  `FunctionDecl`（函数声明）等。
+- `loc` : 位置信息，通常包含文件名、行号和列号，用于指示源代码中该元素的位置。
+- `range`
+  : 范围信息，指出了源代码中该节点覆盖的起始和结束位置。它有 begin 和 end 两个属性，每个属性可能包含偏移量、行号、列号等信息，用于准确定位代码片段。
+- `inner` : 内部节点，这个列表包含了当前节点下的子节点。例如，一个
+  `FunctionDecl` 节点会包含它的参数和函数体等子节点。
+- `isImplicit`
+  : 表示该声明是否是隐式的，即没有在源代码中直接写出来，而是由编译器自动生成的。
+- `name` : 节点名称，比如类型名称、函数名称等。
+- `type` : 节点类型，包含了源代码的类型信息，如 `__int128`、 `unsigned __int128`
+  等。对于类型节点， `qualType` 属性描述了类型的完整限定名。
+- `decl` : 声明信息，某些节点（如 `RecordType`）可能包含对声明本身的引用。
+- `size` : 大小，主要用于数组类型，表示数组的元素数量。
+- `valueCategory` : 值类别，如 `prvalue` 表示纯右值。
+- `value` : 节点值，对于字面量如整数字面量，这个字段包含了具体的值。
 
-此外，通过 VSCode 可以很方便地看到 JSON 文件的结构。鼠标点击下图中红框里的`...`，就会显示这个文件的结构：
+此外，通过 VSCode 可以很方便地看到 JSON 文件的结构。鼠标点击下图中红框里的
+`...`，就会显示这个文件的结构：
 
 ![alt text](../images/bison/task2-json.png)
 
-可以看见，其最外层的结构的`kind`（种类）为`TranslationUnitDecl`。点击左侧图标展开，可以看到属性`inner`还包含其余六个部分：前五个都是`TypedefDecl`，最后一个是`FunctionDecl`：
+可以看见，其最外层的结构的 `kind`（种类）为
+`TranslationUnitDecl`。点击左侧图标展开，可以看到属性 `inner`
+还包含其余六个部分：前五个都是 `TypedefDecl`，最后一个是 `FunctionDecl`：
 
 ![alt text](../images/bison/task2-answer-exam.png)
 
@@ -101,15 +115,20 @@
 
 ## 构建目标介绍
 
-当同学们通过 `cmake` 插件点击小小按钮来构建 task2 的可执行文件时，助教们写好的各种 `CMakeLists`脚本会将 task2 所有相关代码文件编译成一个可执行文件。同学们在 `cmake` 插件中的下拉选项中看见，到底有哪些文件参与进来。
+当同学们通过 `cmake`
+插件点击小小按钮来构建 task2 的可执行文件时，助教们写好的各种 `CMakeLists`
+脚本会将 task2 所有相关代码文件编译成一个可执行文件。同学们在 `cmake`
+插件中的下拉选项中看见，到底有哪些文件参与进来。
 
 ![task2 build1](../images/task2_antlr/task2_build1.png)
 
-当可执行文件编译完成后，同学们可以在 `build/task/2/antlr/` 或`build/task/2/bison/`目录下找到这个 `task2` 这个可执行文件。
+当可执行文件编译完成后，同学们可以在 `build/task/2/antlr/` 或
+`build/task/2/bison/` 目录下找到这个 `task2` 这个可执行文件。
 
 ![task2 excutable](../images/task2_antlr/task2_excutable.png)
 
-当我们点击“ task2-score ”时，助教们写好的评测脚本`score.py`将调用这个程序，以测试样例作为输入，并将程序的输出（代表 ASG 的 JSON 文件）保存下来，最后与正确答案比较，给出评分。
+当我们点击“task2-score”时，助教们写好的评测脚本 `score.py`
+将调用这个程序，以测试样例作为输入，并将程序的输出（代表 ASG 的 JSON 文件）保存下来，最后与正确答案比较，给出评分。
 
 !!! tip "看 score 之前，先抽一两个 answer.json 对照阅读"
 
@@ -120,7 +139,8 @@
 
 同学们查看 JSON 文件，会发现上述每个节点里面包含了非常多的属性，除去 TypedefDecl 不用管之外，我们的评分以属性打印为准，具体如下：
 
-- 是否提取出正确的 `kind`、`name`、`value` 键值（不含 `InitListExpr`）（60 分）
+- 是否提取出正确的 `kind`、 `name`、 `value` 键值（不含
+  `InitListExpr`）（60 分）
 - 是否提取出正确的 `type` 键值及是否构造正确的 `InitListExpr` 生成树（40 分）。
 
 在根目录下的 `config.cmake` 中可以选择实验二的日志输出级别：
@@ -131,7 +151,8 @@
 
 建议同学们在实验过程中从低到高选择不同的日志等级，比较当前输出与标准输出的区别，并逐渐完善代码。
 
-同时，强烈建议（尤其是选用 Bison 完成 task2 的）同学们在`config.cmake`中**启用复活功能**，以直接使用标准的输入，避免 task1 中实现的不完善，影响 task2 的完成。是否启用复活功能，对本次实验的成绩没有任何影响。
+同时，强烈建议（尤其是选用 Bison 完成 task2 的）同学们在 `config.cmake`
+中**启用复活功能**，以直接使用标准的输入，避免 task1 中实现的不完善，影响 task2 的完成。是否启用复活功能，对本次实验的成绩没有任何影响。
 
 !!! note "复活机制是隔离问题，不是偷懒"
 
@@ -140,7 +161,8 @@
 
 ## 文法参考
 
-本实验设计时参考的文法是 SysY 语言文法。SysY 语言文法是一个非常完整的类 C 语言的文法，完成实验只需要用到其中的一部分。同学们还可以参考 [SysY 语言定义](https://gitlab.eduxiji.net/csc1/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf)，来获取更详细的解释和说明。
+本实验设计时参考的文法是 SysY 语言文法。SysY 语言文法是一个非常完整的类 C 语言的文法，完成实验只需要用到其中的一部分。同学们还可以参考
+[SysY 语言定义](https://gitlab.eduxiji.net/csc1/nscscc/compiler2021/-/blob/master/SysY%E8%AF%AD%E8%A8%80%E5%AE%9A%E4%B9%89.pdf)，来获取更详细的解释和说明。
 
 下面是 SysY 语言文法的所有产生式，同学们只需要选取其中的一部分，即可完成实验：
 

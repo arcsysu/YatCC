@@ -1,6 +1,7 @@
 ## 常用 API
 
-LLVM 中几乎所有对象均继承于`llvm::Value`（继承关系见[Value 继承关系图](#附录)）。本文档可能无法覆盖实现优化需要的所有 API。LLVM 中代码即文档，如果不清楚是否存在对应功能的 API，可以根据自己的需求查看对应类的头文件。
+LLVM 中几乎所有对象均继承于 `llvm::Value`（继承关系见
+[Value 继承关系图](#附录)）。本文档可能无法覆盖实现优化需要的所有 API。LLVM 中代码即文档，如果不清楚是否存在对应功能的 API，可以根据自己的需求查看对应类的头文件。
 
 ### 类型
 
@@ -37,7 +38,8 @@ LLVM 中大部分优化会对指令进行修改，因此对指令操作的函数
 指令修改 use 的相关操作：
 
 - `void replaceAllUsesWith(Value *V)`：将所有用到当前指令结果的地方替换为 V。该函数在进行指令替换时经常会用到，因为删除指令前需要将被删除指令的所有 Use 替换/删除
-- `bool replaceUsesOfWith(Value *From, Value *To)`：将所有用到 From 的地方替换为 To，功能与`replaceAllUsesWith`相同
+- `bool replaceUsesOfWith(Value *From, Value *To)`：将所有用到 From 的地方替换为 To，功能与
+  `replaceAllUsesWith` 相同
 - `void replaceUsesOutsideBlock(Value *V, BasicBlock *BB)`：将 BB 之外的 Use 全部替换为 V
 - `void replaceUsesWithIf(Value *New, llvm::function_ref<bool(Use &U)> ShouldReplace)`：设置判断条件，满足条件时将当前指令替换为 V
 
@@ -66,10 +68,11 @@ I2: %5 = add nsw %4, %4
 指令查询 use 的相关操作：
 
 - `unsigned getNumUses()`：返回当前指令 Use 的数量（被使用的次数）
-- `iterator_range<use_iterator> uses()`：返回当前指令 Use 的迭代器（Use 数量与`getNumUses()`对应）
+- `iterator_range<use_iterator> uses()`：返回当前指令 Use 的迭代器（Use 数量与
+  `getNumUses()` 对应）
 - `op_range operands()`：返回当前指令 Use 的迭代器（用于遍历指令的所有操作数）
 - `User* getOperandList()`：返回当前指令所有操作数的列表
-- `Use& getOperandUse(unsigned idx)`：以`Use`形式返回第 idx 个操作数
+- `Use& getOperandUse(unsigned idx)`：以 `Use` 形式返回第 idx 个操作数
 
 指令所属的位置：
 
@@ -79,7 +82,10 @@ I2: %5 = add nsw %4, %4
 
 #### Use 类
 
-Use 类的定义如下，其描述了使用`Val`计算`Parent`的数据依赖关系。例如，在`%3 = add %1, %2`中`%3`存在两个 Use，其(`Val`, `Parent`)分别为(`%3`, `%1`)和(`%3`, `%2`)。`Val`相同的多个 Use 组织成链表的形式，使用`Next`和`Prev`记录链表中前后两个`Use`。
+Use 类的定义如下，其描述了使用 `Val` 计算 `Parent` 的数据依赖关系。例如，在
+`%3 = add %1, %2` 中 `%3` 存在两个 Use，其( `Val` , `Parent` )分别为( `%3` ,
+`%1` )和( `%3` , `%2` )。 `Val` 相同的多个 Use 组织成链表的形式，使用 `Next` 和
+`Prev` 记录链表中前后两个 `Use`。
 
 ```cpp
 class Use {
@@ -103,8 +109,8 @@ private:
 
 相关操作：
 
-- `Value *get()`：返回`Val`
-- `User *getUser()`：返回`Parent`
+- `Value *get()`：返回 `Val`
+- `User *getUser()`：返回 `Parent`
 - `unsigned getOperandNo()`：返回当前 Use 在 User 的操作数序号
 - `Use *getNext()`：返回当前 Use 在链表中的下一个 Use
 
@@ -137,7 +143,8 @@ for (Use& u : I->uses()) {
 
 ### 基本块
 
-基本块是 LLVM IR 控制流的基本组成部分，对基本块的修改需要保证修改后程序的正确性。
+基本块是 LLVM
+IR 控制流的基本组成部分，对基本块的修改需要保证修改后程序的正确性。
 
 #### 插入、删除、移动基本块
 
@@ -168,13 +175,15 @@ for (Use& u : I->uses()) {
 
 查询其他基本块：
 
-- `BasicBlock *getSinglePredecessor()`：是否只有一个前驱基本块，且前驱基本块只有一条边指向当前基本块（e.g. switch 指令的多个 cases 指向同一个基本块不满足该条件）
+- `BasicBlock *getSinglePredecessor()`：是否只有一个前驱基本块，且前驱基本块只有一条边指向当前基本块（e.g.
+  switch 指令的多个 cases 指向同一个基本块不满足该条件）
 - `BasicBlock *getUniquePredecessor()`：是否只有一个前驱基本块
 - `BasicBlock *getSingleSuccessor()`：是否只有一个后驱基本块，且当前基本块只有一条边指向后驱基本块
 - `BasicBlock *getUniqueSuccessor()`：是否只有一个后驱基本块
 - `pred_range predecessors(BasicBlock *BB)`：返回当前基本块的所有前驱基本块
 - `succ_range successors(BasicBlock *BB)`：返回当前基本块的所有后驱基本块
-- `unsigned getNumUses()`：返回当前基本块的前驱数量。BasicBlock 继承于`llvm::Value`，因此也具有 Use 属性
+- `unsigned getNumUses()`：返回当前基本块的前驱数量。BasicBlock 继承于
+  `llvm::Value`，因此也具有 Use 属性
 
 查询基本块所属的对象：
 
@@ -202,7 +211,14 @@ LLVM 的循环结构一般如下：
 
 ![LLVM循环结构](../images/task4/loop-terminology.svg)
 
-对循环进行优化时，常常需要获取与循环相关的信息，而 LLVM 为开发者提供了对循环进行分析的 Analysis Pass：`LoopAnalysis`。使用该 Pass 前，需要先进行 Analysis Pass 的注册（注册方式参考[Analysis Pass 注册](./framework.md#注册transform-pass和analysis-pass)）。由于`LoopAnalysis`为 Function 级别的 Analysis Pass，因此需要使用`FunctionAnalysisManager`。`LoopAnalysis`、`FunctionAnalysisManager`和`PassBuilder`的头文件分别为`llvm/Analysis/LoopInfo.h`、`llvm/IR/PassManager.h`、`llvm/Passes/PassBuilder.h`。
+对循环进行优化时，常常需要获取与循环相关的信息，而 LLVM 为开发者提供了对循环进行分析的 Analysis
+Pass： `LoopAnalysis`。使用该 Pass 前，需要先进行 Analysis
+Pass 的注册（注册方式参考
+[Analysis Pass 注册](./framework.md#注册transform-pass和analysis-pass)）。由于
+`LoopAnalysis` 为 Function 级别的 Analysis Pass，因此需要使用
+`FunctionAnalysisManager`。 `LoopAnalysis`、 `FunctionAnalysisManager` 和
+`PassBuilder` 的头文件分别为 `llvm/Analysis/LoopInfo.h`、
+`llvm/IR/PassManager.h`、 `llvm/Passes/PassBuilder.h`。
 
 ```cpp
 llvm::PreservedAnalyses run(llvm::Module& mod,
@@ -250,10 +266,14 @@ llvm::PreservedAnalyses run(llvm::Module& mod,
 
 #### DominatorTree
 
-支配树（Dominance Tree）是一种用于描述基本块之间支配关系的数据结构。在程序的控制流图中，一个基本块 A 支配另一个基本块 B，意味着无论程序执行路径如何，如果进入 B，则一定会先经过 A。支配树能够以树状结构表示这种支配关系。支配树有两个主要的概念：
+支配树（Dominance
+Tree）是一种用于描述基本块之间支配关系的数据结构。在程序的控制流图中，一个基本块 A 支配另一个基本块 B，意味着无论程序执行路径如何，如果进入 B，则一定会先经过 A。支配树能够以树状结构表示这种支配关系。支配树有两个主要的概念：
 
 1. 支配关系（Dominance）：在控制流图中，基本块 A 支配基本块 B，如果每条从图的入口节点到 B 的路径都必须经过 A。如果 A 支配 B，那么 A 被称为 B 的支配者，B 被称为 A 的被支配者。
-2. 支配树（Dominance Tree）：支配树是控制流图中基本块之间支配关系的一种表示。它是一个树状结构，其中每个节点代表一个基本块，节点之间的父子关系表示最近支配关系。最近支配（immediate dominator，记作 idom）表示节点的最近支配关系，若 a idom b，则 a 是支配 b 且离 b 最近的节点。树的根节点是控制流图的入口基本块。
+2. 支配树（Dominance
+   Tree）：支配树是控制流图中基本块之间支配关系的一种表示。它是一个树状结构，其中每个节点代表一个基本块，节点之间的父子关系表示最近支配关系。最近支配（immediate
+   dominator，记作 idom）表示节点的最近支配关系，若 a idom
+   b，则 a 是支配 b 且离 b 最近的节点。树的根节点是控制流图的入口基本块。
 
 下面是一个控制流图，其中的节点表示基本块，边表示程序执行基本块的顺序，节点 1 为入口基本块：
 
@@ -263,7 +283,8 @@ llvm::PreservedAnalyses run(llvm::Module& mod,
 
 ![支配树](../images/task4/DominatorTree.png)
 
-在 LLVM 中，支配树使用数据结构`DominatorTree`表示，头文件为`llvm/IR/Dominators.h`。
+在 LLVM 中，支配树使用数据结构 `DominatorTree` 表示，头文件为
+`llvm/IR/Dominators.h`。
 
 ```cpp
 llvm::PreservedAnalyses run(llvm::Module& mod,
@@ -281,14 +302,16 @@ llvm::PreservedAnalyses run(llvm::Module& mod,
 }
 ```
 
-`DominatorTree`的常用 API 如下：
+`DominatorTree` 的常用 API 如下：
 
 - `bool dominates(const NodeT *A, const NodeT *B)`：判断节点 A 是否支配节点 B（节点可以是基本块，也可以是指令）
 - `bool properlyDominates(const NodeT *A, const NodeT *B)`：判断节点 A 是否支配节点 B 且 A 与 B 不是同一个节点
 - `void getDescendants(NodeT *R, SmallVectorImpl<NodeT *> &Result)`：返回支配节点 R 的所有节点（包括 R）
 - `NodeT* getRoot()`：返回支配树的根节点
 
-支配树与支配关系在基本块和代码移动时非常重要，如果我们希望一条指令移动到某个地方后能够影响后续某些基本块或指令，那么就需要将指令放在支配这些基本块或指令的位置。除了普通的支配树，LLVM 还提供了后序支配树`PostDominatorTree`，其用法与`DominatorTree`类似，需要使用的同学们可以自行了解。
+支配树与支配关系在基本块和代码移动时非常重要，如果我们希望一条指令移动到某个地方后能够影响后续某些基本块或指令，那么就需要将指令放在支配这些基本块或指令的位置。除了普通的支配树，LLVM 还提供了后序支配树
+`PostDominatorTree`，其用法与 `DominatorTree`
+类似，需要使用的同学们可以自行了解。
 
 ### 参考资料
 

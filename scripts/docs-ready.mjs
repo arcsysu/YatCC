@@ -106,9 +106,13 @@ function autoFixMaterialBlocks(markdownText) {
 
   const admonitionHeaderRe = /^(\s*)(!{3}|\?{3}\+?)\s+\S/;
   const tabHeaderRe = /^(\s*)===\s+["']/;
+  const fenceRe = /^(`{3,}|~{3,})/;
+  const keepIndentRe =
+    /^(?:[-*+]\s|\d+\.\s|>\s|\|\s|#{1,6}\s|<\w|!!!\s|\?{3}\+?\s|===\s)/;
 
   let state = null; // { kind: 'admonition'|'tab', base: number, hasBody: boolean }
   let lastLineWasBlankInBlock = false;
+  let fence = null; // { ch: '`'|'~', len: number } | null
 
   const result = [];
   for (let i = 0; i < lines.length; i += 1) {
@@ -125,6 +129,7 @@ function autoFixMaterialBlocks(markdownText) {
     if (admonitionStart) {
       state = { kind: "admonition", base: admonitionStart[1].length, hasBody: false };
       lastLineWasBlankInBlock = false;
+      fence = null;
       result.push(line);
       continue;
     }
@@ -132,11 +137,34 @@ function autoFixMaterialBlocks(markdownText) {
     if (tabStart) {
       state = { kind: "tab", base: tabStart[1].length, hasBody: false };
       lastLineWasBlankInBlock = false;
+      fence = null;
       result.push(line);
       continue;
     }
 
     if (state) {
+      const trimmed = content.trimStart();
+      const fenceMatch = fenceRe.exec(trimmed);
+      if (fenceMatch) {
+        const ch = fenceMatch[1][0];
+        const len = fenceMatch[1].length;
+        if (!fence) {
+          fence = { ch, len };
+        } else if (fence.ch === ch && len >= fence.len) {
+          fence = null;
+        }
+        // Ensure fence marker is inside the block (at least base+4).
+        if (indent < state.base + 4) {
+          result.push(" ".repeat(state.base + 4) + trimmed);
+        } else {
+          // Normalize fence marker indentation to avoid accidental indented code blocks.
+          result.push(" ".repeat(state.base + 4) + trimmed);
+        }
+        state.hasBody = true;
+        lastLineWasBlankInBlock = false;
+        continue;
+      }
+
       if (isBlank) {
         // Blank lines may appear inside admonitions/tabs (multi-paragraph content).
         // We keep the block open and use the blank line as a potential delimiter:
@@ -151,13 +179,35 @@ function autoFixMaterialBlocks(markdownText) {
       if (state.hasBody && lastLineWasBlankInBlock && indent <= state.base) {
         state = null;
         lastLineWasBlankInBlock = false;
+        fence = null;
         result.push(line);
+        continue;
+      }
+
+      // Inside fenced code blocks: keep original indentation, only ensure it's inside the block.
+      if (fence) {
+        if (indent < state.base + 4) {
+          result.push(" ".repeat(state.base + 4) + content);
+        } else {
+          result.push(line);
+        }
+        state.hasBody = true;
+        lastLineWasBlankInBlock = false;
         continue;
       }
 
       // Otherwise, treat outdented/under-indented lines as missing indentation and fix them.
       if (indent < state.base + 4) {
         result.push(" ".repeat(state.base + 4) + content);
+        state.hasBody = true;
+        lastLineWasBlankInBlock = false;
+        continue;
+      }
+
+      // Avoid accidentally rendering plain text as an indented code block inside admonitions/tabs.
+      // For paragraph-like lines, normalize indentation to exactly base+4.
+      if (!keepIndentRe.test(trimmed) && indent > state.base + 4) {
+        result.push(" ".repeat(state.base + 4) + trimmed);
         state.hasBody = true;
         lastLineWasBlankInBlock = false;
         continue;
@@ -176,17 +226,17 @@ function autoFixMaterialBlocks(markdownText) {
 }
 
 function formatFiles(files) {
-  let changedAny = false;
+  let changedCount = 0;
   for (const file of files) {
     if (!fs.existsSync(file)) continue;
     const before = fs.readFileSync(file, "utf8");
     const after = autoFixMaterialBlocks(before);
     if (after !== before) {
       fs.writeFileSync(file, after, "utf8");
-      changedAny = true;
+      changedCount += 1;
     }
   }
-  return changedAny;
+  return changedCount;
 }
 
 function main() {
@@ -232,7 +282,10 @@ function main() {
     // Run our structural auto-fixes after markdownlint's fixes as well, because
     // some markdownlint fixers may rewrite indentation in ways that break
     // MkDocs Material block syntax.
-    formatFiles(files);
+    const changedCount = formatFiles(files);
+    if (changedCount > 0) {
+      console.log(`[docs-ready] Applied structural fixes to ${changedCount} file(s).`);
+    }
     const lintStatus = runWithStatus(markdownlint.command, [
       ...markdownlint.prefixArgs,
       ...files,
@@ -268,7 +321,10 @@ function main() {
       }
     }
   }
-  formatFiles(allDocs);
+  const changedCount = formatFiles(allDocs);
+  if (changedCount > 0) {
+    console.log(`[docs-ready] Applied structural fixes to ${changedCount} file(s).`);
+  }
   const lintStatus = runWithStatus(markdownlint.command, [
     ...markdownlint.prefixArgs,
     "docs/**/*.md",

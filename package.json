@@ -9,7 +9,9 @@
     "docs:fix": "markdownlint-cli2 \"docs/**/*.md\" --fix",
     "docs:ready": "node scripts/docs-ready.mjs --all",
     "docs:ready:changed": "node scripts/docs-ready.mjs",
-    "docs:ready:all": "node scripts/docs-ready.mjs --all"
+    "docs:ready:all": "node scripts/docs-ready.mjs --all",
+    "docs:format": "node scripts/docs-format.mjs",
+    "docs:format:all": "node scripts/docs-format.mjs --all"
   },
   "keywords": [],
   "author": "",

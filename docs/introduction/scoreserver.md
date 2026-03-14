@@ -6,15 +6,19 @@
 https://arcsysu.terryinc.top/login
 ```
 
-然后需要同学们点击下图所示界面的`使用 Github 登录`按钮（如果你还没有 `github` 账户的话，是时候注册一个啦！）
+然后需要同学们点击下图所示界面的 `使用 Github 登录` 按钮（如果你还没有 `github`
+账户的话，是时候注册一个啦！）
 
 ![showscorelog](../images/scoreserver/scorelogin.jpg)
 
-如果你的浏览器缓存了你的`github`账号登录信息(如果没有缓存，只需要你再登录一下 `github` 账户即可)，你将会看到如下图所示的界面
+如果你的浏览器缓存了你的 `github` 账号登录信息(如果没有缓存，只需要你再登录一下
+`github` 账户即可)，你将会看到如下图所示的界面
 
 ![showscorelog](../images/scoreserver/shouquan.jpg)
 
-请点击`authorize sumuzhe317`进行授权登录即可，然后正常情况下浏览器将会自动跳转到课程界面。请同学们点击左上角的`加入课程`按钮
+请点击 `authorize sumuzhe317`
+进行授权登录即可，然后正常情况下浏览器将会自动跳转到课程界面。请同学们点击左上角的
+`加入课程` 按钮
 
 ![showscorelog](../images/scoreserver/enterclass.jpg)
 

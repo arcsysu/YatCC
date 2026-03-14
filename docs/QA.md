@@ -4,9 +4,10 @@
 
 ## 环境配置
 
-#### 1.WSL 环境下使用 `systemctl`指令报错：`System has not been booted with systemd as init system (PID 1). Can’t operate.`
+#### 1.WSL 环境下使用 `systemctl` 指令报错： `System has not been booted with systemd as init system (PID 1). Can’t operate.`
 
-由于部分 WSL 使用 `SysV init`而非 `systemd`管理服务，解决方法是使用 `service`指令代替 `systemctl`指令。
+由于部分 WSL 使用 `SysV init` 而非 `systemd` 管理服务，解决方法是使用 `service`
+指令代替 `systemctl` 指令。
 
 #### 2.如何更新代码仓库: 请在终端依次输入以下指令
 
@@ -22,7 +23,7 @@ git stash pop # 恢复先前暂时储藏的修改
 
 1. 安装 VSCode 插件 `CodeLLDB`  
    ![codeLLDB](images/QA/codelldb.png)
-2. 在`.vscode/launch.json`中加入以下配置
+2. 在 `.vscode/launch.json` 中加入以下配置
 
 ```json
 {
@@ -35,21 +36,22 @@ git stash pop # 恢复先前暂时储藏的修改
 }
 ```
 
-![launch.json](images/QA/VSClaunch.png) 3. 打上断点，在`测试`插件中对单个测例进行单步调试
-![alt text](images/QA/debug.png)
+![launch.json](images/QA/VSClaunch.png) 3. 打上断点，在 `测试`
+插件中对单个测例进行单步调试 ![alt text](images/QA/debug.png)
 
 ## 实验一
 
 #### 1.在 task1 中存在部分 Loc 要求输出相对路径，部分 Loc 要求输出绝对路径，是否需要针对不同要求编写不同方式的 print_token?
 
-![alt text](images/QA/task1.1_1.png)
-![alt text](images/QA/task1.1_2.png)
+![alt text](images/QA/task1.1_1.png) ![alt text](images/QA/task1.1_2.png)
 答：相对路径与绝对路径的区别并不是 print_token()函数导致的，而是由于 clang 预处理时输出格式不同所导致的（详见 task0-answer 生成的预处理源代码，路径为 build/test/task0/\*），词法规则中对预处理信息的处理可以提供文件路径信息，可以关注预处理信息中的最后一条。
 
 #### 2.预处理文件中没有关于源文件的行号信息，如何识别出词法单元出现在源文件中的位置？是否需要额外编写脚本？
 
 答：关于源文件的行号信息，需要从预处理文件中的预处理信息中获取，无需额外编写脚本  
-例如# 1 "./basic/000_main.sysu.c" 2：其中'#'右边的数字 1 即下一行有效内容出现在对应源文件中的行数（可自行比对预处理后的源文件与标准输出 answer.txt），此后的行号/列号信息需要自行维护  
+例如#
+1 "./basic/000_main.sysu.c"
+2：其中'#'右边的数字 1 即下一行有效内容出现在对应源文件中的行数（可自行比对预处理后的源文件与标准输出 answer.txt），此后的行号/列号信息需要自行维护  
 如图是 003 样例的源文件，预处理文件和答案，起始行并不是 1
 ![alt text](images/QA/task1.2_1.png)
 
@@ -65,7 +67,8 @@ git stash pop # 恢复先前暂时储藏的修改
 答：
 
 1. 预处理信息应选取最后一个地址
-2. 因为在"sylib.h"头文件中，"void \_sysy_starttime..."为第 10 行；预处理信息第九行的意思是下一行的词法单元处于源文件中的行号
+2. 因为在"sylib.h"头文件中，"void
+   \_sysy_starttime..."为第 10 行；预处理信息第九行的意思是下一行的词法单元处于源文件中的行号
 3. 地址后的数字与输出无关，可忽略
 
 ## 实验二
@@ -81,32 +84,52 @@ assignment_expression | expression Comma assignment_expression
 assignment_expression (Comma assignment_expression)*
 ```
 
-但是在 task2 中，需要注意，你的 g4 的文法会影响 `ctx->assignment_expression()` 的返回类型：
+但是在 task2 中，需要注意，你的 g4 的文法会影响 `ctx->assignment_expression()`
+的返回类型：
 
-文法是 `assignment_expression | expression Comma assignment_expression` 时，`ctx->assignment_expression()` 是单个的指针；
+文法是 `assignment_expression | expression Comma assignment_expression` 时，
+`ctx->assignment_expression()` 是单个的指针；
 
-文法是 `assignment_expression (Comma assignment_expression)*` 时，`ctx->assignment_expression()` 是一个 vector ，里面存放一堆指针。
+文法是 `assignment_expression (Comma assignment_expression)*` 时，
+`ctx->assignment_expression()` 是一个 vector，里面存放一堆指针。
 
 怎么回事呢？这是因为助教们的脚本会根据你的文法，在 SYsUParser.h 中自动生成相应的类型。
 
-比如 `assignment_expression (Comma assignment_expression)*` ，因为里面 assignment_expression 的数量是不确定的，所以需要用 vector ，`ctx->assignment_expression()` 便是一个 vector ，与此同时， expression 将会有许多的孩子分支， `auto children = ctx->children;` 之后， `children[0]` 、 `children[2]` 、 `children[4]` ...便对应各个 assignment_expression 节点。
+比如
+`assignment_expression (Comma assignment_expression)*`，因为里面 assignment_expression 的数量是不确定的，所以需要用 vector，
+`ctx->assignment_expression()`
+便是一个 vector，与此同时，expression 将会有许多的孩子分支，
+`auto children = ctx->children;` 之后， `children[0]`、 `children[2]`、
+`children[4]` ...便对应各个 assignment_expression 节点。
 
-另一个例子， `assignment_expression | expression Comma assignment_expression` ，里面 assignment_expression 的数量是确定的1，于是 `ctx->assignment_expression()` 便是单个的指针，与此同时， expression 的孩子分支要么只有一个，要么有三个（跟你写的文法是呼应的）。
+另一个例子，
+`assignment_expression | expression Comma assignment_expression`，里面 assignment_expression 的数量是确定的 1，于是
+`ctx->assignment_expression()`
+便是单个的指针，与此同时，expression 的孩子分支要么只有一个，要么有三个（跟你写的文法是呼应的）。
 
-现在回到标题的问题，为什么一元表达式不能用非递归型的 `(unary_operator)* postfix_expression` 呢？这其实是助教的问题，因为助教在一些已实现的代码里，是按照 `ctx->unary_operator()` 是单个的指针写的代码，但是如果你把文法改成 `(unary_operator)* postfix_expression` ，就会使得 `ctx->unary_operator()` 变成一个 vector 了，于是助教们写的代码会炸。
+现在回到标题的问题，为什么一元表达式不能用非递归型的
+`(unary_operator)* postfix_expression`
+呢？这其实是助教的问题，因为助教在一些已实现的代码里，是按照
+`ctx->unary_operator()` 是单个的指针写的代码，但是如果你把文法改成
+`(unary_operator)* postfix_expression`，就会使得 `ctx->unary_operator()`
+变成一个 vector 了，于是助教们写的代码会炸。
 
-就结果而言，对一元表达式，建议使用“递归”的文法 `unary_expression : postfix_expression | unary_operator unary_expression;`。当然对于其他大多数文法规则，你用“递归”的文法或者“直接”的文法都可以！注意一下上述的“是否是vector”的问题即可。
+就结果而言，对一元表达式，建议使用“递归”的文法
+`unary_expression : postfix_expression | unary_operator unary_expression;`。当然对于其他大多数文法规则，你用“递归”的文法或者“直接”的文法都可以！注意一下上述的“是否是 vector”的问题即可。
 
 #### 2.关于 `children[i]` 与 `ctx->assignment_expression()` 的区别
 
-以文法 `expression : assignment_expression (Comma assignment_expression)* ;` 为例，
+以文法 `expression : assignment_expression (Comma assignment_expression)* ;`
+为例，
 
 ```cpp
 auto children = ctx->children;
 for(int i=0;i<children.size();i+=2)children[i];
 ```
 
-这样取出的偶数位置的 `children[i]` 便对应各个 `assignment_expression` 节点，但需注意类型转换，因为 `children[i]` 还不是 `ast::Assignment_expressionContext*` 类型，照葫芦画瓢可以写出类似的代码：
+这样取出的偶数位置的 `children[i]` 便对应各个 `assignment_expression`
+节点，但需注意类型转换，因为 `children[i]` 还不是
+`ast::Assignment_expressionContext*` 类型，照葫芦画瓢可以写出类似的代码：
 
 ```cpp
 node->rht = self(dynamic_cast<ast::Assignment_expressionContext*>(children[i]));
@@ -114,21 +137,38 @@ node->rht = self(dynamic_cast<ast::Assignment_expressionContext*>(children[i]));
 
 这里稍微介绍一下这个 self 是做什么的：
 
-在task2中，你会用到大量的 `make<???>()` ，这个 make 函数的功能是向系统申请一小块内存空间，然后返回一个指向该实空间的指针，例如 `auto ret = make<CallExpr>();`。
+在 task2 中，你会用到大量的
+`make<???>()`，这个 make 函数的功能是向系统申请一小块内存空间，然后返回一个指向该实空间的指针，例如
+`auto ret = make<CallExpr>();`。
 
-我们的函数诸如 `Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)` ，返回的便是这个 ret 指针，但重点是这个 ret 指针指向了一个实空间，这个实空间正是我们通过调用 `make<???>()` 申请得到的。
+我们的函数诸如
+`Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)`，返回的便是这个 ret 指针，但重点是这个 ret 指针指向了一个实空间，这个实空间正是我们通过调用
+`make<???>()` 申请得到的。
 
-我们用到的许多 self 就是诸如 `Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)` 的函数中的某一种。总之， `self(???)` 返回一个指针，但具有实际价值的，是这个指针指向的实空间。
+我们用到的许多 self 就是诸如
+`Expr* Ast2Asg::operator()(ast::Postfix_expressionContext* ctx)`
+的函数中的某一种。总之， `self(???)`
+返回一个指针，但具有实际价值的，是这个指针指向的实空间。
 
-回归正题，介绍完 `children[i]` ，再来介绍 `ctx->assignment_expression()`。
+回归正题，介绍完 `children[i]`，再来介绍 `ctx->assignment_expression()`。
 
-调用 `auto list=ctx->assignment_expression()` ，返回一个 vector ， list 里面便装着一堆 `assignment_expression`。通过 `for(int i = 0; i < list.size(); i++)list[i];` 可以访问 `expression` 的每一个 `assignment_expression` 孩子。注意我们不需要像 children 那样访问0、2、4、6这样的位置，因为 `ctx->assignment_expression()` 返回一个 vector ，里面只装了 `assignment_expression` ，而不会装有 Comma。
+调用
+`auto list=ctx->assignment_expression()`，返回一个 vector，list 里面便装着一堆
+`assignment_expression`。通过 `for(int i = 0; i < list.size(); i++)list[i];`
+可以访问 `expression` 的每一个 `assignment_expression`
+孩子。注意我们不需要像 children 那样访问 0、2、4、6 这样的位置，因为
+`ctx->assignment_expression()` 返回一个 vector，里面只装了
+`assignment_expression`，而不会装有 Comma。
 
-在编写代码时，需注意 `list[i]` 和 `self(list[i])` 的区别。前文已提到了 `self(???)` 的作用， `self(???)` 实际上会调用我们写的那些函数，返回一个指针，这个指针指向一个 make 出来的实空间。而 `list[i]` 仅是在遍历 ctx 的孩子。我们的 task2 要做的就是让指针们指向正确的 make 出来的实空间，这个实空间往往也具备一些指针成员，指向其他的实空间。这样指来指去，把实空间和指针安排好后，就构建好了 asg 语法图。
+在编写代码时，需注意 `list[i]` 和 `self(list[i])` 的区别。前文已提到了
+`self(???)` 的作用， `self(???)`
+实际上会调用我们写的那些函数，返回一个指针，这个指针指向一个 make 出来的实空间。而
+`list[i]`
+仅是在遍历 ctx 的孩子。我们的 task2 要做的就是让指针们指向正确的 make 出来的实空间，这个实空间往往也具备一些指针成员，指向其他的实空间。这样指来指去，把实空间和指针安排好后，就构建好了 asg 语法图。
 
 #### 3.关于函数定义的若干问题
 
-一种能够减少你的工作量的g4文法如下：
+一种能够减少你的工作量的 g4 文法如下：
 
 ```shell
 parameter_list
@@ -149,7 +189,8 @@ function_definition
 
 为了便于后文你理解“类型”与“限定”，此处稍作提及。
 
-你可能在代码中见过一个叫 `specs` 的变量，是 `SpecQual` 类型。`SpecQual` 类型包含“类型spec”与“是否限定qual”两项内容。
+你可能在代码中见过一个叫 `specs` 的变量，是 `SpecQual` 类型。 `SpecQual`
+类型包含“类型 spec”与“是否限定 qual”两项内容。
 
 下文的函数定义的代码中含有详细的注释解析，可以帮助你理解这部分具有复杂层次的内容，代码仅供参考，同学们也可以有其他实现方式。
 
@@ -158,13 +199,13 @@ FunctionDecl*
 Ast2Asg::operator()(ast::Function_definitionContext* ctx){
   auto ret = make<FunctionDecl>();
   mCurrentFunc = ret;
-  
+
   auto type = make<Type>();
   ret->type = type;
-  
+
   auto sq = self(ctx->declaration_specifiers());
   type->spec = sq.first, type->qual = sq.second;
-  
+
   auto [texp, name] = self(ctx->direct_declarator(), nullptr);//右侧调用的函数为 std::pair<TypeExpr*, std::string> Ast2Asg::operator()(ast::Direct_declaratorContext* ctx, TypeExpr* sub)
 //这里解释一下texp的类型，即TypeExpr*，你可以简单认为他是处理数组定义的，例如对于int a[5][3]，TypeExpr*负责记录这些维度的长度
 //那么texp作为一个指针类型，即TypeExpr*类型，这个指针若非空，是要指向一个实空间的，一个例子便是指向 make<ArrayType>(); 的实空间
@@ -193,7 +234,7 @@ Ast2Asg::operator()(ast::Function_definitionContext* ctx){
 //ret存放函数名name，函数实现body，以及一个参数列表（含有参数名字）
 
 //注：我们不考虑int a[2][4](int b=10,char c[3]);这种带默认值的
-  
+
   Symtbl localDecls(self);
 
   if(auto plist = ctx->parameter_list()){
@@ -220,7 +261,7 @@ Ast2Asg::operator()(ast::Function_definitionContext* ctx){
       ret->body = self(ctx->compound_statement());
     }
   }
-  
+
   return ret;
 }
 ```

@@ -20,18 +20,24 @@
 - **传统方法**：编写 LLVM Pass，实现经典编译优化算法
 - **大语言模型方法**：编写代码，调用大语言模型优化中间代码
 
-实验的输入与输出均为 LLVM IR，要求同学们在保证代码正确性的基础上面向给定测试样例进行代码优化。
+实验的输入与输出均为 LLVM
+IR，要求同学们在保证代码正确性的基础上面向给定测试样例进行代码优化。
 
 !!! danger "不要面向测例做特判"
 
     一旦通过文件名、固定输入模式或样例特征去做针对性优化，本质上就偏离了通用优化的目标，也会直接触碰实验规则边界。
     你的优化应该建立在 IR 结构与分析结果上，而不是样例身份上。
 
-在 LLVM 中，中端优化函数以 Pass 的形式存在，其作用是对输入的 LLVM IR 进行分析与变换，并输出变换后的 LLVM IR。每个优化由一个或多个 Transform Pass 实现，不同优化的 pass 之间相互独立。本次实验没有标准答案，同学们可以自由发挥，借助任何可能的优化方法提升程序的运行效率，并通过测评系统测评。
+在 LLVM 中，中端优化函数以 Pass 的形式存在，其作用是对输入的 LLVM
+IR 进行分析与变换，并输出变换后的 LLVM IR。每个优化由一个或多个 Transform
+Pass 实现，不同优化的 pass 之间相互独立。本次实验没有标准答案，同学们可以自由发挥，借助任何可能的优化方法提升程序的运行效率，并通过测评系统测评。
 
 ## 评分标准
 
-本实验需要分别使用传统方法和大语言模型方法实现，两部分测例独立，前者可在 `YatCC/test/cases/performance/` 目录下查看，后者则在 `YatCC/test/cases/llm-performance` 目录下查看。两部分实验测例独立评分、赋分，最后加权求和作为实验四的总分。
+本实验需要分别使用传统方法和大语言模型方法实现，两部分测例独立，前者可在
+`YatCC/test/cases/performance/` 目录下查看，后者则在
+`YatCC/test/cases/llm-performance`
+目录下查看。两部分实验测例独立评分、赋分，最后加权求和作为实验四的总分。
 
 对于每种方法，评分均考虑两个方面——**正确性**与**程序运行性能**，比较对象为 clang 开启 O2 优化后生成的程序（下称**标准程序**）以及：
 
@@ -47,34 +53,44 @@
 本次实验不允许出现以下行为，**若出现以下行为将视为作弊与抄袭**：
 
 - 通过识别文件名、输入、特定代码段等，面向测例进行优化
-- 直接调用 LLVM 内置的 **Transform Pass**，或者直接复制 LLVM 提供的 Transform Pass 代码进行优化
+- 直接调用 LLVM 内置的 **Transform Pass**，或者直接复制 LLVM 提供的 Transform
+  Pass 代码进行优化
 
 我们允许以下行为：
 
 - 在理解 LLVM 优化源代码的基础上将其简化移植
-- 使用 LLVM 提供的 **Analysis Pass** 获取优化所需的信息（Transform Pass 和 Analysis Pass 的区别是前者执行后会修改 LLVM IR，而后者仅返回信息不改变 IR）
+- 使用 LLVM 提供的 **Analysis Pass** 获取优化所需的信息（Transform
+  Pass 和 Analysis Pass 的区别是前者执行后会修改 LLVM
+  IR，而后者仅返回信息不改变 IR）
 
 !!! note "先做可解释的优化，再追排行榜"
 
-    实验四最稳妥的路线，是先实现自己能说清楚正确性的优化，再逐步观察收益。
-    能解释为什么正确、为什么有效，通常比堆很多来源不明的小技巧更重要。
+    实验四最稳妥 ahg 的路线，是先实现自己能说清楚正确性的优化，再逐步观察收益。能解释为什么正确、为什么有效，通常比堆很多来源不明的小技巧更重要。
 
 我们鼓励同学们：
 
 - 实现实验文档/测例中未涉及到的优化方法，并提供相应测例，并在实验报告中说明。我们将在分析优化效果与实现难度后酌情加分。
-- 积极探索将 LLM 融入编译优化的方法，通过调用 LLM 来获得期望的编译优化信息辅助优化决策，实现 **LLM for Compiler**
+- 积极探索将 LLM 融入编译优化的方法，通过调用 LLM 来获得期望的编译优化信息辅助优化决策，实现
+  **LLM for Compiler**
 
 ## 如何调试
 
 ### 输出调试
 
-同学们可以使用本项目提供的[调试功能](../introduction/howtouse.md#debug)对单个测例进行调试：
+同学们可以使用本项目提供的 [调试功能](../introduction/howtouse.md#debug)
+对单个测例进行调试：
 
 ![实验四输出调试](../images/task4/task4_testing2.jpg)
 
-`task4/xxx/xxx.sysu.c` 系列测试仅查看优化器代码能否通过编译、正常优化 LLVM IR 以及输出优化后的 LLVM IR，而 `test4/xxx/xxx.sysu.c` 系列测试在前者的基础上，还会对测例评分，方便查看优化效果（具体差别可以查看`YatCC/test/task4/CMakeLists.txt`）。
+`task4/xxx/xxx.sysu.c` 系列测试仅查看优化器代码能否通过编译、正常优化 LLVM
+IR 以及输出优化后的 LLVM IR，而 `test4/xxx/xxx.sysu.c`
+系列测试在前者的基础上，还会对测例评分，方便查看优化效果（具体差别可以查看
+`YatCC/test/task4/CMakeLists.txt`）。
 
-前者的输出可在 VSCode 的 `OUTPUT`（输出，是 CTest 的输出）和 `TEST RESULTS`（测试结果，一般为程序输出到标准错误流 `stderr` 的内容）中直接查看。后者的输出可以在`/YatCC/build/test/task4/Testing/Temporary/LastTest.log`文件中查看。
+前者的输出可在 VSCode 的 `OUTPUT`（输出，是 CTest 的输出）和
+`TEST RESULTS`（测试结果，一般为程序输出到标准错误流 `stderr`
+的内容）中直接查看。后者的输出可以在
+`/YatCC/build/test/task4/Testing/Temporary/LastTest.log` 文件中查看。
 
 !!! tip "先看是否正确，再看是否变快"
 
@@ -85,7 +101,9 @@
 
 ---
 
-你也可以手动调用优化器程序，对特定样例进性测试。二进制程序存放在`/YatCC/build/task/4/`目录下，传统方法和大语言模型方法生成的二进制程序分别为 `task4-classic` 和 `task4-llm`。
+你也可以手动调用优化器程序，对特定样例进性测试。二进制程序存放在
+`/YatCC/build/task/4/` 目录下，传统方法和大语言模型方法生成的二进制程序分别为
+`task4-classic` 和 `task4-llm`。
 
 手动调用前，应该先构建一遍 task4 目标，再像下面这样调用：
 
@@ -101,13 +119,14 @@ task4=task4-classic
 ${task4_out}/${task4} ${test3_out}/${case}/answer.ll ${output_dir}/output.ll > ${output_dir}/output.log
 ```
 
-最终输出结果将重定向到`${output_dir}/output.log`中。
+最终输出结果将重定向到 `${output_dir}/output.log` 中。
 
 ![](../images/task4/task4_output.png)
 
 ### 修改测例
 
-在实验时，可能需要修改测例以验证优化是否可行。由于缓存机制，需要删除整个`/YatCC/build`文件夹后，按下面的方式重新构建项目：
+在实验时，可能需要修改测例以验证优化是否可行。由于缓存机制，需要删除整个
+`/YatCC/build` 文件夹后，按下面的方式重新构建项目：
 
 ![](../images/task4/build_all_projects.png)
 

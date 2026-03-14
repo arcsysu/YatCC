@@ -18,20 +18,25 @@ common/
 
 ## Obj
 
-`Obj` 类及相关的结构是一个为内存管理和类型系统设计的框架。这个框架的设计目的是为了在 ASG 构建和操作过程中，提供一个灵活、高效的内存管理和类型标注体系。
+`Obj`
+类及相关的结构是一个为内存管理和类型系统设计的框架。这个框架的设计目的是为了在 ASG 构建和操作过程中，提供一个灵活、高效的内存管理和类型标注体系。
 
 ### Obj 类
 
-`Obj` 类是所有对象的基类，它定义了一套通用的接口和一些基本的属性。这个设计允许在 ASG 中不同种类的节点之间进行通用操作，同时提供了标准的内存管理和类型识别机制。
+`Obj`
+类是所有对象的基类，它定义了一套通用的接口和一些基本的属性。这个设计允许在 ASG 中不同种类的节点之间进行通用操作，同时提供了标准的内存管理和类型识别机制。
 
 主要特性和成员
 
-- `any`：这是一个 `void*` 指针，可以用来存储任意类型的数据。这提供了一种灵活的方式，让不同的 ASG 节点可以附加额外的信息或状态。
-- `__next__`：这是一个指向下一个`Obj`对象的指针。这样`Obj`对象形成一个链表结构，方便管理所有创建的对象，特别是垃圾回收机制。
+- `any`：这是一个 `void*`
+  指针，可以用来存储任意类型的数据。这提供了一种灵活的方式，让不同的 ASG 节点可以附加额外的信息或状态。
+- `__next__`：这是一个指向下一个 `Obj` 对象的指针。这样 `Obj`
+  对象形成一个链表结构，方便管理所有创建的对象，特别是垃圾回收机制。
 
 ### Obj::Mgr 类
 
-`Obj::Mgr` 类是一个对象管理器，负责管理所有通过它创建的 `Obj` 派生对象的生命周期。它使用标记-清除算法来实现垃圾回收，防止内存泄漏。
+`Obj::Mgr` 类是一个对象管理器，负责管理所有通过它创建的 `Obj`
+派生对象的生命周期。它使用标记-清除算法来实现垃圾回收，防止内存泄漏。
 
 垃圾回收机制涉及以下两个成员：
 
@@ -40,54 +45,70 @@ common/
 
 ### Obj::Walked 类
 
-`Obj::Walked` 是一个辅助类，用于检测和防止在对象图遍历过程中发生的循环引用问题。通过在遍历开始时构造`Obj::Walked` 实例，并在遍历结束时自动析构，它可以暂时修改对象的状态来标记已访问的对象，从而避免无限循环。例如在对 ASG 进行深度优先搜索（DFS）等操作时，`Obj::Walked` 可以确保每个节点只被访问一次，即使图中存在循环引用。
+`Obj::Walked`
+是一个辅助类，用于检测和防止在对象图遍历过程中发生的循环引用问题。通过在遍历开始时构造
+`Obj::Walked`
+实例，并在遍历结束时自动析构，它可以暂时修改对象的状态来标记已访问的对象，从而避免无限循环。例如在对 ASG 进行深度优先搜索（DFS）等操作时，
+`Obj::Walked` 可以确保每个节点只被访问一次，即使图中存在循环引用。
 
 ---
 
-总的来说，在 ASG 构建和操作过程中，所有的节点都继承自 `Obj` 类，确保了类型的统一和内存的可管理性。`Obj::Mgr`实例作为对象的容器和管理者，控制着所有对象的生命周期，并提供垃圾回收机制。在遍历或分析`ASG`时，`Obj::Walked` 用于保护遍历算法不会因循环引用而陷入死循环。
+总的来说，在 ASG 构建和操作过程中，所有的节点都继承自 `Obj`
+类，确保了类型的统一和内存的可管理性。 `Obj::Mgr`
+实例作为对象的容器和管理者，控制着所有对象的生命周期，并提供垃圾回收机制。在遍历或分析
+`ASG` 时， `Obj::Walked` 用于保护遍历算法不会因循环引用而陷入死循环。
 
-感兴趣的同学还可以看看这篇由本实验的总工程师[顾宇浩](https://yhgu2000.github.io/)师兄写的[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)，来了解更多内容。
+感兴趣的同学还可以看看这篇由本实验的总工程师
+[顾宇浩](https://yhgu2000.github.io/) 师兄写的
+[博客](https://yhgu2000.github.io/posts/%E4%B8%AD%E5%B1%B1%E5%A4%A7%E5%AD%A6SYsUlang%E5%AE%9E%E9%AA%8C%E6%94%BB%E7%95%A5/)，来了解更多内容。
 
 ## asg
 
-`asg` 命名空间中定义了一系列类和函数，它们构成了将 AST 转换为抽象语法图 ASG 以及将 ASG 转为 JSON 的基础。ASG 是源代码抽象语法树 AST 的进一步抽象，旨在提供更丰富的语义表示，以便进行类型检查、优化等编译阶段的处理。以下是这部分代码的详细介绍：
+`asg`
+命名空间中定义了一系列类和函数，它们构成了将 AST 转换为抽象语法图 ASG 以及将 ASG 转为 JSON 的基础。ASG 是源代码抽象语法树 AST 的进一步抽象，旨在提供更丰富的语义表示，以便进行类型检查、优化等编译阶段的处理。以下是这部分代码的详细介绍：
 
 ### 核心类
 
 1. `TranslationUnit` 类:
-
    - 代表整个程序或一个编译单元，是 ASG 的根节点。
    - 包含多个 `Decl` 类型的成员，代表在全局范围内声明的变量和函数。
 
 2. `Decl` 类:
-
    - 是声明的基类，声明包括变量声明和函数声明等。
-   - 具体的声明类由`Decl`类派生而来，例如 `VarDecl` 和 `FunctionDecl`等。
+   - 具体的声明类由 `Decl` 类派生而来，例如 `VarDecl` 和 `FunctionDecl` 等。
 
 3. `Expr` 类:
-
    - 是表达式的基类，表达式包括字面量、二元运算、函数调用等。
-   - 具体的表达式类由`Expr`类派生而来，例如 `IntegerLiteral`、`BinaryExpr` 和 `CallExpr`等。
+   - 具体的表达式类由 `Expr` 类派生而来，例如 `IntegerLiteral`、 `BinaryExpr` 和
+     `CallExpr` 等。
 
 4. `Stmt` 类:
-
    - 是语句的基类，语句包括表达式语句和复合语句等。
-   - 具体的语句类由`Stmt`类派生而来，例如 `ExprStmt` 和 `CompoundStmt`等。
+   - 具体的语句类由 `Stmt` 类派生而来，例如 `ExprStmt` 和 `CompoundStmt` 等。
 
 5. `Type` 类和 `TypeExpr` 类:
-
    - 这两者都用于表示节点的类型信息，包括基本类型和复合类型。
    - `TypeExpr` 类用于更复杂的类型表达，如数组和函数类型。
 
 ### 类之间的关系
 
-- 从属关系：`TranslationUnit` 作为 ASG 的根节点，包含一系列的 `Decl` 实例，如 `VarDecl` 和 `FunctionDecl`，这些`Decl`实例代表全局声明的变量和函数。`Decl`实例中可能会包含对表达式的引用，例如函数返回类型或者变量初始化表达式，从而关联到 `Expr` 类及其派生类。
-- 包含关系：`FunctionDecl` 类会包含 `Stmt` 类的实例，特别是复合语句 `CompoundStmt`以表示函数体。`CompoundStmt` 再包含更多的 `Stmt` 实例，形成一个语句树，这些语句可能是表达式语句 `ExprStmt`，或者是其他复合语句，形成层次结构。
-- 引用关系：表达式类（`Expr` 类及其派生类）可能会（通过 `DeclRefExpr` 类）引用声明类，表示变量的使用或函数的调用。同时，表达式之间也会形成树状结构，如 `BinaryExpr` 的左右子表达式。
+- 从属关系： `TranslationUnit` 作为 ASG 的根节点，包含一系列的 `Decl` 实例，如
+  `VarDecl` 和 `FunctionDecl`，这些 `Decl` 实例代表全局声明的变量和函数。 `Decl`
+  实例中可能会包含对表达式的引用，例如函数返回类型或者变量初始化表达式，从而关联到
+  `Expr` 类及其派生类。
+- 包含关系： `FunctionDecl` 类会包含 `Stmt` 类的实例，特别是复合语句
+  `CompoundStmt` 以表示函数体。 `CompoundStmt` 再包含更多的 `Stmt`
+  实例，形成一个语句树，这些语句可能是表达式语句
+  `ExprStmt`，或者是其他复合语句，形成层次结构。
+- 引用关系：表达式类（ `Expr` 类及其派生类）可能会（通过 `DeclRefExpr`
+  类）引用声明类，表示变量的使用或函数的调用。同时，表达式之间也会形成树状结构，如
+  `BinaryExpr` 的左右子表达式。
 
 ## Typing
 
-`Typing` 类及其相关函数用来在 ASG 中进行类型推导和检查。`Typing` 类通过遍历 ASG 节点并分析其语义，填充或确认节点的类型信息，以便于后续的代码生成或其他分析阶段使用。接下来是对 `Typing` 类的详细介绍。
+`Typing` 类及其相关函数用来在 ASG 中进行类型推导和检查。 `Typing`
+类通过遍历 ASG 节点并分析其语义，填充或确认节点的类型信息，以便于后续的代码生成或其他分析阶段使用。接下来是对
+`Typing` 类的详细介绍。
 
 ### 主要职责
 
@@ -109,12 +130,16 @@ common/
 - `operator()(Stmt* obj)`：对语句进行类型处理，确保语句中使用的表达式类型正确。
 - `operator()(Decl* obj)`：对声明进行类型推导和检查，包括变量声明和函数声明。
 - `ensure_rvalue(Expr* exp)`：确保表达式为右值，如果需要，进行左值到右值的转换。
-- `promote_integer(Expr* exp, Type::Spec to = Type::Spec::kInt)`：进行整数提升，将小于 `int` 类型的整数类型提升为 `int` 或更大的整数类型。
+- `promote_integer(Expr* exp, Type::Spec to = Type::Spec::kInt)`：进行整数提升，将小于
+  `int` 类型的整数类型提升为 `int` 或更大的整数类型。
 - `assignment_cast(Expr* lft, Expr* rht)`：对赋值操作的右侧进行类型转换，确保与左侧类型兼容。
 
 ### 类型推导
 
-在处理表达式时，`Typing` 类会根据表达式的类型进行分派，调用对应的处理函数。例如，对于整数字面量 `IntegerLiteral`，它会确定字面量的类型，判断是用 `int` 表示就够了，还是需要如 `long long`这样更大的类型。
+在处理表达式时， `Typing`
+类会根据表达式的类型进行分派，调用对应的处理函数。例如，对于整数字面量
+`IntegerLiteral`，它会确定字面量的类型，判断是用 `int` 表示就够了，还是需要如
+`long long` 这样更大的类型。
 
 ```cpp
 Expr* Typing::operator()(IntegerLiteral* obj) {
@@ -161,17 +186,22 @@ int a = 1;
 int b = a;
 ```
 
-第二行生成 ASG 时，等式右侧的`a`要首先套一层`DeclRefExpr`，表示对已声明变量的引用，再套一层`kLValueToRValue`类型的`ImplicitCastExpr`，表示将左值转换为右值（`a`这个变量名本身是一个左值，表示地址，我们这里需要`a`的值）。
+第二行生成 ASG 时，等式右侧的 `a` 要首先套一层
+`DeclRefExpr`，表示对已声明变量的引用，再套一层 `kLValueToRValue` 类型的
+`ImplicitCastExpr`，表示将左值转换为右值（ `a`
+这个变量名本身是一个左值，表示地址，我们这里需要 `a` 的值）。
 
 ---
 
-另一个`Typing`类处理的细节是，对于空初始化列表：
+另一个 `Typing` 类处理的细节是，对于空初始化列表：
 
 ```cpp
 int a[4][2] = {};
 ```
 
-右侧本来是`list`为空的`InitListExpr`，`Typing`类会将其转换为一个`ImplicitInitExpr`。但是最终打印为 JSON 时，仍然会打印为`InitListExpr`，只是没有`inner`：
+右侧本来是 `list` 为空的 `InitListExpr`， `Typing` 类会将其转换为一个
+`ImplicitInitExpr`。但是最终打印为 JSON 时，仍然会打印为
+`InitListExpr`，只是没有 `inner`：
 
 ```json
 {
@@ -235,25 +265,33 @@ int b[4][2] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 ---
 
-这些方法使得 `Typing` 类可以灵活地处理各种类型相关的语义规则，包括基本的类型推导、类型兼容性检查和必要的类型转换。通过将这些功能集中在 `Typing` 类中，代码的其余部分可以在不直接处理复杂类型规则的情况下，进行语义分析和代码生成。
+这些方法使得 `Typing`
+类可以灵活地处理各种类型相关的语义规则，包括基本的类型推导、类型兼容性检查和必要的类型转换。通过将这些功能集中在
+`Typing`
+类中，代码的其余部分可以在不直接处理复杂类型规则的情况下，进行语义分析和代码生成。
 
-如果同学们想要了解更多关于本实验类型系统的设计，可以看看这篇文章——[类型、类型检查与推导](https://github.com/arcsysu/YatCC/blob/main/docs/gyh-manual/%E7%B1%BB%E5%9E%8B%E3%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E4%B8%8E%E6%8E%A8%E5%AF%BC.md)
+如果同学们想要了解更多关于本实验类型系统的设计，可以看看这篇文章——
+[类型、类型检查与推导](https://github.com/arcsysu/YatCC/blob/main/docs/gyh-manual/%E7%B1%BB%E5%9E%8B%E3%80%81%E7%B1%BB%E5%9E%8B%E6%A3%80%E6%9F%A5%E4%B8%8E%E6%8E%A8%E5%AF%BC.md)
 
-[这个路径](https://github.com/arcsysu/YatCC/tree/main/docs/gyh-manual)下的其他文章也很值得一读，同学们会发现它们都深入到这个实验的底层设计理念，显得相当硬核，但相信它们会给同学们做实验时带来启发。不过需要注意的是，其中的一些信息可能已经过时。
+[这个路径](https://github.com/arcsysu/YatCC/tree/main/docs/gyh-manual)
+下的其他文章也很值得一读，同学们会发现它们都深入到这个实验的底层设计理念，显得相当硬核，但相信它们会给同学们做实验时带来启发。不过需要注意的是，其中的一些信息可能已经过时。
 
 ## Asg2Json
 
-`Asg2Json.cpp` 和 `Asg2Json.hpp` 定义了一个 `Asg2Json` 类，其作用是是将抽象语法图 ASG 转换为 JSON 格式的表示。这样的转换使得 ASG 的结构可以以文本形式展示，便于调试、可视化和进一步的处理。
+`Asg2Json.cpp` 和 `Asg2Json.hpp` 定义了一个 `Asg2Json`
+类，其作用是是将抽象语法图 ASG 转换为 JSON 格式的表示。这样的转换使得 ASG 的结构可以以文本形式展示，便于调试、可视化和进一步的处理。
 
 ### 主要职责
 
-1. 进行转换：提供将 ASG 中不同节点（如声明、表达式、语句等）转换为 `json::Object` 对象的逻辑。
+1. 进行转换：提供将 ASG 中不同节点（如声明、表达式、语句等）转换为
+   `json::Object` 对象的逻辑。
 2. 输出格式化：生成的 JSON 格式化输出，使其易于阅读和理解。
 3. 递归处理：能够递归处理 ASG 中的复杂结构，如函数内部的语句和表达式。
 
 ### operator() 重载
 
-`Asg2Json` 类为 ASG 中的各种节点类型提供了 `operator()` 的重载，每个重载负责处理一种特定类型的节点，并将其转换为`json::Object`对象。
+`Asg2Json` 类为 ASG 中的各种节点类型提供了 `operator()`
+的重载，每个重载负责处理一种特定类型的节点，并将其转换为 `json::Object` 对象。
 
 - `json::Object operator()(TranslationUnit* tu)`：用于处理整个翻译单元，作为转换的入口点。
 
@@ -261,19 +299,25 @@ int b[4][2] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 - `json::Object operator()(Stmt* obj)`：用于处理语句，它会根据具体的语句类型调用相应的处理函数。
 
-- `json::Object operator()(Decl* obj)` 用于处理声明。它会根据具体的声明类型（如变量声明或函数声明）调用相应的处理函数。
+- `json::Object operator()(Decl* obj)`
+  用于处理声明。它会根据具体的声明类型（如变量声明或函数声明）调用相应的处理函数。
 
-每种具体的表达式和语句类型（如 `IntegerLiteral`, `BinaryExpr`, `CompoundStmt` 等）都有对应的处理方法，这些方法生成代表该节点的`json::Object`对象，并递归地处理节点的子节点（如果有）。
+每种具体的表达式和语句类型（如 `IntegerLiteral` , `BinaryExpr` , `CompoundStmt`
+等）都有对应的处理方法，这些方法生成代表该节点的 `json::Object`
+对象，并递归地处理节点的子节点（如果有）。
 
 ## Ast2Asg 类
 
 ### 类定义
 
-`Ast2Asg` 类是 ANTLR 代码框架中类，定义在`antlr/Ast2Asg.hpp`中，负责将由 ANTLR 解析器生成的 AST 转换为更方便处理的 ASG 形式。Bison 框架中，也有相同作用的东西，不过没有封装为一个类，都定义在了命名空间`par`中，可以查看`/bison/par.hpp`文件。
+`Ast2Asg` 类是 ANTLR 代码框架中类，定义在 `antlr/Ast2Asg.hpp`
+中，负责将由 ANTLR 解析器生成的 AST 转换为更方便处理的 ASG 形式。Bison 框架中，也有相同作用的东西，不过没有封装为一个类，都定义在了命名空间
+`par` 中，可以查看 `/bison/par.hpp` 文件。
 
-整体上，`Ast2Asg.cpp` 中定义的 `Ast2Asg` 类通过这些方法实现了从 `ANTLR` 的 AST 到 ASG 的转换，涵盖了编程语言的主要构造：表达式、语句、声明和函数定义。转换过程中，它还处理了类型信息和作用域信息，为后续的语义分析和代码生成提供了基础。
+整体上， `Ast2Asg.cpp` 中定义的 `Ast2Asg` 类通过这些方法实现了从 `ANTLR`
+的 AST 到 ASG 的转换，涵盖了编程语言的主要构造：表达式、语句、声明和函数定义。转换过程中，它还处理了类型信息和作用域信息，为后续的语义分析和代码生成提供了基础。
 
-接下来以`antlr/Ast2Asg.hpp`中的定义为例，介绍 `Ast2Asg` 类的主要成员和方法：
+接下来以 `antlr/Ast2Asg.hpp` 中的定义为例，介绍 `Ast2Asg` 类的主要成员和方法：
 
 ```cpp
 class Ast2Asg
@@ -308,20 +352,25 @@ private:
 - `operator()` 方法被重载多次，每个重载对应处理 AST 中不同节点类型的转换逻辑。
 - `SpecQual` 是一个类型别名，用于表示变量或函数的类型和限定符。
 - `Symtbl` 结构是一个符号表，用于在转换过程中管理作用域内的符号信息。
-- `mSymtbl` 成员指向当前的符号表，`mCurrentFunc` 指向当前正在处理的函数声明，以便在处理表达式时可以访问函数的上下文信息。
+- `mSymtbl` 成员指向当前的符号表， `mCurrentFunc`
+  指向当前正在处理的函数声明，以便在处理表达式时可以访问函数的上下文信息。
 - `make<T>()` 模板函数用于通过对象管理器创建新的 AST 节点对象。
 
-`Ast2Asg` 类的方法主要负责将 AST 中的每个节点转换为 ASG 的对应表示。包括但不限于：
+`Ast2Asg`
+类的方法主要负责将 AST 中的每个节点转换为 ASG 的对应表示。包括但不限于：
 
-- 处理整个编译单元（`TranslationUnit`）。
-- 转换类型说明符（`DeclarationSpecifiersContext`）和声明符（`DeclaratorContext`、`DirectDeclaratorContext`）。
-- 转换各种表达式（如`AssignmentExpressionContext`、`AdditiveExpressionContext`等）。
-- 转换语句（`StatementContext`、`CompoundStatementContext`等）。
-- 转换声明和函数定义（`DeclarationContext`、`FunctionDefinitionContext`等）。
+- 处理整个编译单元（ `TranslationUnit`）。
+- 转换类型说明符（ `DeclarationSpecifiersContext`）和声明符（
+  `DeclaratorContext`、 `DirectDeclaratorContext`）。
+- 转换各种表达式（如 `AssignmentExpressionContext`、 `AdditiveExpressionContext`
+  等）。
+- 转换语句（ `StatementContext`、 `CompoundStatementContext` 等）。
+- 转换声明和函数定义（ `DeclarationContext`、 `FunctionDefinitionContext` 等）。
 
 ### 成员函数
 
-下面这个函数负责处理整个编译单元（通常是一个文件），它接收 ANTLR 生成的 `TranslationUnitContext` 对象作为参数，这个对象代表了整个文件的 AST 根节点。
+下面这个函数负责处理整个编译单元（通常是一个文件），它接收 ANTLR 生成的
+`TranslationUnitContext` 对象作为参数，这个对象代表了整个文件的 AST 根节点。
 
 ```cpp
 TranslationUnit*
@@ -358,12 +407,16 @@ Ast2Asg::operator()(ast::TranslationUnitContext* ctx)
 ```
 
 1. 首先，它创建了一个 `asg::TranslationUnit` 对象，这对应 ASG 的根节点。
-2. 然后，通过遍历 AST 中的所有外部声明（`externalDeclaration`），将它们转换为 ASG 中的声明和函数定义，并添加到 `asg::TranslationUnit` 的声明列表中。
+2. 然后，通过遍历 AST 中的所有外部声明（
+   `externalDeclaration`），将它们转换为 ASG 中的声明和函数定义，并添加到
+   `asg::TranslationUnit` 的声明列表中。
 3. 如果遇到函数定义，还会将函数名添加到当前作用域的符号表中。
 
 ---
 
-下面这个函数处理变量或函数的类型说明符和类型限定符。类型说明符（Specifier），用于指定变量或函数的基本类型或存储类别，例如`int`、`float`、`static`等。类型限定符（Qualifier），用于修饰类型的属性，例如 `const` 或 `volatile`等。
+下面这个函数处理变量或函数的类型说明符和类型限定符。类型说明符（Specifier），用于指定变量或函数的基本类型或存储类别，例如
+`int`、 `float`、 `static` 等。类型限定符（Qualifier），用于修饰类型的属性，例如
+`const` 或 `volatile` 等。
 
 ```cpp
 Ast2Asg::SpecQual
@@ -391,7 +444,8 @@ Ast2Asg::operator()(ast::DeclarationSpecifiersContext* ctx)
 }
 ```
 
-它遍历 AST 节点中的所有类型说明符，确定变量或函数的类型，并返回一个包含类型说明符和类型限定符的 `SpecQual` 对象。
+它遍历 AST 节点中的所有类型说明符，确定变量或函数的类型，并返回一个包含类型说明符和类型限定符的
+`SpecQual` 对象。
 
 ---
 
@@ -431,7 +485,8 @@ operator()(ast::FunctionDefinitionContext* ctx)
 
 ### Symtbl
 
-在`/bison/par.hpp`或`/antlr/Ast2Asg.cpp`中，定义了一个`Symtbl`结构体。以后者中的定义为例：
+在 `/bison/par.hpp` 或 `/antlr/Ast2Asg.cpp` 中，定义了一个 `Symtbl`
+结构体。以后者中的定义为例：
 
 ```cpp
 struct Ast2Asg::Symtbl : public std::unordered_map<std::string, Decl*>
@@ -463,13 +518,20 @@ Ast2Asg::Symtbl::resolve(const std::string& name)
 
 ```
 
-`Symtbl` 用于实现符号表，它继承自 `std::unordered_map<std::string, Decl*>`，键是符号名称，值是指向声明节点的指针，由于保存当前作用域内所有声明的符号及其对应的节点之间的映射。
+`Symtbl` 用于实现符号表，它继承自
+`std::unordered_map<std::string, Decl*>`，键是符号名称，值是指向声明节点的指针，由于保存当前作用域内所有声明的符号及其对应的节点之间的映射。
 
-`Symtbl`持有外层 `Ast2Asg` 对象的引用 `m`，以便于访问其成员。`mPrev` 是指向上一个符号表的指针，用于实现作用域的嵌套。
+`Symtbl` 持有外层 `Ast2Asg` 对象的引用 `m`，以便于访问其成员。 `mPrev`
+是指向上一个符号表的指针，用于实现作用域的嵌套。
 
-`Symtbl`的构造函数，接收一个 `Ast2Asg` 对象的引用`m`，让自己的`mPrev`指向旧的符号表`m.mSymtbl`，然后将自身（一个新的符号表实例）设置为当前符号表`m.Symbtl=this`。析构函数中，则将符号表恢复到上一个符号表。
+`Symtbl` 的构造函数，接收一个 `Ast2Asg` 对象的引用 `m`，让自己的 `mPrev`
+指向旧的符号表 `m.mSymtbl`，然后将自身（一个新的符号表实例）设置为当前符号表
+`m.Symbtl=this`。析构函数中，则将符号表恢复到上一个符号表。
 
-`Symtbl::resolve()`方法用于在符号表中查找给定名称的符号的声明，如果当前作用域中没有找到，会递归地前往上一个作用域中查找。其接收一个`const std::string& name`，表示需要查找的符号名称；返回指向`Decl*`类型的指针，表示找到的符号的声明。如果给定名称的符号在任何一个作用域中都没有找到，则会触发一个断言错误。
+`Symtbl::resolve()`
+方法用于在符号表中查找给定名称的符号的声明，如果当前作用域中没有找到，会递归地前往上一个作用域中查找。其接收一个
+`const std::string& name`，表示需要查找的符号名称；返回指向 `Decl*`
+类型的指针，表示找到的符号的声明。如果给定名称的符号在任何一个作用域中都没有找到，则会触发一个断言错误。
 
 ## 类型的转换
 
@@ -512,7 +574,8 @@ int a[2] = {0, 1};
 
   ![alt text](../images/bison/asg.png)
 
-  相比于 AST ，我们在`declReference_1`中直接存储指向变量声明的那个语义结点指针而不是变量名，这将会给后面的分析和变换的代码编写带来极大的便利。
+  相比于 AST，我们在 `declReference_1`
+  中直接存储指向变量声明的那个语义结点指针而不是变量名，这将会给后面的分析和变换的代码编写带来极大的便利。
 
 ### 总结
 

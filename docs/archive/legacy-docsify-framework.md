@@ -5,7 +5,7 @@
 ## 备份范围
 
 - 旧入口页：docs/index.html
-- 旧侧边栏：docs/_sidebar.md
+- 旧侧边栏：docs/\_sidebar.md
 - 旧项目说明：docs/README.md
 
 ## 旧入口页：docs/index.html
@@ -79,7 +79,7 @@
 </html>
 ```
 
-## 旧侧边栏：docs/_sidebar.md
+## 旧侧边栏：docs/\_sidebar.md
 
 ```md
 <!-- _sidebar.md -->
