@@ -122,8 +122,8 @@ set(TASK4_REVIVE OFF)
 
 ![packing_1](../images/howtouse/packing_1.png)
 
-2. 使用打包脚本将`/YatCC/task/1`文件夹打包，打包后的文件位于`/YatCC/build/task/task1.0123456789-某某某.tar.xz`。
+1. 使用打包脚本将`/YatCC/task/1`文件夹打包，打包后的文件位于`/YatCC/build/task/task1.0123456789-某某某.tar.xz`。
 
 ![packing_1](../images/howtouse/packing_2.png)
 
-3. 将打包后的文件夹下载至本地（在对应文件夹点击右键，选择“Download”下载文件），提交到超算习堂作业提交处。建议同学们在提交前将打包文件解压一遍，查看其中是否包含实验报告。
+1. 将打包后的文件夹下载至本地（在对应文件夹点击右键，选择“Download”下载文件），提交到超算习堂作业提交处。建议同学们在提交前将打包文件解压一遍，查看其中是否包含实验报告。

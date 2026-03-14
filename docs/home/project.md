@@ -3,7 +3,7 @@
 
 中山大学[编译课程](https://yatcc-ai.com)实验。
 
-YatCC 是中山大学编译的实验框架。基于 YatCC 编译实践体系，中山大学[计算机学院](https://cse.sysu.edu.cn/)与[国家超算广州中心](http://www.nscc-gz.cn/)联合开发了智能编译教学实践平台 [YatCC-AI](https://yatcc-ai.com)（Yat Compiler Construction with AI）。YatCC-AI 结合国产超算资源与 [arcSYSu 实验室](https://arcsysu.tech)打造的 AI 资源聚合平台[ YatCC - AI Hub](https://portal.aihub.arcsysu.cn)，为《编译原理》和《编译器构造实验》课程提供全新的智能化学习体验。平台深度融合高性能计算（HPC）和人工智能（AI）技术，通过云端容器化环境、AI辅助开发和实时反馈机制，全面优化实践环节，帮助学生掌握编译领域核心知识，接触前沿编译技术与实际应用场景，从而提升工程实践能力与科研创新能力。
+YatCC 是中山大学编译的实验框架。基于 YatCC 编译实践体系，中山大学[计算机学院](https://cse.sysu.edu.cn/)与[国家超算广州中心](http://www.nscc-gz.cn/)联合开发了智能编译教学实践平台 [YatCC-AI](https://yatcc-ai.com)（Yat Compiler Construction with AI）。YatCC-AI 结合国产超算资源与 [arcSYSu 实验室](https://arcsysu.tech)打造的 AI 资源聚合平台[YatCC - AI Hub](https://portal.aihub.arcsysu.cn)，为《编译原理》和《编译器构造实验》课程提供全新的智能化学习体验。平台深度融合高性能计算（HPC）和人工智能（AI）技术，通过云端容器化环境、AI辅助开发和实时反馈机制，全面优化实践环节，帮助学生掌握编译领域核心知识，接触前沿编译技术与实际应用场景，从而提升工程实践能力与科研创新能力。
 
 相比传统编译实验，YatCC-AI 通过一站式在线集成开发环境和 AI Hub 提供的大模型接入服务，为学生提供覆盖编译实验全过程的层次化智能体验，包括：知识问答推理（**LLM4Chatting**）、代码开发调试（**LLM4Coding**）、编译前沿探索（**LLM4Compiling**）。
 此外，平台提供云端代码仓库和统一的实验环境配置，大幅简化本地环境搭建带来的繁琐和复杂度，避免因实验环境差异带来的问题，使学生能够更加专注于编译核心技术的学习与实践。

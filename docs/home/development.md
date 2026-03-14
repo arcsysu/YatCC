@@ -21,13 +21,13 @@
 
 安装好 Python 后，可以将 MkDocs 安装到虚拟环境下，在文档**根目录**执行：
 
-```bash
+```shell
 python -m venv .venv
 ```
 
 进入虚拟环境，执行
 
-```bash
+```shell
 # Windows Powershell
 .\.venv\Scripts\activate
 
@@ -37,10 +37,9 @@ source ./.venv/bin/activate
 
 安装 MkDocs：
 
-```bash
+```shell
 pip install mkdocs mkdocs-material
 ```
-
 
 ## 文档编写指南
 
@@ -88,7 +87,7 @@ pip install mkdocs mkdocs-material
 !!! tip "建议标题"
 
     这里写黄色建议块内容。
-```
+    ```
 
 ### 样式与脚本改动
 
@@ -105,7 +104,7 @@ pip install mkdocs mkdocs-material
     如果某个视觉需求会影响很多页面，优先在 CSS 中统一处理，而不是在 Markdown 里逐页手写额外结构。
     这样后续维护成本更低，也更不容易出现风格漂移。
 
-### 关于页面 Agent 
+### 关于页面 Agent
 
 当前文档站点包含一个文档 Agent 面板，用于辅助用户查询文档内容。维护时建议了解以下位置：
 
@@ -114,7 +113,6 @@ pip install mkdocs mkdocs-material
 - 脚本入口：`docs/javascripts/doc-agent.js`
 
 如果只是改文案、按钮文案、占位符或提示信息，通常修改模板即可；如果涉及位置、尺寸、对齐、配色等，则需要同步调整 CSS。
-
 
 ## 文档编写规范
 
@@ -148,13 +146,11 @@ pip install mkdocs mkdocs-material
         - 常规的英文缩写与专有名词，如 CPU
         - 用于强调。应使用加粗来达到强调的目的
 
-
-
 ## 本地预览
 
 本地预览命令如下：
 
-```bash
+```shell
 # Linux/MacOS
 source .venv/bin/activate
 NO_MKDOCS_2_WARNING=1 mkdocs serve -a 127.0.0.1:8000       
@@ -175,7 +171,7 @@ mkdocs serve -a 127.0.0.1:8000
 
 提交前建议至少执行一次严格构建：
 
-```bash
+```shell
 # Linux/MacOS
 source .venv/bin/activate
 NO_MKDOCS_2_WARNING=1 mkdocs build --strict
@@ -197,7 +193,6 @@ mkdocs build --strict
 
     `mkdocs serve` 成功运行，不代表配置一定没有问题。
     严格构建通过，才说明这次修改对整站是自洽的。
-
 
 ## 推荐工作流
 

@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
     "docs:lint": "markdownlint-cli2 \"docs/**/*.md\"",
     "docs:fix": "markdownlint-cli2 \"docs/**/*.md\" --fix",
-    "docs:ready": "markdownlint-cli2 \"docs/**/*.md\" --fix && markdownlint-cli2 \"docs/**/*.md\""
+    "docs:ready": "node scripts/docs-ready.mjs --all",
+    "docs:ready:changed": "node scripts/docs-ready.mjs",
+    "docs:ready:all": "node scripts/docs-ready.mjs --all"
   },
   "keywords": [],
   "author": "",

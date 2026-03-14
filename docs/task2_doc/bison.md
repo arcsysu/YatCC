@@ -16,7 +16,7 @@
    - 补充缺少的产生式
 
    - 补充缺少的语义动作
-   
+
    - 在语义动作中，创建 ASG 节点（结构体），并填充相应的成员
 
 ## Bison 简介
@@ -559,7 +559,7 @@ initializer_list
 
 然后，你可以调用语法分析器程序，并提供出现错误的输入文件，运行，就可以看到输入信息了。例如，CMake 生成 task2 可执行文件后，在命令行中输入：
 
-```bash
+```shell
 ./build/task/2/bison/task2 ./build/test/task1/functional-0/000_main.sysu.c/answer.txt ./mylog.txt
 ```
 

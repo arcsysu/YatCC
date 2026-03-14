@@ -1,6 +1,18 @@
 {
   "customRules": ["mkdocs-material-linter"],
   "config": {
+    "default": false,
+
+    // The docs in this repo intentionally use inline HTML, long lines, and a variety of Markdown patterns.
+    // Keep linting focused on MkDocs Material structural correctness (admonitions/tabs/code blocks).
+    "MD013": false,
+    "MD033": false,
+    "MD045": false,
+    "MD046": false,
+
+    // Do not require YAML front matter on every page.
+    "material-meta-tags": false,
+
     "material-admonition-types": true,
     "material-admonition-indentation": true,
     "material-admonition-empty": true,

@@ -12,10 +12,10 @@
 
 （注意：你的终端所在目录应在实验代码文件夹根目录下，如果你不确定，请新建终端）
 
-```bash
-git stash	# 将当前未提交的修改暂时储藏
-git pull	# 从远程仓库拉取新的实验代码
-git stash pop	# 恢复先前暂时储藏的修改
+```shell
+git stash # 将当前未提交的修改暂时储藏
+git pull # 从远程仓库拉取新的实验代码
+git stash pop # 恢复先前暂时储藏的修改
 ```
 
 #### 3.MacOS + VSCode 如何进入单步调试
@@ -76,7 +76,7 @@ git stash pop	# 恢复先前暂时储藏的修改
 
 在解释这个问题前，需要说明如下事项。在 task2 中，我们既可以使用“递归”的文法，也可以使用“直接”的文法。例如 expression 的这两种写法都是可以的：
 
-```bash
+```shell
 assignment_expression | expression Comma assignment_expression
 assignment_expression (Comma assignment_expression)*
 ```
@@ -130,7 +130,7 @@ node->rht = self(dynamic_cast<ast::Assignment_expressionContext*>(children[i]));
 
 一种能够减少你的工作量的g4文法如下：
 
-```bash
+```shell
 parameter_list
     : parameter_declaration (Comma parameter_declaration)*
     ;

@@ -1,6 +1,6 @@
 在本实验的 `common` 文件夹下存在如下几个代码文件：
 
-```bash
+```shell
 common/
 ├── Asg2Json.cpp
 ├── Asg2Json.hpp

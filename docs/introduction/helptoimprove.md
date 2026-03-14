@@ -36,7 +36,7 @@ git clone https://github.com/arcsysu/YatCC.git
 
 待 clone 完成之后 cd 到文件夹内，并且进行实验分支的查看
 
-```bash
+```shell
 cd YatCC
 git branch -a
 ```
@@ -47,13 +47,13 @@ git branch -a
 
 接下来请同学们输入以下命令将远端的 docs 分支拉取到本地的 docs 分支
 
-```bash
+```shell
 git checkout -b docs remotes/origin/docs
 ```
 
 输入命令后命令行会提示以下内容代表切换成功。
 
-```bash
+```shell
 branch 'docs' set up to track 'origin/docs'.
 Switched to a new branch 'docs'
 ```
@@ -65,7 +65,7 @@ Switched to a new branch 'docs'
 
 接下来请同学们输入以下命令将本地仓库中的文件 push 到我们 fork 的远端 github 仓库中。
 
-```bash
+```shell
 git add howtoPR.md
 git commit -m "for teach how to PR"
 git push origin docs

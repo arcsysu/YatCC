@@ -28,7 +28,6 @@
 
 - 输出结果：每次调用 `main.cpp` 的 `print_token()` 函数会根据**当前的**状态信息 `G g` 组装结果并输出到指定文件中，因此我们需要根据需要修改 `print_token()` 函数，使得输出与标准答案一致。
 
-
 ## 词法分析部分
 
 代码框架中与词法分析相关的文件有三个：`lex.cpp`、`lex.hpp` 和 `lex.l`。
@@ -107,7 +106,7 @@ struct G
 
 ### lex.cpp 文件
 
-`lex.cpp `包含了 `lex.hpp` 中声明的函数的定义，并实例化了一个 `G` 结构体变量 `g`。
+`lex.cpp`包含了 `lex.hpp` 中声明的函数的定义，并实例化了一个 `G` 结构体变量 `g`。
 
 由于枚举值并不是我们要在最终文件中输出的字符串，所以 `lex.cpp` 中还定义了一个字符串数组 `kTokenNames`，用于保存每个枚举值对应的输出字符串。注意`kTokenNames` 中的字符串顺序需要与 `lex.hpp` 中 `enum Id` 的枚举变量的顺序：例如 `COMMA` 在 `enum Id` 中位于 `IDENTIFIER` 开始的第 14 位（从 0 开始计算），那么 `"comma"` 在 `kTokenNames` 的下标应该是 14。
 

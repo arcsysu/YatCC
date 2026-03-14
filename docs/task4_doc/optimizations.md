@@ -213,7 +213,7 @@ ans = ans + 20 * 60;
 
 同学们可以使用[工具](https://wisesciencewise.wordpress.com/2022/10/03/steps-to-generate-llvm-call-flow-graphcfg/)来生成 IR 的控制流信息，并进一步生成控制流图。例如，按照如下命令行操作：
 
-```bash
+```shell
 clang -S -emit-llvm file.c -o file.ll
 opt -dot-cfg -disable-output -enable-new-pm=0 file.ll
 dot -Tpng -ofunction.png .function.dot
@@ -362,7 +362,7 @@ int main() {
 
 自动识别可以并行执行的代码块，并将部分代码由串行执行优化为并行执行，充分利用 CPU 的计算资源。
 
-### mem2reg 实现 
+### mem2reg 实现
 
 #### 简介和例子
 

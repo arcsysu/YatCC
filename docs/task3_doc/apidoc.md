@@ -960,7 +960,7 @@ llvm::BasicBlock *block = llvm::BasicBlock::Create(TheContext, "entry", func);
 llvm::Function *func = block->getParent();
 ```
 
-### 获得基本块的终结指令 
+### 获得基本块的终结指令
 
 在 LLVM IR 正确组织的情况下，每一个基本块的最后一条指令都应该是一条[终结指令（Terminator instructions）](https://llvm.org/docs/LangRef.html#terminator-instructions)。
 
@@ -1182,9 +1182,9 @@ Value *CreateICmpEQ (Value *LHS, Value *RHS, const Twine &Name="");
 Value *CreateICmpNE(Value *LHS, Value *RHS, const Twine &Name="");
 ```
 
-### 逻辑与 && 
+### 逻辑与 &&
 
-#### 短路求值思路参考 
+#### 短路求值思路参考
 
 对于形如 `exp_1 && exp_2` 这样的与的表达式，其中 `exp_1` 和 `exp_2` 为具有真值的表达式。当 `exp_1` 和 `exp_2` 均为 `true` 时，整个表达式的值才为 `true`。换句话说，`exp_1`和`exp_2`其中一个为 `false` 时，整个表达式的值就为 `false`。
 
@@ -1292,7 +1292,7 @@ br label %land.end
 PHINode *CreatePHI(Type *Ty, unsigned NumReservedValues, const Twine &Name="");
 ```
 
-之后，使用 `addIncoming()` 函数来为 `PHINode` 添加前驱基本块和值，即添加 `[%value %block] `对。
+之后，使用 `addIncoming()` 函数来为 `PHINode` 添加前驱基本块和值，即添加 `[%value %block]`对。
 
 ```cpp
 /// PHINode成员函数
@@ -1471,7 +1471,7 @@ lor.end:                                          ; preds = %lor.rhs, %entry
 
 ## 一元表达式
 
-### 逻辑非 !
+### 逻辑非
 
 一般意义上的非运算指按位取反（在 C 语言中用`~`表示）。
 

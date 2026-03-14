@@ -1,15 +1,15 @@
 # 实验介绍
 
 <div class="quote-card">
-	<p class="quote-card__eyebrow">Task 3 · 中间代码生成 / Intermediate Representation</p>
-	<p class="quote-card__text">&quot;All problems in computer science can be solved by another level of indirection.&quot;</p>
-	<p class="quote-card__translation">（计算机科学中的所有问题，都可以通过增加一个间接层来解决。）</p>
-	<p class="quote-card__author">David Wheeler</p>
+ <p class="quote-card__eyebrow">Task 3 · 中间代码生成 / Intermediate Representation</p>
+ <p class="quote-card__text">&quot;All problems in computer science can be solved by another level of indirection.&quot;</p>
+ <p class="quote-card__translation">（计算机科学中的所有问题，都可以通过增加一个间接层来解决。）</p>
+ <p class="quote-card__author">David Wheeler</p>
 </div>
 
 !!! note "从最小测例出发，逐步扩展语言特性"
 
-		task3-answer 是最有价值的参照物。先让最简单的 main、return、常量与表达式路径稳定，再一点点把变量、数组、控制流补齐。
+    task3-answer 是最有价值的参照物。先让最简单的 main、return、常量与表达式路径稳定，再一点点把变量、数组、控制流补齐。
 
 ## 任务描述
 
@@ -19,8 +19,8 @@
 
 !!! tip "优先打通最短路径"
 
-	最推荐的做法是先让最简单的函数生成合法 LLVM IR，再逐类加入表达式、变量、数组和控制流。
-	一次性并行补很多分支，通常会让错误来源变得很难判断。
+    最推荐的做法是先让最简单的函数生成合法 LLVM IR，再逐类加入表达式、变量、数组和控制流。
+    一次性并行补很多分支，通常会让错误来源变得很难判断。
 
 ![workflow](../images/task3/framework.png)
 
@@ -28,8 +28,8 @@
 
 !!! warning "不要一上来同时补齐所有节点类型"
 
-	IR 生成最怕的是路径一多，错误来源就混在一起。建议始终围绕“一个测例、一类节点、一段输出”地推进。
-	每补完一类结构，就先用 task3-answer 对比一次，再继续扩展。
+    IR 生成最怕的是路径一多，错误来源就混在一起。建议始终围绕“一个测例、一类节点、一段输出”地推进。
+    每补完一类结构，就先用 task3-answer 对比一次，再继续扩展。
 
 ---
 
@@ -60,8 +60,8 @@ task3/
 
 !!! tip "把输出 IR 当成第一调试现场"
 
-	很多 task3 问题不是运行时报出来的，而是在生成的 `.ll` 文件里就已经能看见端倪。
-	优先检查函数签名、基本块结构、返回值和类型是否符合预期，通常比盲目单步更快。
+    很多 task3 问题不是运行时报出来的，而是在生成的 `.ll` 文件里就已经能看见端倪。
+    优先检查函数签名、基本块结构、返回值和类型是否符合预期，通常比盲目单步更快。
 
 ## 评分标准
 
@@ -79,5 +79,5 @@ LLVM IR 是可以通过 LLVM 的工具 `lli` 被直接执行的，如 `lli outpu
 
 !!! danger "成员状态没有初始化时，问题会非常隐蔽"
 
-	Task3 开始对象状态显著变多，未初始化成员、悬空引用和类型不一致都会表现成很绕的后果。
-	如果出现“本地偶现”“测评机不稳定”这类症状，先回头检查对象生命周期和默认值。
+    Task3 开始对象状态显著变多，未初始化成员、悬空引用和类型不一致都会表现成很绕的后果。
+    如果出现“本地偶现”“测评机不稳定”这类症状，先回头检查对象生命周期和默认值。

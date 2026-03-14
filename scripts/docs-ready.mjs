@@ -194,6 +194,31 @@ function main() {
   const useAll = args.includes("--all");
   const markdownlint = resolveMarkdownlintCli2Runner();
 
+  // If user explicitly passes file paths, operate only on those.
+  const explicitFiles = args
+    .filter((a) => !a.startsWith("-"))
+    .map((a) => a.replaceAll("\\", "/"))
+    .filter((a) => a.toLowerCase().endsWith(".md"))
+    .map((a) => path.resolve(projectRoot, a));
+  const explicitDocsFiles = explicitFiles.filter((abs) =>
+    isDocsMarkdownFile(path.relative(projectRoot, abs)),
+  );
+
+  if (explicitDocsFiles.length > 0) {
+    console.log(`[docs-ready] Targeting ${explicitDocsFiles.length} explicit file(s).`);
+    const fixStatus = runWithStatus(markdownlint.command, [
+      ...markdownlint.prefixArgs,
+      "--fix",
+      ...explicitDocsFiles,
+    ]);
+    formatFiles(explicitDocsFiles);
+    const lintStatus = runWithStatus(markdownlint.command, [
+      ...markdownlint.prefixArgs,
+      ...explicitDocsFiles,
+    ]);
+    process.exit(Math.max(fixStatus, lintStatus));
+  }
+
   const changed = !useAll ? listChangedDocsMarkdownFiles() : null;
   const files = changed && changed.length > 0 ? changed : null;
 
@@ -213,6 +238,11 @@ function main() {
       ...files,
     ]);
     process.exit(Math.max(fixStatus, lintStatus));
+  }
+
+  if (!useAll) {
+    console.log("[docs-ready] No changed docs Markdown files found.");
+    process.exit(0);
   }
 
   console.log("[docs-ready] Targeting all docs Markdown files.");

@@ -67,7 +67,7 @@ main(int argc, char** argv)
 }
 ```
 
-## 传统方法 
+## 传统方法
 
 本次实验的传统方法框架主要分为以下两部分：
 
@@ -391,7 +391,7 @@ PreservedAnalyses FlattenCFGPass::run(Function &F,
 - [LLVM Pass 其一：PassManager](https://cloud.tencent.com/developer/article/2259878)
 - [LLVM Pass 其二：Analysis 与 AnalysisManager](https://cloud.tencent.com/developer/article/2259881)
 
-## 大语言模型方法 
+## 大语言模型方法
 
 本次实验的大语言模型方法框架主要分为以下两部分：
 
@@ -592,7 +592,9 @@ def extract_text_from_xml(tag: str):
         return text.strip()
 
     return extract
-````
+```
+
+```
 
 ### pybind11 简介
 
@@ -618,7 +620,10 @@ def extract_text_from_xml(tag: str):
 
 `PassSequencePredict` 中以`PassInfo`结构体来存储每个可用的 LLVM Pass 的信息：
 
-```cpp
+```
+
+``cpp
+
 struct PassInfo
 {
     std::string mClassName; // Pass 的名字
@@ -643,6 +648,7 @@ std::vector<PassInfo> mPassesInfo;
    这里利用 C++ 读取文件（`read_file()`），得到`std::string`，然后转换为 `pybind11::str`，再调用 `.attr("format")`，也就是 Python 中的 `str.format()` 来格式化字符串，并使用 `_a` 进行关键字传参数：
 
    ```cpp
+
    namespace Py = pybind11;
    using pybind11::literals;
 
@@ -701,6 +707,7 @@ std::vector<PassInfo> mPassesInfo;
    分析完所有给定的 LLVM Pass 后，将各个 Pass 的分析结果拼接，连同输入的 LLVM IR，一起发送给大语言模型进行 Pass 序列的预测，此部分逻辑在 `run` 函数中：
 
    ```cpp
+
    llvm::PreservedAnalyses
    PassSequencePredict::run(llvm::Module& mod, llvm::ModuleAnalysisManager& mam)
    {
@@ -779,7 +786,10 @@ std::vector<PassInfo> mPassesInfo;
 
 完成 `PassSequencePredict` 这个 LLM 加持下的 Pass 后，就可以在 `main.cpp` 中的 `TASK4_LLM` 宏定义中使用。下面的代码以传统方法中的三种示例 LLVM Pass 作为可用 Pass，然后用 `PassSequencePredict` 做 Pass 序列预测：
 
-```cpp
+```
+
+``cpp
+
 void
 opt(llvm::Module& mod)
 {
@@ -850,7 +860,10 @@ opt(llvm::Module& mod)
 
 以下是第一步 Pass 分析的系统级提示词：
 
-```xml
+```
+
+``xml
+
 <task>
   你是一位熟悉 LLVM 和 C++17 的编译优化专家，精通 LLVM IR、LLVM Pass 和相关优化技术。你可以深入分析用 C++17 和 LLVM 库编写的 LLVM Pass 代码，并准确解释其功能。
   <instructions>

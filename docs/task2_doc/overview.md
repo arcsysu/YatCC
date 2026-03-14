@@ -90,7 +90,7 @@
 
 所以这个 JSON 文件表示的 ASG，结构如下：
 
-```bash
+```shell
 └── TranslationUnitDecl
     ├── 多个 TypedefDecl
     └── FunctionDecl

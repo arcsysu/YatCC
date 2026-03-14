@@ -32,7 +32,7 @@
 
 `SYsULexer.g4`是词法分析器的核心文件，其中定义了词法分析器的规则。
 
-ANTLR 会根据`.g4`文件生成 `SYsULexer.cpp` 和 `SYsULexer.h` 两个文件，其中定义了继承自 `antlr4::Lexer `的 `SYsULexer` 类，供主程序使用。`SYsULexer` 类的定义是根据我们编写的词法规则生成的，调用这个类的方法，就可以根据规则识别出各类词法单元了。在成功构建一次 task1 之后，你可以在 `/YatCC/build/antlr4_generated_src/task1-antlr/` 下看到 ANTLR 的产物。
+ANTLR 会根据`.g4`文件生成 `SYsULexer.cpp` 和 `SYsULexer.h` 两个文件，其中定义了继承自 `antlr4::Lexer`的 `SYsULexer` 类，供主程序使用。`SYsULexer` 类的定义是根据我们编写的词法规则生成的，调用这个类的方法，就可以根据规则识别出各类词法单元了。在成功构建一次 task1 之后，你可以在 `/YatCC/build/antlr4_generated_src/task1-antlr/` 下看到 ANTLR 的产物。
 
 ---
 
@@ -148,9 +148,9 @@ auto& vocabulary = lexer.getVocabulary();
 auto tokenTypeName = std::string(vocabulary.getSymbolicName(token->getType()));
 ```
 
-但是这个“规则名”并不是我们要在最终文件中输出的字符串，所以 `main.cpp `中含定义了一个哈希表 `tokenTypeMapping` 来保存每个在`SYsULexer.g4`中定义的“规则名” 对应的输出字符串。 
+但是这个“规则名”并不是我们要在最终文件中输出的字符串，所以 `main.cpp`中含定义了一个哈希表 `tokenTypeMapping` 来保存每个在`SYsULexer.g4`中定义的“规则名” 对应的输出字符串。
 
-如我们在 `SYsULexer.g4` 中定义了一条词法规则 `LeftParen : '(';`。而 `clang ` 内部为 `(` 定义的类型描述符为 `l_paren`，那我们就要在 `tokenTypeMapping` 中添加一条从 `LeftParen` 到 `l_paren` 的映射。
+如我们在 `SYsULexer.g4` 中定义了一条词法规则 `LeftParen : '(';`。而 `clang` 内部为 `(` 定义的类型描述符为 `l_paren`，那我们就要在 `tokenTypeMapping` 中添加一条从 `LeftParen` 到 `l_paren` 的映射。
 
 ```cpp
 if (tokenTypeName.empty())
