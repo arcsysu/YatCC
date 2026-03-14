@@ -3,7 +3,7 @@
 请根据序言中 [AI 工具配置与使用方法](../introduction/prompt.md)
 部分的教程来使用或优化如下 Meta-Prompt（元提示词，用来让 AI 生成 Prompt，从而免去自己编写、优化 Prompt 的过程）示例。
 
-````markdown
+~~~markdown
 # Task1 Meta-Prompt：词法分析器 Prompt 生成器
 
 > **用途**：将以下内容整体输入给大模型，让它为你生成一份可直接使用的、针对 Task1（SYsU 词法分析）的实现 Prompt。
@@ -290,15 +290,6 @@ need_test_verification: true
 请根据以上所有技术规格和约束，生成一份**可直接使用的 Prompt**。该 Prompt 的目标读者是另一个大模型，读完后它应该能够生成完整、正确、可编译运行的 SYsU 词法分析器代码。
 
 生成的 Prompt 应以 `---BEGIN PROMPT---` 开头，以 `---END PROMPT---` 结尾。
-```
 
-```
-```
 
-```
-```
-
-```
-```
-```
-````
+~~~
