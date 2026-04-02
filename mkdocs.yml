@@ -73,9 +73,9 @@ extra_css:
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js
   - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js
-  - javascripts/katex.js
-  - javascripts/navigation-accordion.js
-  - javascripts/image-lightbox.js
+  - js/katex.js
+  - js/navigation-accordion.js
+  - js/image-lightbox.js
 exclude_docs: |
   index.html
   _sidebar.md

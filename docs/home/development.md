@@ -74,7 +74,7 @@ npm install
 - `docs/task*_doc/`：各个 Task 的文档页面
 - `docs/images/`：文档中引用的图片资源
 - `docs/stylesheets/`：站点样式覆盖
-- `docs/javascripts/`：站点脚本增强，例如侧边栏折叠
+- `docs/js/`：站点脚本增强，例如侧边栏折叠
 - `docs/overrides/`：Material 模板覆盖，例如 Agent 面板
 - `mkdocs.yml`：站点导航、主题、插件和静态资源总配置
 
@@ -127,7 +127,7 @@ npm install
 - `docs/stylesheets/extra.css`：站点主要样式覆盖
 - `docs/stylesheets/fonts.css`：字体定义
 - `docs/stylesheets/agent.css`：文档 Agent 面板与悬浮按钮样式
-- `docs/javascripts/navigation-accordion.js`：侧边栏折叠逻辑
+- `docs/js/navigation-accordion.js`：侧边栏折叠逻辑
 - `docs/overrides/partials/agent.html`：Agent 面板结构
 
 !!! tip "样式改动需应用到整个站点"
@@ -141,7 +141,7 @@ npm install
 
 - 面板结构： `docs/overrides/partials/agent.html`
 - 样式： `docs/stylesheets/agent.css`
-- 脚本入口： `docs/javascripts/doc-agent.js`
+- 脚本入口： `docs/js/doc-agent.js`
 
 如果只是改文案、按钮文案、占位符或提示信息，通常修改模板即可；如果涉及位置、尺寸、对齐、配色等，则需要同步调整 CSS。
 
