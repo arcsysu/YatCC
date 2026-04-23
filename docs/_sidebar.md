@@ -37,6 +37,9 @@
   - [API 速查](task4_doc/apidoc.md)
 - Task5
   - [整体介绍](task5_doc/overview.md)
+  - [RV64 指令集参考](task5_doc/riscv.md)
+  - [填空导读](task5_doc/guide.md)
+  - [API 速查](task5_doc/apidoc.md)
 - Q&A
   - [常见问题与答案](QA.md)
 - 致谢
