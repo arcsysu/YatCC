@@ -1,8 +1,8 @@
-# 填空导读
+## 填空导读
 
 `EmitMIR.cpp` 中有四处 `TODO: Student Implementation`，下面逐一说明思路。
 
-## 1 emitBinary — 二元运算
+### 1 emitBinary — 二元运算
 
 需要做的事：把 LLVM IR 的二元运算翻译成对应的 RV64 指令。
 
@@ -36,7 +36,7 @@
 
 对不支持的 opcode 调用 `llvm::report_fatal_error`，不要静默忽略。
 
-## 2 emitICmpInst — 整数比较
+### 2 emitICmpInst — 整数比较
 
 需要做的事：把 LLVM IR 的 `icmp` 翻译成 0/1 结果。
 
@@ -54,7 +54,7 @@
 - `ICMP_SLE` / `ICMP_SGE`：先做严格比较，再用 `XORI dst, tmp, 1` 取反。
 - 无符号版本（`ICMP_ULT` 等）把 SLT 换成 SLTU，逻辑完全对称。
 
-## 3 emitLoadInst — load 指令
+### 3 emitLoadInst — load 指令
 
 需要做的事：从内存地址读取值到寄存器。
 
@@ -67,7 +67,7 @@
 
 就这么多，非常直接。
 
-## 4 emitStoreInst — store 指令
+### 4 emitStoreInst — store 指令
 
 需要做的事：把值写回内存地址。
 
