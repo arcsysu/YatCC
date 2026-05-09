@@ -43,7 +43,7 @@
 
 ![](./docs/use-ol.gif)
 
-登陆云端代码仓库后，可以通过[AI工具配置](https://arcsysu.github.io/YatCC/#/introduction/aitools)教程中的 Base URL（当前为https://llm.yatcc-ai.com/v1/） 和 API-key（各账号私有）进行 Roo Code 插件配置：
+登陆云端代码仓库后，可以通过[AI工具配置](https://arcsysu.github.io/YatCC/#/introduction/aitools)教程中的 Base URL（当前为https://aihub.arcsysu.cn/v1） 和 API-key（各同学私有）进行 Roo Code 插件配置：
 
 ![](./docs/llm-config.gif)
 
