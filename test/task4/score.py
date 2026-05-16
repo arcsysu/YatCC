@@ -351,13 +351,6 @@ if __name__ == "__main__":
         classic_cases_helper = CasesHelper(
             srcdir=cases_helper.srcdir, bindir=cases_helper.bindir, cases=classic_cases
         )
-        llm_cases_helper = CasesHelper(
-            srcdir=cases_helper.srcdir, bindir=cases_helper.bindir, cases=llm_cases
-        )
-
         generate_score_report(
             classic_cases_helper, "task4-classic", "score-classic.txt", "score-classic.json"
-        )
-        generate_score_report(
-            llm_cases_helper, "task4-llm", "score-llm.txt", "score-llm.json"
         )
